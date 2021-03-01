@@ -30,7 +30,7 @@ extern "C" {
 #include "stm32l552e_eval.h"
 /* Include Gyroscope component driver */
 #include "../Components/Common/gyro.h"
-#include "../Components/l3gd20/l3gd20.h"
+#include "../Components/icg20330/icg20330.h"
 
 /** @addtogroup BSP
   * @{

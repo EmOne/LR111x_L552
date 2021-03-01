@@ -1,16 +1,16 @@
 /**
   ******************************************************************************
-  * @file    stm32l476g_discovery_gyroscope.c
-  * @author  MCD Application Team
-  * @brief   This file provides a set of functions needed to manage the L3GD20
-  *          MEMS accelerometer available on STM32L476G-Discovery board.
+  * @file    stm32l5xx_gyroscope.c
+  * @author  EmOne Application Team
+  * @brief   This file provides a set of functions needed to manage the ICG20330
+  *          MEMS accelerometer available on STM32L5Xx board.
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2016 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2021 EmOne.
   * All rights reserved.</center></h2>
   *
-  * This software component is licensed by ST under BSD 3-Clause license,
+  * This software component is licensed by EmOne under BSD 3-Clause license,
   * the "License"; You may not use this file except in compliance with the
   * License. You may obtain a copy of the License at:
   *                        opensource.org/licenses/BSD-3-Clause
@@ -25,16 +25,16 @@
   * @{
   */
 
-/** @addtogroup STM32L476G_DISCOVERY
+/** @addtogroup STM32L5XX
   * @{
   */
 
-/** @defgroup STM32L476G_DISCOVERY_GYROSCOPE STM32L476G-DISCOVERY GYROSCOPE
+/** @defgroup STM32L5XX_GYROSCOPE STM32L476G-DISCOVERY GYROSCOPE
   * @{
   */
 
 /* Private typedef -----------------------------------------------------------*/
-/** @defgroup STM32L476G_DISCOVERY_GYROSCOPE_Private_Types Private Types
+/** @defgroup STM32L5XX_GYROSCOPE_Private_Types Private Types
   * @{
   */
 /**
@@ -42,7 +42,7 @@
   */
 
 /* Private defines ------------------------------------------------------------*/
-/** @defgroup STM32L476G_DISCOVERY_GYROSCOPE_Private_Constants Private Constants
+/** @defgroup STM32L5XX_GYROSCOPE_Private_Constants Private Constants
   * @{
   */
 /**
@@ -50,7 +50,7 @@
   */
 
 /* Private macros ------------------------------------------------------------*/
-/** @defgroup STM32L476G_DISCOVERY_GYROSCOPE_Private_Macros Private Macros
+/** @defgroup STM32L5XX_GYROSCOPE_Private_Macros Private Macros
   * @{
   */
 /**
@@ -58,7 +58,7 @@
   */
 
 /* Private variables ---------------------------------------------------------*/
-/** @defgroup STM32L476G_DISCOVERY_GYROSCOPE_Private_Variables Private Variables
+/** @defgroup STM32L5XX_GYROSCOPE_Private_Variables Private Variables
   * @{
   */
 static GYRO_DrvTypeDef *GyroscopeDrv;
@@ -68,7 +68,7 @@ static GYRO_DrvTypeDef *GyroscopeDrv;
   */
 
 /* Private function prototypes -----------------------------------------------*/
-/** @defgroup STM32L476G_DISCOVERY_GYROSCOPE_Private_FunctionPrototypes Private Functions
+/** @defgroup STM32L5XX_GYROSCOPE_Private_FunctionPrototypes Private Functions
   * @{
   */
 /**
@@ -76,7 +76,7 @@ static GYRO_DrvTypeDef *GyroscopeDrv;
   */
 
 /* Exported functions --------------------------------------------------------*/
-/** @addtogroup STM32L476G_DISCOVERY_GYROSCOPE_Exported_Functions
+/** @addtogroup STM32L5XX_GYROSCOPE_Exported_Functions
   * @{
   */
 
@@ -88,44 +88,44 @@ uint8_t BSP_GYRO_Init(void)
 {
   uint8_t ret = GYRO_ERROR;
   uint16_t ctrl = 0x0000;
-  GYRO_InitTypeDef L3GD20_InitStructure;
-  GYRO_FilterConfigTypeDef L3GD20_FilterStructure = {0, 0};
+  GYRO_InitTypeDef ICG20330_InitStructure;
+  GYRO_FilterConfigTypeDef ICG20330_FilterStructure = {0, 0};
 
-  if ((L3gd20Drv.ReadID() == I_AM_L3GD20) || (L3gd20Drv.ReadID() == I_AM_L3GD20_TR))
+  if (icg20330Drv.ReadID() == I_AM_ICG20330)
   {
     /* Initialize the gyroscope driver structure */
-    GyroscopeDrv = &L3gd20Drv;
+    GyroscopeDrv = &icg20330Drv;
 
     /* Configure Mems : data rate, power mode, full scale and axes */
-    L3GD20_InitStructure.Power_Mode = L3GD20_MODE_ACTIVE;
-    L3GD20_InitStructure.Output_DataRate = L3GD20_OUTPUT_DATARATE_1;
-    L3GD20_InitStructure.Axes_Enable = L3GD20_AXES_ENABLE;
-    L3GD20_InitStructure.Band_Width = L3GD20_BANDWIDTH_4;
-    L3GD20_InitStructure.BlockData_Update = L3GD20_BlockDataUpdate_Continous;
-    L3GD20_InitStructure.Endianness = L3GD20_BLE_LSB;
-    L3GD20_InitStructure.Full_Scale = L3GD20_FULLSCALE_500;
+    ICG20330_InitStructure.Power_Mode = ICG20330_MODE_ACTIVE;
+    ICG20330_InitStructure.Output_DataRate = ICG20330_OUTPUT_DATARATE_1;
+    ICG20330_InitStructure.Axes_Enable = ICG20330_AXES_ENABLE;
+    ICG20330_InitStructure.Band_Width = ICG20330_BANDWIDTH_250;
+    ICG20330_InitStructure.BlockData_Update = ICG20330_BlockDataUpdate_Continous;
+    ICG20330_InitStructure.Endianness = ICG20330_BLE_LSB;
+    ICG20330_InitStructure.Full_Scale = ICG20330_FULLSCALE_500;
 
-    /* Configure MEMS: data rate, power mode, full scale and axes */
-    ctrl = (uint16_t)(L3GD20_InitStructure.Power_Mode | L3GD20_InitStructure.Output_DataRate | \
-                      L3GD20_InitStructure.Axes_Enable | L3GD20_InitStructure.Band_Width);
-
-    ctrl |= (uint16_t)((L3GD20_InitStructure.BlockData_Update | L3GD20_InitStructure.Endianness | \
-                        L3GD20_InitStructure.Full_Scale) << 8);
+//    /* Configure MEMS: data rate, power mode, full scale and axes */
+//    ctrl = (uint16_t)(ICG20330_InitStructure.Power_Mode | ICG20330_InitStructure.Output_DataRate | \
+//                      ICG20330_InitStructure.Axes_Enable | ICG20330_InitStructure.Band_Width);
+//
+//    ctrl |= (uint16_t)((ICG20330_InitStructure.BlockData_Update | ICG20330_InitStructure.Endianness | \
+//                        ICG20330_InitStructure.Full_Scale) << 8);
 
     /* Initialize component */
-    GyroscopeDrv->Init(ctrl);
+    GyroscopeDrv->Init(&ICG20330_InitStructure);
 
-    L3GD20_FilterStructure.HighPassFilter_Mode_Selection = L3GD20_HPM_NORMAL_MODE_RES;
-    L3GD20_FilterStructure.HighPassFilter_CutOff_Frequency = L3GD20_HPFCF_0;
-
-    ctrl = (uint8_t)((L3GD20_FilterStructure.HighPassFilter_Mode_Selection | \
-                      L3GD20_FilterStructure.HighPassFilter_CutOff_Frequency));
+//    ICG20330_FilterStructure.HighPassFilter_Mode_Selection = ICG20330_HPM_NORMAL_MODE_RES;
+//    ICG20330_FilterStructure.HighPassFilter_CutOff_Frequency = ICG20330_FULLSCALE_63;
+//
+//    ctrl = (uint8_t)((ICG20330_FilterStructure.HighPassFilter_Mode_Selection | \
+//                      ICG20330_FilterStructure.HighPassFilter_CutOff_Frequency));
 
     /* Configure component filter */
-    GyroscopeDrv->FilterConfig(ctrl) ;
+      GyroscopeDrv->FilterConfig(0x00) ;
 
     /* Enable component filter */
-    GyroscopeDrv->FilterCmd(L3GD20_HIGHPASSFILTER_ENABLE);
+    GyroscopeDrv->FilterCmd(ICG20330_HPM_NORMAL_MODE_RES | ICG20330_FULLSCALE_63);
 
     ret = GYRO_OK;
   }
@@ -155,12 +155,12 @@ void BSP_GYRO_DeInit(void)
 void BSP_GYRO_LowPower(void)
 {
   uint16_t ctrl = 0x0000;
-  GYRO_InitTypeDef L3GD20_InitStructure;
+  GYRO_InitTypeDef ICG20330_InitStructure;
 
   /* configure only Power_Mode field */
-  L3GD20_InitStructure.Power_Mode = L3GD20_MODE_POWERDOWN;
+  ICG20330_InitStructure.Power_Mode = ICG20330_MODE_POWERDOWN;
 
-  ctrl = (uint16_t)(L3GD20_InitStructure.Power_Mode);
+  ctrl = (uint16_t)(ICG20330_InitStructure.Power_Mode);
 
   /* Set component in low-power mode */
   GyroscopeDrv->LowPower(ctrl);
@@ -198,7 +198,7 @@ void BSP_GYRO_Reset(void)
 /**
   * @brief  Configure Gyroscope interrupts (INT1 or INT2).
   * @param  pIntConfig: pointer to a GYRO_InterruptConfigTypeDef
-  *         structure that contains the configuration setting for the L3GD20 Interrupt.
+  *         structure that contains the configuration setting for the ICG20330 Interrupt.
   * @retval None
   */
 void BSP_GYRO_ITConfig(GYRO_InterruptConfigTypeDef *pIntConfig)
@@ -221,8 +221,8 @@ void BSP_GYRO_ITConfig(GYRO_InterruptConfigTypeDef *pIntConfig)
   * @brief  Enable Gyroscope interrupts (INT1 or INT2).
   * @param  IntPin: Interrupt pin
   *      This parameter can be:
-  *        @arg L3GD20_INT1
-  *        @arg L3GD20_INT2
+  *        @arg ICG20330_INT1
+  *        @arg ICG20330_INT2
   * @retval None
   */
 void BSP_GYRO_EnableIT(uint8_t IntPin)
@@ -237,8 +237,8 @@ void BSP_GYRO_EnableIT(uint8_t IntPin)
   * @brief  Disable Gyroscope interrupts (INT1 or INT2).
   * @param  IntPin: Interrupt pin
   *      This parameter can be:
-  *        @arg L3GD20_INT1
-  *        @arg L3GD20_INT2
+  *        @arg ICG20330_INT1
+  *        @arg ICG20330_INT2
   * @retval None
   */
 void BSP_GYRO_DisableIT(uint8_t IntPin)
