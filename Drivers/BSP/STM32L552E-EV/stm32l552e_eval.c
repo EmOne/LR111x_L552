@@ -123,9 +123,9 @@ static uint16_t      LED_PIN[LEDn]  = {LED4_PIN, LED5_PIN};
 static GPIO_TypeDef *LED_PORT[LEDn] = {LED4_GPIO_PORT, LED5_GPIO_PORT};
 #endif
 
-static uint16_t           BUTTON_PIN[BUTTONn]  = {BUTTON_WAKEUP_PIN, BUTTON_TAMPER_PIN};
-static GPIO_TypeDef      *BUTTON_PORT[BUTTONn] = {BUTTON_WAKEUP_GPIO_PORT, BUTTON_TAMPER_GPIO_PORT};
-static IRQn_Type          BUTTON_IRQn[BUTTONn] = {BUTTON_WAKEUP_EXTI_IRQn, BUTTON_TAMPER_EXTI_IRQn};
+static uint16_t           BUTTON_PIN[BUTTONn]  = {BUTTON_WAKEUP_PIN};
+static GPIO_TypeDef      *BUTTON_PORT[BUTTONn] = {BUTTON_WAKEUP_GPIO_PORT};
+static IRQn_Type          BUTTON_IRQn[BUTTONn] = {BUTTON_WAKEUP_EXTI_IRQn};
 static EXTI_HandleTypeDef hpb_exti[BUTTONn];
 
 #if (USE_BSP_COM_FEATURE == 1)
@@ -448,19 +448,19 @@ int32_t BSP_PB_Init(Button_TypeDef Button, ButtonMode_TypeDef ButtonMode)
 {
   int32_t               status = BSP_ERROR_NONE;
   GPIO_InitTypeDef      GPIO_Init;
-  uint32_t              BSP_BUTTON_IT_PRIO[BUTTONn] = {BSP_BUTTON_WAKEUP_IT_PRIORITY, BSP_BUTTON_TAMPER_IT_PRIORITY};
-  uint32_t              BUTTON_EXTI_LINE[BUTTONn]   = {BUTTON_WAKEUP_EXTI_LINE, BUTTON_TAMPER_EXTI_LINE};
-  BSP_EXTI_LineCallback ButtonCallback[BUTTONn]     = {BUTTON_WAKEUP_EXTI_Callback, BUTTON_TAMPER_EXTI_Callback};
+  uint32_t              BSP_BUTTON_IT_PRIO[BUTTONn] = {BSP_BUTTON_WAKEUP_IT_PRIORITY};
+  uint32_t              BUTTON_EXTI_LINE[BUTTONn]   = {BUTTON_WAKEUP_EXTI_LINE};
+  BSP_EXTI_LineCallback ButtonCallback[BUTTONn]     = {BUTTON_WAKEUP_EXTI_Callback};
 
   /* Enable the BUTTON clock */
   if (Button == BUTTON_WAKEUP)
   {
     BUTTON_WAKEUP_GPIO_CLK_ENABLE();
   }
-  else /* BUTTON_TAMPER */
-  {
-    BUTTON_TAMPER_GPIO_CLK_ENABLE();
-  }
+//  else /* BUTTON_TAMPER */
+//  {
+//    BUTTON_TAMPER_GPIO_CLK_ENABLE();
+//  }
 
   GPIO_Init.Pin   = BUTTON_PIN[Button];
   GPIO_Init.Pull  = GPIO_NOPULL;
@@ -1305,14 +1305,14 @@ static void BUTTON_WAKEUP_EXTI_Callback(void)
   BSP_PB_Callback(BUTTON_WAKEUP);
 }
 
-/**
-  * @brief  Tamper EXTI line detection callbacks.
-  * @retval None
-  */
-static void BUTTON_TAMPER_EXTI_Callback(void)
-{
-  BSP_PB_Callback(BUTTON_TAMPER);
-}
+///**
+//  * @brief  Tamper EXTI line detection callbacks.
+//  * @retval None
+//  */
+//static void BUTTON_TAMPER_EXTI_Callback(void)
+//{
+//  BSP_PB_Callback(BUTTON_TAMPER);
+//}
 
 #if (USE_BSP_IO_CLASS == 1)
 /**

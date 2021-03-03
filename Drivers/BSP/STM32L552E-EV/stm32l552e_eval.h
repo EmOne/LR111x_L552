@@ -33,6 +33,7 @@ extern "C" {
 #if (USE_BSP_IO_CLASS == 1)
 #include "stm32l552e_eval_io.h"
 #endif
+#include "stm32l5xx_gyroscope.h"
 
 /** @addtogroup BSP
   * @{
@@ -205,13 +206,13 @@ typedef struct
 #define LEDn                                    2U
 #endif
 
-#define LED4_GPIO_PORT                          GPIOB
-#define LED4_GPIO_CLK_ENABLE()                  __HAL_RCC_GPIOB_CLK_ENABLE()
-#define LED4_PIN                                GPIO_PIN_3
+#define LED4_GPIO_PORT                          GPIOA
+#define LED4_GPIO_CLK_ENABLE()                  __HAL_RCC_GPIOA_CLK_ENABLE()
+#define LED4_PIN                                GPIO_PIN_1
 
-#define LED5_GPIO_PORT                          GPIOD
-#define LED5_GPIO_CLK_ENABLE()                  __HAL_RCC_GPIOD_CLK_ENABLE()
-#define LED5_PIN                                GPIO_PIN_3
+#define LED5_GPIO_PORT                          GPIOA
+#define LED5_GPIO_CLK_ENABLE()                  __HAL_RCC_GPIOA_CLK_ENABLE()
+#define LED5_PIN                                GPIO_PIN_2
 
 #if (USE_BSP_IO_CLASS == 1)
 #define LED6_PIN                                IO_PIN_11
@@ -225,19 +226,19 @@ typedef struct
 /** @defgroup STM32L552E-EV_COMMON_BUTTON STM32L552E-EV COMMON BUTTON
   * @{
   */
-#define BUTTONn                                 2U
+#define BUTTONn                                 1U
 
-#define BUTTON_WAKEUP_GPIO_PORT                 GPIOC
-#define BUTTON_WAKEUP_GPIO_CLK_ENABLE()         __HAL_RCC_GPIOC_CLK_ENABLE()
-#define BUTTON_WAKEUP_PIN                       GPIO_PIN_13
-#define BUTTON_WAKEUP_EXTI_LINE                 EXTI_LINE_13
-#define BUTTON_WAKEUP_EXTI_IRQn                 EXTI13_IRQn
+#define BUTTON_WAKEUP_GPIO_PORT                 GPIOA
+#define BUTTON_WAKEUP_GPIO_CLK_ENABLE()         __HAL_RCC_GPIOA_CLK_ENABLE()
+#define BUTTON_WAKEUP_PIN                       GPIO_PIN_0
+#define BUTTON_WAKEUP_EXTI_LINE                 EXTI_LINE_0
+#define BUTTON_WAKEUP_EXTI_IRQn                 EXTI0_IRQn
 
-#define BUTTON_TAMPER_GPIO_PORT                 GPIOA
-#define BUTTON_TAMPER_GPIO_CLK_ENABLE()         __HAL_RCC_GPIOA_CLK_ENABLE()
-#define BUTTON_TAMPER_PIN                       GPIO_PIN_1
-#define BUTTON_TAMPER_EXTI_LINE                 EXTI_LINE_1
-#define BUTTON_TAMPER_EXTI_IRQn                 EXTI1_IRQn
+//#define BUTTON_TAMPER_GPIO_PORT                 GPIOA
+//#define BUTTON_TAMPER_GPIO_CLK_ENABLE()         __HAL_RCC_GPIOA_CLK_ENABLE()
+//#define BUTTON_TAMPER_PIN                       GPIO_PIN_1
+//#define BUTTON_TAMPER_EXTI_LINE                 EXTI_LINE_1
+//#define BUTTON_TAMPER_EXTI_IRQn                 EXTI1_IRQn
 /**
   * @}
   */
@@ -263,13 +264,13 @@ typedef struct
 #define COM2_UART                               LPUART1
 #define COM2_CLK_ENABLE()                       __HAL_RCC_LPUART1_CLK_ENABLE()
 #define COM2_CLK_DISABLE()                      __HAL_RCC_LPUART1_CLK_DISABLE()
-#define COM2_TX_GPIO_PORT                       GPIOG
-#define COM2_TX_GPIO_CLK_ENABLE()               __HAL_RCC_GPIOG_CLK_ENABLE()
-#define COM2_TX_PIN                             GPIO_PIN_7
+#define COM2_TX_GPIO_PORT                       GPIOC
+#define COM2_TX_GPIO_CLK_ENABLE()               __HAL_RCC_GPIOC_CLK_ENABLE()
+#define COM2_TX_PIN                             GPIO_PIN_4
 #define COM2_TX_AF                              GPIO_AF8_LPUART1
-#define COM2_RX_GPIO_PORT                       GPIOG
-#define COM2_RX_GPIO_CLK_ENABLE()               __HAL_RCC_GPIOG_CLK_ENABLE()
-#define COM2_RX_PIN                             GPIO_PIN_8
+#define COM2_RX_GPIO_PORT                       GPIOC
+#define COM2_RX_GPIO_CLK_ENABLE()               __HAL_RCC_GPIOC_CLK_ENABLE()
+#define COM2_RX_PIN                             GPIO_PIN_5
 #define COM2_RX_AF                              GPIO_AF8_LPUART1
 
 /**
@@ -423,6 +424,7 @@ void    BSP_JOY_IRQHandler(JOY_TypeDef JOY, JOYPin_TypeDef JoyPin);
 /**
   * @}
   */
+
 
 /**
   * @}

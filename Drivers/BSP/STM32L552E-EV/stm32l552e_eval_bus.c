@@ -153,6 +153,8 @@ static uint32_t      I2c_valid_timing_nbr = 0;
 /** @defgroup STM32L552E-EV_BUS_Exported_Variables STM32L552E-EV BUS Exported Variables
   * @{
   */
+extern I2C_HandleTypeDef hi2c1;
+
 I2C_HandleTypeDef hbus_i2c1 = {0};
 /**
   * @}
@@ -180,11 +182,18 @@ static void     I2C_Compute_PRESC_SCLDEL_SDADEL(uint32_t clock_src_freq, uint32_
   * @brief  Initialize BSP I2C1.
   * @retval BSP status.
   */
-int32_t BSP_I2C1_Init(void)
+int32_t BSP_I2C1_Init()
 {
   int32_t status = BSP_ERROR_NONE;
 
-  hbus_i2c1.Instance = BUS_I2C1;
+  if(&hi2c1 != NULL)
+  {
+	 hbus_i2c1 = hi2c1;
+  }
+  else
+  {
+	  hbus_i2c1.Instance = BUS_I2C1;
+  }
 
   if (I2c1InitCounter == 0U)
   {

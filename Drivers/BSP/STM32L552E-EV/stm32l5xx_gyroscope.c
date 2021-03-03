@@ -20,7 +20,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32l5xx_gyroscope.h"
-
+#include "stm32l552e_eval_bus.h"
 /** @addtogroup BSP
   * @{
   */
@@ -125,7 +125,8 @@ uint8_t BSP_GYRO_Init(void)
       GyroscopeDrv->FilterConfig(0x00) ;
 
     /* Enable component filter */
-    GyroscopeDrv->FilterCmd(ICG20330_HPM_NORMAL_MODE_RES | ICG20330_FULLSCALE_63);
+    GyroscopeDrv->FilterCmd(0x1B);
+//    GyroscopeDrv->FilterCmd(ICG20330_HPM_NORMAL_MODE_RES | ICG20330_FULLSCALE_500);
 
     ret = GYRO_OK;
   }
@@ -265,6 +266,33 @@ void BSP_GYRO_GetXYZ(float *pfData)
 /**
   * @}
   */
+void    GYRO_IO_Init(void)
+{
+	uint8_t data = 0x81;
+
+	BSP_I2C1_Init();
+
+	HAL_GPIO_WritePin(GYO_DEN_GPIO_Port, GYO_DEN_Pin, GPIO_PIN_RESET);
+	HAL_Delay(50);
+
+	GYRO_IO_Write(&data, ICG20330_PWR_MGMT_1_ADDR, 1);
+	HAL_Delay(100);
+}
+void    GYRO_IO_DeInit(void)
+{
+	BSP_I2C1_DeInit();
+}
+void    GYRO_IO_Write(uint8_t *pBuffer, uint8_t WriteAddr, uint16_t NumByteToWrite)
+{
+	uint16_t DevAddress = (ICG20330_ADDR << 1) | 0x00;
+	BSP_I2C1_WriteReg(DevAddress, WriteAddr, pBuffer, NumByteToWrite);
+
+}
+void    GYRO_IO_Read(uint8_t *pBuffer, uint8_t ReadAddr, uint16_t NumByteToRead)
+{
+	uint16_t DevAddress = (ICG20330_ADDR << 1) | 0x01;
+	BSP_I2C1_ReadReg(DevAddress, ReadAddr, pBuffer, NumByteToRead);
+}
 
 /**
   * @}

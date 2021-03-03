@@ -20,8 +20,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "secure_nsc.h"
-#include <stdio.h>
-//#include "secure_port_macros.h"
+
 /** @addtogroup STM32L5xx_HAL_Examples
   * @{
   */

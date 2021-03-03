@@ -68,7 +68,7 @@
   */
 typedef struct
 {  
-  void       (*Init)(uint16_t);
+  void       (*Init)(void*);
   void       (*DeInit)(void); 
   uint8_t    (*ReadID)(void);
   void       (*Reset)(void);

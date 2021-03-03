@@ -9,10 +9,10 @@
   * <h2><center>&copy; Copyright (c) 2021 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
-  * This software component is licensed by ST under Ultimate Liberty license
-  * SLA0044, the "License"; You may not use this file except in compliance with
-  * the License. You may obtain a copy of the License at:
-  *                             www.st.com/SLA0044
+  * This software component is licensed by ST under BSD 3-Clause license,
+  * the "License"; You may not use this file except in compliance with the
+  * License. You may obtain a copy of the License at:
+  *                        opensource.org/licenses/BSD-3-Clause
   *
   ******************************************************************************
   */
@@ -33,7 +33,6 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "stm32l552e_eval.h"
-#include "stm32l5xx_gyroscope.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -64,8 +63,7 @@ void SecureError_Callback(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-uint16_t gyro_addr = 0x69;
-uint8_t data[8] = { 0 };
+static float pfData[3];
 /* USER CODE END 0 */
 
 /**
@@ -89,10 +87,10 @@ int main(void)
 
   /* USER CODE BEGIN SysInit */
   /* Register SecureFault callback defined in non-secure and to be called by secure handler */
-  SECURE_RegisterCallback(SECURE_FAULT_CB_ID, (void *)SecureFault_Callback);
+    SECURE_RegisterCallback(SECURE_FAULT_CB_ID, (void *)SecureFault_Callback);
 
-  /* Register SecureError callback defined in non-secure and to be called by secure handler */
-  SECURE_RegisterCallback(GTZC_ERROR_CB_ID, (void *)SecureError_Callback);
+    /* Register SecureError callback defined in non-secure and to be called by secure handler */
+    SECURE_RegisterCallback(GTZC_ERROR_CB_ID, (void *)SecureError_Callback);
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
@@ -111,31 +109,18 @@ int main(void)
   MX_RNG_Init();
   /* USER CODE BEGIN 2 */
   BSP_GYRO_Init();
-
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-
-  data[0] = 0x81;
-  HAL_GPIO_WritePin(GYO_DEN_GPIO_Port, GYO_DEN_Pin, GPIO_PIN_RESET);
-  HAL_Delay(50);
-  HAL_I2C_Mem_Write(&hi2c1, (gyro_addr << 1) | 0x00, 0x6B, 1, &data[0], 1, 1000);
-  HAL_I2C_Mem_Write(&hi2c1, (gyro_addr << 1) | 0x00, 0x6C, 1, &data[1], 1, 1000);
-  HAL_I2C_Mem_Read(&hi2c1, (gyro_addr << 1) | 0x01, 0x75, 1, data, 1, 1000);
-
   while (1)
   {
 	  SECURE_LEDToggle_YELLOW();
-	  HAL_I2C_Mem_Read(&hi2c1, (gyro_addr << 1) | 0x01, 0x41, 1, &data[0], 2, 1000);
-	  HAL_I2C_Mem_Read(&hi2c1, (gyro_addr << 1) | 0x01, 0x43, 1, &data[2], 2, 1000);
-	  HAL_I2C_Mem_Read(&hi2c1, (gyro_addr << 1) | 0x01, 0x45, 1, &data[4], 2, 1000);
-	  HAL_I2C_Mem_Read(&hi2c1, (gyro_addr << 1) | 0x01, 0x47, 1, &data[6], 2, 1000);
-
+	  BSP_GYRO_GetXYZ(pfData);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	  HAL_Delay(2000);
+	  HAL_Delay(500);
   }
   /* USER CODE END 3 */
 }

@@ -29,7 +29,7 @@ extern "C" {
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32l5xx_hal.h"
-
+#include "main.h"
 /** @addtogroup BSP
   * @{
   */
@@ -61,7 +61,7 @@ extern "C" {
 
 /* Button interrupt priorities */
 #define BSP_BUTTON_WAKEUP_IT_PRIORITY 0x07UL  /* Default is lowest priority level */
-#define BSP_BUTTON_TAMPER_IT_PRIORITY 0x07UL  /* Default is lowest priority level */
+//#define BSP_BUTTON_TAMPER_IT_PRIORITY 0x07UL  /* Default is lowest priority level */
 
 /* GYRO */
 #define USE_BSP_GYRO                 1U

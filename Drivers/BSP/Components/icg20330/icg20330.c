@@ -125,23 +125,23 @@ void ICG20330_Init(void* InitStruct)
   
   switch (init->Power_Mode) {
 	case ICG20330_MODE_POWERDOWN:
-
+		ctrl = 0xFF;
 		break;
 	case ICG20330_MODE_STANDBY:
-
+		ctrl = 0x10;
 		break;
 	case ICG20330_MODE_SLEEP:
-
+		ctrl = 0x40;
 		break;
 	case ICG20330_MODE_ACTIVE:
-
+		ctrl = 0x01;
 		break;
 	default:
 		break;
   }
   GYRO_IO_Write(&ctrl, ICG20330_PWR_MGMT_1_ADDR, 1);
   
-
+  ctrl &=~ (ICG20330_STBY_XG_DISABLE | ICG20330_STBY_YG_DISABLE | ICG20330_STBY_ZG_DISABLE);
   GYRO_IO_Write(&ctrl, ICG20330_PWR_MGMT_2_ADDR, 1);
 }
 
@@ -375,18 +375,18 @@ void ICG20330_ReadXYZAngRate(float *pfData)
   
   /* check in the control register 4 the data alignment (Big Endian or Little Endian)*/
 //  if(!(tmpreg & ICG20330_BLE_MSB))
-  {
-    for(i=0; i<3; i++)
-    {
-      RawData[i]=(int16_t)(((uint16_t)tmpbuffer[2*i+1] << 8) + tmpbuffer[2*i]);
-    }
-  }
-//  else
 //  {
 //    for(i=0; i<3; i++)
 //    {
-//      RawData[i]=(int16_t)(((uint16_t)tmpbuffer[2*i] << 8) + tmpbuffer[2*i+1]);
+//      RawData[i]=(int16_t)(((uint16_t)tmpbuffer[2*i+1] << 8) + tmpbuffer[2*i]);
 //    }
+//  }
+//  else
+//  {
+    for(i=0; i<3; i++)
+    {
+      RawData[i]=(int16_t)(((uint16_t)tmpbuffer[2*i] << 8) + tmpbuffer[2*i+1]);
+    }
 //  }
   
   /* Switch the sensitivity value set in the CRTL4 */
@@ -410,7 +410,8 @@ void ICG20330_ReadXYZAngRate(float *pfData)
   /* Divide by sensitivity */
   for(i=0; i<3; i++)
   {
-    pfData[i]=(float)(RawData[i] / sensitivity);
+    pfData[i]=(float)(RawData[i]);
+    pfData[i]/=(float)(sensitivity);
   }
 }
 

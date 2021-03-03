@@ -109,8 +109,8 @@
 /******************************************************************************/
 /**************************** END REGISTER MAPPING  ***************************/
 /******************************************************************************/
-
-#define I_AM_ICG20330                 ((uint8_t)0x92)
+#define ICG20330_ADDR					((uint8_t)0x69)
+#define I_AM_ICG20330                 	((uint8_t)0x92)
 
 /** @defgroup POWER MANAGEMENT 2
    * @{
@@ -286,10 +286,10 @@ typedef enum {
 } eEndianness_t;
 
 typedef enum {
-	ICG20330_FULLSCALE_63,
-	ICG20330_FULLSCALE_125,
-	ICG20330_FULLSCALE_250,
-	ICG20330_FULLSCALE_500,
+	ICG20330_FULLSCALE_63 = 0x00,
+	ICG20330_FULLSCALE_125 = 0x08,
+	ICG20330_FULLSCALE_250 = 0x10,
+	ICG20330_FULLSCALE_500 = 0x18,
 } eScale_t;
 
 #define ICG20330_SENSITIVITY_1024 1024

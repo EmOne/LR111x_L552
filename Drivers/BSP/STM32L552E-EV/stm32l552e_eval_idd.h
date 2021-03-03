@@ -30,12 +30,12 @@
 #include "stm32l552e_eval_conf.h"
 #include "stm32l552e_eval_errno.h"
 #include "../Components/Common/idd.h"
-//#include "../Components/mfxstm32l152/mfxstm32l152.h"
+
 #include "../Components/Common/gyro.h"
-#include "../Components/l3gd20/l3gd20.h"
+#include "../Components/icg20330/icg20330.h"
 
 #if (USE_BSP_IO_CLASS == 1)
-
+#include "../Components/mfxstm32l152/mfxstm32l152.h"
 /** @addtogroup BSP
   * @{
   */
