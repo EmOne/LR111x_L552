@@ -1,0 +1,17 @@
+stm32l5xx_hal_rng.c:175:19:HAL_RNG_Init	24	static
+stm32l5xx_hal_rng.c:286:19:HAL_RNG_DeInit	24	static
+stm32l5xx_hal_rng.c:356:13:HAL_RNG_MspInit	16	static
+stm32l5xx_hal_rng.c:371:13:HAL_RNG_MspDeInit	16	static
+stm32l5xx_hal_rng.c:393:19:HAL_RNG_RegisterCallback	32	static
+stm32l5xx_hal_rng.c:475:19:HAL_RNG_UnRegisterCallback	24	static
+stm32l5xx_hal_rng.c:546:19:HAL_RNG_RegisterReadyDataCallback	24	static
+stm32l5xx_hal_rng.c:582:19:HAL_RNG_UnRegisterReadyDataCallback	24	static
+stm32l5xx_hal_rng.c:646:19:HAL_RNG_GenerateRandomNumber	24	static
+stm32l5xx_hal_rng.c:723:19:HAL_RNG_GenerateRandomNumber_IT	24	static
+stm32l5xx_hal_rng.c:772:6:HAL_RNG_IRQHandler	24	static
+stm32l5xx_hal_rng.c:858:10:HAL_RNG_ReadLastRandomNumber	16	static
+stm32l5xx_hal_rng.c:875:13:HAL_RNG_ReadyDataCallback	16	static
+stm32l5xx_hal_rng.c:891:13:HAL_RNG_ErrorCallback	16	static
+stm32l5xx_hal_rng.c:925:22:HAL_RNG_GetState	16	static
+stm32l5xx_hal_rng.c:935:10:HAL_RNG_GetError	16	static
+stm32l5xx_hal_rng.c:957:19:RNG_RecoverSeedError	24	static
