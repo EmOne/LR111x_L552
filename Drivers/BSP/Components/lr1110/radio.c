@@ -29,6 +29,7 @@
 #include "lr1110-board.h"
 #include "stm32l552e_eval.h"
 #include "timer.h"
+#include "delay.h"
 /*!
  * \brief Initializes the radio
  *
@@ -1078,7 +1079,7 @@ void RadioSetTxContinuousWave( uint32_t freq, int8_t power, uint16_t time )
 {
     uint32_t timeout = ( uint32_t )time * 1000;
 
-    lr1110_radio_set_rf_frequency( &LR1110, freq );
+    lr1110_radio_set_rf_freq( &LR1110, freq );
     lr1110_board_set_rf_tx_power( &LR1110, power );
     lr1110_radio_set_tx_cw( &LR1110 );
     lr1110_hal_set_operating_mode( &LR1110, LR1110_HAL_OP_MODE_TX );
@@ -1135,14 +1136,14 @@ void RadioSetMaxPayloadLength( RadioModems_t modem, uint8_t max )
     if( modem == MODEM_LORA )
     {
         LR1110.packet_params.packet.lora.pld_len_in_bytes = MaxPayloadLength = max;
-        lr1110_radio_set_packet_param_lora( &LR1110, &LR1110.packet_params.packet.lora );
+        lr1110_radio_set_lora_pkt_params( &LR1110, &LR1110.packet_params.packet.lora );
     }
     else
     {
         if( LR1110.packet_params.packet.gfsk.header_type == LR1110_RADIO_GFSK_PKT_VAR_LEN )
         {
             LR1110.packet_params.packet.gfsk.pld_len_in_bytes = MaxPayloadLength = max;
-            lr1110_radio_set_packet_param_gfsk( &LR1110, &LR1110.packet_params.packet.gfsk );
+            lr1110_radio_set_gfsk_pkt_params( &LR1110, &LR1110.packet_params.packet.gfsk );
         }
     }
 }
@@ -1261,7 +1262,7 @@ void RadioIrqProcess( void )
             lr1110_regmem_read_buffer8( &LR1110, RadioRxPayload, rxbuffer_status.buffer_start_pointer,
                                         rxbuffer_status.pld_len_in_bytes );
 
-            lr1110_radio_get_packet_type( &LR1110, &packet_type );
+            lr1110_radio_get_pkt_type( &LR1110, &packet_type );
             if( packet_type == LR1110_RADIO_PKT_TYPE_LORA )
             {
                 lr1110_radio_get_lora_pkt_status( &LR1110, &lora_packet_status );

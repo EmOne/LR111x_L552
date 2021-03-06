@@ -25,7 +25,9 @@ C:/Users/anol_/STM32CubeIDE/workspace_1.6.0/LR111x_L552VE/Drivers/STM32L5xx_HAL_
 C:/Users/anol_/STM32CubeIDE/workspace_1.6.0/LR111x_L552VE/Drivers/STM32L5xx_HAL_Driver/Src/stm32l5xx_hal_rtc.c \
 C:/Users/anol_/STM32CubeIDE/workspace_1.6.0/LR111x_L552VE/Drivers/STM32L5xx_HAL_Driver/Src/stm32l5xx_hal_rtc_ex.c \
 C:/Users/anol_/STM32CubeIDE/workspace_1.6.0/LR111x_L552VE/Drivers/STM32L5xx_HAL_Driver/Src/stm32l5xx_hal_tim.c \
-C:/Users/anol_/STM32CubeIDE/workspace_1.6.0/LR111x_L552VE/Drivers/STM32L5xx_HAL_Driver/Src/stm32l5xx_hal_tim_ex.c 
+C:/Users/anol_/STM32CubeIDE/workspace_1.6.0/LR111x_L552VE/Drivers/STM32L5xx_HAL_Driver/Src/stm32l5xx_hal_tim_ex.c \
+C:/Users/anol_/STM32CubeIDE/workspace_1.6.0/LR111x_L552VE/Drivers/STM32L5xx_HAL_Driver/Src/stm32l5xx_ll_exti.c \
+C:/Users/anol_/STM32CubeIDE/workspace_1.6.0/LR111x_L552VE/Drivers/STM32L5xx_HAL_Driver/Src/stm32l5xx_ll_utils.c 
 
 OBJS += \
 ./Drivers/STM32L5xx_HAL_Driver/stm32l5xx_hal.o \
@@ -48,7 +50,9 @@ OBJS += \
 ./Drivers/STM32L5xx_HAL_Driver/stm32l5xx_hal_rtc.o \
 ./Drivers/STM32L5xx_HAL_Driver/stm32l5xx_hal_rtc_ex.o \
 ./Drivers/STM32L5xx_HAL_Driver/stm32l5xx_hal_tim.o \
-./Drivers/STM32L5xx_HAL_Driver/stm32l5xx_hal_tim_ex.o 
+./Drivers/STM32L5xx_HAL_Driver/stm32l5xx_hal_tim_ex.o \
+./Drivers/STM32L5xx_HAL_Driver/stm32l5xx_ll_exti.o \
+./Drivers/STM32L5xx_HAL_Driver/stm32l5xx_ll_utils.o 
 
 C_DEPS += \
 ./Drivers/STM32L5xx_HAL_Driver/stm32l5xx_hal.d \
@@ -71,7 +75,9 @@ C_DEPS += \
 ./Drivers/STM32L5xx_HAL_Driver/stm32l5xx_hal_rtc.d \
 ./Drivers/STM32L5xx_HAL_Driver/stm32l5xx_hal_rtc_ex.d \
 ./Drivers/STM32L5xx_HAL_Driver/stm32l5xx_hal_tim.d \
-./Drivers/STM32L5xx_HAL_Driver/stm32l5xx_hal_tim_ex.d 
+./Drivers/STM32L5xx_HAL_Driver/stm32l5xx_hal_tim_ex.d \
+./Drivers/STM32L5xx_HAL_Driver/stm32l5xx_ll_exti.d \
+./Drivers/STM32L5xx_HAL_Driver/stm32l5xx_ll_utils.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes
@@ -117,4 +123,8 @@ Drivers/STM32L5xx_HAL_Driver/stm32l5xx_hal_tim.o: C:/Users/anol_/STM32CubeIDE/wo
 	arm-none-eabi-gcc "$<" -mcpu=cortex-m33 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32L552xx -c -I../Core/Inc -I../../Secure_nsclib -I../../Drivers/CMSIS/Device/ST/STM32L5xx/Include -I../../Drivers/STM32L5xx_HAL_Driver/Inc -I../../Drivers/STM32L5xx_HAL_Driver/Inc/Legacy -I../../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -mcmse -MMD -MP -MF"Drivers/STM32L5xx_HAL_Driver/stm32l5xx_hal_tim.d" -MT"$@" --specs=nano.specs -mfpu=fpv5-sp-d16 -mfloat-abi=hard -mthumb -o "$@"
 Drivers/STM32L5xx_HAL_Driver/stm32l5xx_hal_tim_ex.o: C:/Users/anol_/STM32CubeIDE/workspace_1.6.0/LR111x_L552VE/Drivers/STM32L5xx_HAL_Driver/Src/stm32l5xx_hal_tim_ex.c Drivers/STM32L5xx_HAL_Driver/subdir.mk
 	arm-none-eabi-gcc "$<" -mcpu=cortex-m33 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32L552xx -c -I../Core/Inc -I../../Secure_nsclib -I../../Drivers/CMSIS/Device/ST/STM32L5xx/Include -I../../Drivers/STM32L5xx_HAL_Driver/Inc -I../../Drivers/STM32L5xx_HAL_Driver/Inc/Legacy -I../../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -mcmse -MMD -MP -MF"Drivers/STM32L5xx_HAL_Driver/stm32l5xx_hal_tim_ex.d" -MT"$@" --specs=nano.specs -mfpu=fpv5-sp-d16 -mfloat-abi=hard -mthumb -o "$@"
+Drivers/STM32L5xx_HAL_Driver/stm32l5xx_ll_exti.o: C:/Users/anol_/STM32CubeIDE/workspace_1.6.0/LR111x_L552VE/Drivers/STM32L5xx_HAL_Driver/Src/stm32l5xx_ll_exti.c Drivers/STM32L5xx_HAL_Driver/subdir.mk
+	arm-none-eabi-gcc "$<" -mcpu=cortex-m33 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32L552xx -c -I../Core/Inc -I../../Secure_nsclib -I../../Drivers/CMSIS/Device/ST/STM32L5xx/Include -I../../Drivers/STM32L5xx_HAL_Driver/Inc -I../../Drivers/STM32L5xx_HAL_Driver/Inc/Legacy -I../../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -mcmse -MMD -MP -MF"Drivers/STM32L5xx_HAL_Driver/stm32l5xx_ll_exti.d" -MT"$@" --specs=nano.specs -mfpu=fpv5-sp-d16 -mfloat-abi=hard -mthumb -o "$@"
+Drivers/STM32L5xx_HAL_Driver/stm32l5xx_ll_utils.o: C:/Users/anol_/STM32CubeIDE/workspace_1.6.0/LR111x_L552VE/Drivers/STM32L5xx_HAL_Driver/Src/stm32l5xx_ll_utils.c Drivers/STM32L5xx_HAL_Driver/subdir.mk
+	arm-none-eabi-gcc "$<" -mcpu=cortex-m33 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32L552xx -c -I../Core/Inc -I../../Secure_nsclib -I../../Drivers/CMSIS/Device/ST/STM32L5xx/Include -I../../Drivers/STM32L5xx_HAL_Driver/Inc -I../../Drivers/STM32L5xx_HAL_Driver/Inc/Legacy -I../../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -mcmse -MMD -MP -MF"Drivers/STM32L5xx_HAL_Driver/stm32l5xx_ll_utils.d" -MT"$@" --specs=nano.specs -mfpu=fpv5-sp-d16 -mfloat-abi=hard -mthumb -o "$@"
 

@@ -21,8 +21,6 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
  ../../Drivers/STM32L5xx_HAL_Driver/Inc/stm32l5xx_hal_adc.h \
  ../../Drivers/STM32L5xx_HAL_Driver/Inc/stm32l5xx_ll_adc.h \
  ../../Drivers/STM32L5xx_HAL_Driver/Inc/stm32l5xx_hal_adc_ex.h \
- ../../Drivers/STM32L5xx_HAL_Driver/Inc/stm32l5xx_hal_crc.h \
- ../../Drivers/STM32L5xx_HAL_Driver/Inc/stm32l5xx_hal_crc_ex.h \
  ../../Drivers/STM32L5xx_HAL_Driver/Inc/stm32l5xx_hal_exti.h \
  ../../Drivers/STM32L5xx_HAL_Driver/Inc/stm32l5xx_hal_flash.h \
  ../../Drivers/STM32L5xx_HAL_Driver/Inc/stm32l5xx_hal_flash_ex.h \
@@ -42,10 +40,23 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
  ../../Drivers/STM32L5xx_HAL_Driver/Inc/stm32l5xx_hal_tim_ex.h \
  ../../Drivers/STM32L5xx_HAL_Driver/Inc/stm32l5xx_hal_uart.h \
  ../../Drivers/STM32L5xx_HAL_Driver/Inc/stm32l5xx_hal_uart_ex.h \
- ../../Secure_nsclib/secure_nsc.h ../Core/Inc/adc.h ../Core/Inc/main.h \
- ../Core/Inc/crc.h ../Core/Inc/dma.h ../Core/Inc/i2c.h \
- ../Core/Inc/usart.h ../Core/Inc/rng.h ../Core/Inc/rtc.h \
- ../Core/Inc/spi.h ../Core/Inc/tim.h ../Core/Inc/gpio.h \
+ ../../Drivers/STM32L5xx_HAL_Driver/Inc/stm32l5xx_ll_crc.h \
+ ../../Drivers/STM32L5xx_HAL_Driver/Inc/stm32l5xx_ll_bus.h \
+ ../../Drivers/STM32L5xx_HAL_Driver/Inc/stm32l5xx_ll_cortex.h \
+ ../../Drivers/STM32L5xx_HAL_Driver/Inc/stm32l5xx_ll_rcc.h \
+ ../../Drivers/STM32L5xx_HAL_Driver/Inc/stm32l5xx_ll_system.h \
+ ../../Drivers/STM32L5xx_HAL_Driver/Inc/stm32l5xx_ll_utils.h \
+ ../../Drivers/STM32L5xx_HAL_Driver/Inc/stm32l5xx_ll_pwr.h \
+ ../../Drivers/STM32L5xx_HAL_Driver/Inc/stm32l5xx_ll_gpio.h \
+ ../../Drivers/STM32L5xx_HAL_Driver/Inc/stm32l5xx_ll_dma.h \
+ ../../Drivers/STM32L5xx_HAL_Driver/Inc/stm32l5xx_ll_dmamux.h \
+ ../../Secure_nsclib/secure_nsc.h \
+ ../../Drivers/STM32L5xx_HAL_Driver/Inc/stm32l5xx_ll_exti.h \
+ ../Core/Inc/adc.h ../Core/Inc/main.h ../Core/Inc/crc.h ../Core/Inc/dma.h \
+ ../Core/Inc/i2c.h ../Core/Inc/usart.h ../Core/Inc/rng.h \
+ ../Core/Inc/rtc.h ../Core/Inc/timer.h ../Core/Inc/spi.h \
+ ../Core/Inc/gpio.h ../Core/Inc/utilities.h ../Core/Inc/tim.h \
+ ../Core/Inc/gpio.h \
  C:/Users/anol_/STM32CubeIDE/workspace_1.6.0/LR111x_L552VE/Drivers/BSP/STM32L552E-EV/stm32l552e_eval.h \
  C:/Users/anol_/STM32CubeIDE/workspace_1.6.0/LR111x_L552VE/Drivers/BSP/STM32L552E-EV/stm32l552e_eval_conf.h \
  C:/Users/anol_/STM32CubeIDE/workspace_1.6.0/LR111x_L552VE/Drivers/BSP/STM32L552E-EV/stm32l552e_eval_errno.h \
@@ -53,7 +64,12 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
  C:/Users/anol_/STM32CubeIDE/workspace_1.6.0/LR111x_L552VE/Drivers/BSP/STM32L552E-EV/stm32l552e_eval.h \
  c:\users\anol_\stm32cubeide\workspace_1.6.0\lr111x_l552ve\drivers\bsp\components\common\gyro.h \
  c:\users\anol_\stm32cubeide\workspace_1.6.0\lr111x_l552ve\drivers\bsp\components\icg20330\icg20330.h \
- c:\users\anol_\stm32cubeide\workspace_1.6.0\lr111x_l552ve\drivers\bsp\components\common\gyro.h
+ c:\users\anol_\stm32cubeide\workspace_1.6.0\lr111x_l552ve\drivers\bsp\components\common\gyro.h \
+ C:/Users/anol_/STM32CubeIDE/workspace_1.6.0/LR111x_L552VE/Drivers/BSP/Components/lr1110/lr1110-board.h \
+ C:/Users/anol_/STM32CubeIDE/workspace_1.6.0/LR111x_L552VE/Drivers/BSP/Components/lr1110/lr1110.h \
+ C:/Users/anol_/STM32CubeIDE/workspace_1.6.0/LR111x_L552VE/Drivers/BSP/Components/Common/radio.h \
+ C:/Users/anol_/STM32CubeIDE/workspace_1.6.0/LR111x_L552VE/Drivers/BSP/lr1110_driver/src/lr1110_hal.h \
+ C:/Users/anol_/STM32CubeIDE/workspace_1.6.0/LR111x_L552VE/Drivers/BSP/lr1110_driver/src/lr1110_radio_types.h
 
 ../Core/Inc/main.h:
 
@@ -101,10 +117,6 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
 
 ../../Drivers/STM32L5xx_HAL_Driver/Inc/stm32l5xx_hal_adc_ex.h:
 
-../../Drivers/STM32L5xx_HAL_Driver/Inc/stm32l5xx_hal_crc.h:
-
-../../Drivers/STM32L5xx_HAL_Driver/Inc/stm32l5xx_hal_crc_ex.h:
-
 ../../Drivers/STM32L5xx_HAL_Driver/Inc/stm32l5xx_hal_exti.h:
 
 ../../Drivers/STM32L5xx_HAL_Driver/Inc/stm32l5xx_hal_flash.h:
@@ -143,7 +155,29 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
 
 ../../Drivers/STM32L5xx_HAL_Driver/Inc/stm32l5xx_hal_uart_ex.h:
 
+../../Drivers/STM32L5xx_HAL_Driver/Inc/stm32l5xx_ll_crc.h:
+
+../../Drivers/STM32L5xx_HAL_Driver/Inc/stm32l5xx_ll_bus.h:
+
+../../Drivers/STM32L5xx_HAL_Driver/Inc/stm32l5xx_ll_cortex.h:
+
+../../Drivers/STM32L5xx_HAL_Driver/Inc/stm32l5xx_ll_rcc.h:
+
+../../Drivers/STM32L5xx_HAL_Driver/Inc/stm32l5xx_ll_system.h:
+
+../../Drivers/STM32L5xx_HAL_Driver/Inc/stm32l5xx_ll_utils.h:
+
+../../Drivers/STM32L5xx_HAL_Driver/Inc/stm32l5xx_ll_pwr.h:
+
+../../Drivers/STM32L5xx_HAL_Driver/Inc/stm32l5xx_ll_gpio.h:
+
+../../Drivers/STM32L5xx_HAL_Driver/Inc/stm32l5xx_ll_dma.h:
+
+../../Drivers/STM32L5xx_HAL_Driver/Inc/stm32l5xx_ll_dmamux.h:
+
 ../../Secure_nsclib/secure_nsc.h:
+
+../../Drivers/STM32L5xx_HAL_Driver/Inc/stm32l5xx_ll_exti.h:
 
 ../Core/Inc/adc.h:
 
@@ -161,7 +195,13 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
 
 ../Core/Inc/rtc.h:
 
+../Core/Inc/timer.h:
+
 ../Core/Inc/spi.h:
+
+../Core/Inc/gpio.h:
+
+../Core/Inc/utilities.h:
 
 ../Core/Inc/tim.h:
 
@@ -182,3 +222,13 @@ c:\users\anol_\stm32cubeide\workspace_1.6.0\lr111x_l552ve\drivers\bsp\components
 c:\users\anol_\stm32cubeide\workspace_1.6.0\lr111x_l552ve\drivers\bsp\components\icg20330\icg20330.h:
 
 c:\users\anol_\stm32cubeide\workspace_1.6.0\lr111x_l552ve\drivers\bsp\components\common\gyro.h:
+
+C:/Users/anol_/STM32CubeIDE/workspace_1.6.0/LR111x_L552VE/Drivers/BSP/Components/lr1110/lr1110-board.h:
+
+C:/Users/anol_/STM32CubeIDE/workspace_1.6.0/LR111x_L552VE/Drivers/BSP/Components/lr1110/lr1110.h:
+
+C:/Users/anol_/STM32CubeIDE/workspace_1.6.0/LR111x_L552VE/Drivers/BSP/Components/Common/radio.h:
+
+C:/Users/anol_/STM32CubeIDE/workspace_1.6.0/LR111x_L552VE/Drivers/BSP/lr1110_driver/src/lr1110_hal.h:
+
+C:/Users/anol_/STM32CubeIDE/workspace_1.6.0/LR111x_L552VE/Drivers/BSP/lr1110_driver/src/lr1110_radio_types.h:

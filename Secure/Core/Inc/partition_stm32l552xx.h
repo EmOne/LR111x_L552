@@ -377,9 +377,9 @@
 //   <o.9>  RCC_IRQn            <0=> Secure state
 //   <o.10> RCC_S_IRQn          <0=> Secure state
 //   <o.11> EXTI0_IRQn          <0=> Secure state
-//   <o.12> EXTI1_IRQn          <1=> Non-Secure state
+//   <o.12> EXTI1_IRQn          <0=> Secure state
 //   <o.13> EXTI2_IRQn          <0=> Secure state
-//   <o.14> EXTI3_IRQn          <1=> Non-Secure state
+//   <o.14> EXTI3_IRQn          <0=> Secure state
 //   <o.15> EXTI4_IRQn          <0=> Secure state
 //   <o.16> EXTI5_IRQn          <0=> Secure state
 //   <o.17> EXTI6_IRQn          <0=> Secure state
@@ -399,7 +399,7 @@
 //   <o.31> DMA1_Channel3_IRQn  <0=> Secure state
 */
 
-#define NVIC_INIT_ITNS0_VAL      0x00005004
+#define NVIC_INIT_ITNS0_VAL      0x00000004
 /*
 //   </e>
 */
@@ -415,7 +415,7 @@
 //   <o.1>  DMA1_Channel5_IRQn  <1=> Non-Secure state
 //   <o.2>  DMA1_Channel6_IRQn  <1=> Non-Secure state
 //   <o.3>  DMA1_Channel7_IRQn  <0=> Secure state
-//   <o.4>  DMA1_Channel8_IRQn  <1=> Non-Secure state
+//   <o.4>  DMA1_Channel8_IRQn  <0=> Secure state
 //   <o.5>  ADC1_2_IRQn   	<1=> Non-Secure state
 //   <o.6>  DAC_IRQn            <0=> Secure state
 //   <o.7>  FDCAN1_IT0_IRQn     <0=> Secure state
@@ -445,7 +445,7 @@
 //   <o.31> USART3_IRQn         <1=> Non-Secure state
 */
 
-#define NVIC_INIT_ITNS1_VAL      0x89821E36
+#define NVIC_INIT_ITNS1_VAL      0x89821E26
 
 /*
 //   </e>
@@ -474,7 +474,7 @@
 //   <o.13> Reserved            <0=> Secure state
 //   <o.14> SDMMC1_IRQn         <0=> Secure state
 //   <o.15> Reserved            <0=> Secure state
-//   <o.16> DMA2_Channel1_IRQn  <1=> Non-Secure state
+//   <o.16> DMA2_Channel1_IRQn  <0=> Secure state
 //   <o.17> DMA2_Channel2_IRQn  <1=> Non-Secure state
 //   <o.18> DMA2_Channel3_IRQn  <1=> Non-Secure state
 //   <o.19> DMA2_Channel4_IRQn  <0=> Secure state
@@ -491,7 +491,7 @@
 //   <o.31> FPU_IRQn            <1=> Non-Secure state
 */
 
-#define NVIC_INIT_ITNS2_VAL      0xC0270004
+#define NVIC_INIT_ITNS2_VAL      0xC0260004
 
 /*
 //   </e>

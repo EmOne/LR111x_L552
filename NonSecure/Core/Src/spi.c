@@ -26,8 +26,6 @@
 
 SPI_HandleTypeDef hspi1;
 SPI_HandleTypeDef hspi3;
-DMA_HandleTypeDef hdma_spi3_rx;
-DMA_HandleTypeDef hdma_spi3_tx;
 
 /* SPI1 init function */
 void MX_SPI1_Init(void)
@@ -150,51 +148,6 @@ void HAL_SPI_MspInit(SPI_HandleTypeDef* spiHandle)
     GPIO_InitStruct.Alternate = GPIO_AF6_SPI3;
     HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
-    /* SPI3 DMA Init */
-    /* SPI3_RX Init */
-    hdma_spi3_rx.Instance = DMA1_Channel8;
-    hdma_spi3_rx.Init.Request = DMA_REQUEST_SPI3_RX;
-    hdma_spi3_rx.Init.Direction = DMA_PERIPH_TO_MEMORY;
-    hdma_spi3_rx.Init.PeriphInc = DMA_PINC_DISABLE;
-    hdma_spi3_rx.Init.MemInc = DMA_MINC_ENABLE;
-    hdma_spi3_rx.Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE;
-    hdma_spi3_rx.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;
-    hdma_spi3_rx.Init.Mode = DMA_NORMAL;
-    hdma_spi3_rx.Init.Priority = DMA_PRIORITY_LOW;
-    if (HAL_DMA_Init(&hdma_spi3_rx) != HAL_OK)
-    {
-      Error_Handler();
-    }
-
-    if (HAL_DMA_ConfigChannelAttributes(&hdma_spi3_rx, DMA_CHANNEL_NPRIV) != HAL_OK)
-    {
-      Error_Handler();
-    }
-
-    __HAL_LINKDMA(spiHandle,hdmarx,hdma_spi3_rx);
-
-    /* SPI3_TX Init */
-    hdma_spi3_tx.Instance = DMA2_Channel1;
-    hdma_spi3_tx.Init.Request = DMA_REQUEST_SPI3_TX;
-    hdma_spi3_tx.Init.Direction = DMA_MEMORY_TO_PERIPH;
-    hdma_spi3_tx.Init.PeriphInc = DMA_PINC_DISABLE;
-    hdma_spi3_tx.Init.MemInc = DMA_MINC_ENABLE;
-    hdma_spi3_tx.Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE;
-    hdma_spi3_tx.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;
-    hdma_spi3_tx.Init.Mode = DMA_NORMAL;
-    hdma_spi3_tx.Init.Priority = DMA_PRIORITY_LOW;
-    if (HAL_DMA_Init(&hdma_spi3_tx) != HAL_OK)
-    {
-      Error_Handler();
-    }
-
-    if (HAL_DMA_ConfigChannelAttributes(&hdma_spi3_tx, DMA_CHANNEL_NPRIV) != HAL_OK)
-    {
-      Error_Handler();
-    }
-
-    __HAL_LINKDMA(spiHandle,hdmatx,hdma_spi3_tx);
-
     /* SPI3 interrupt Init */
     HAL_NVIC_SetPriority(SPI3_IRQn, 0, 0);
     HAL_NVIC_EnableIRQ(SPI3_IRQn);
@@ -242,10 +195,6 @@ void HAL_SPI_MspDeInit(SPI_HandleTypeDef* spiHandle)
     */
     HAL_GPIO_DeInit(GPIOC, LR_SCK_Pin|LR_MISO_Pin|LR_MOSI_Pin);
 
-    /* SPI3 DMA DeInit */
-    HAL_DMA_DeInit(spiHandle->hdmarx);
-    HAL_DMA_DeInit(spiHandle->hdmatx);
-
     /* SPI3 interrupt Deinit */
     HAL_NVIC_DisableIRQ(SPI3_IRQn);
   /* USER CODE BEGIN SPI3_MspDeInit 1 */
@@ -255,7 +204,152 @@ void HAL_SPI_MspDeInit(SPI_HandleTypeDef* spiHandle)
 }
 
 /* USER CODE BEGIN 1 */
+static SPI_HandleTypeDef SpiHandle[3];
 
+void SpiInit( Spi_t *obj, SpiId_t spiId, void* mosiPort, uint16_t mosiPin,
+		void* misoPort, uint16_t misoPin, void* sclkPort, uint16_t sclkPin,
+		void* nssPort, uint16_t nssPin )
+{
+    CRITICAL_SECTION_BEGIN( );
+
+    obj->SpiId = spiId;
+
+    if( spiId == SPI_1 )
+    {
+        __HAL_RCC_SPI1_FORCE_RESET( );
+        __HAL_RCC_SPI1_RELEASE_RESET( );
+        __HAL_RCC_SPI1_CLK_ENABLE( );
+
+        SpiHandle[spiId].Instance = ( SPI_TypeDef* )SPI1_BASE;
+
+        GpioInit( &obj->Mosi, mosiPort, mosiPin, PIN_ALTERNATE_FCT, PIN_PUSH_PULL, PIN_PULL_DOWN, GPIO_AF5_SPI1 );
+        GpioInit( &obj->Miso, misoPort, misoPin, PIN_ALTERNATE_FCT, PIN_PUSH_PULL, PIN_PULL_DOWN, GPIO_AF5_SPI1 );
+        GpioInit( &obj->Sclk, sclkPort, sclkPin, PIN_ALTERNATE_FCT, PIN_PUSH_PULL, PIN_PULL_DOWN, GPIO_AF5_SPI1 );
+        GpioInit( &obj->Nss, nssPort, nssPin, PIN_ALTERNATE_FCT, PIN_PUSH_PULL, PIN_PULL_UP, GPIO_AF5_SPI1 );
+    }
+    else if( spiId == SPI_2 )
+    {
+        __HAL_RCC_SPI2_FORCE_RESET( );
+        __HAL_RCC_SPI2_RELEASE_RESET( );
+        __HAL_RCC_SPI2_CLK_ENABLE( );
+
+        SpiHandle[spiId].Instance = ( SPI_TypeDef* )SPI2_BASE;
+
+        GpioInit( &obj->Mosi, mosiPort, mosiPin, PIN_ALTERNATE_FCT, PIN_PUSH_PULL, PIN_PULL_DOWN, GPIO_AF5_SPI2 );
+                GpioInit( &obj->Miso, misoPort, misoPin, PIN_ALTERNATE_FCT, PIN_PUSH_PULL, PIN_PULL_DOWN, GPIO_AF5_SPI2 );
+                GpioInit( &obj->Sclk, sclkPort, sclkPin, PIN_ALTERNATE_FCT, PIN_PUSH_PULL, PIN_PULL_DOWN, GPIO_AF5_SPI2 );
+                GpioInit( &obj->Nss, nssPort, nssPin, PIN_ALTERNATE_FCT, PIN_PUSH_PULL, PIN_PULL_UP, GPIO_AF5_SPI2 );
+    }
+    else
+	{
+		__HAL_RCC_SPI3_FORCE_RESET( );
+		__HAL_RCC_SPI3_RELEASE_RESET( );
+		__HAL_RCC_SPI3_CLK_ENABLE( );
+
+		SpiHandle[spiId].Instance = ( SPI_TypeDef* )SPI3_BASE;
+
+		GpioInit( &obj->Mosi, mosiPort, mosiPin, PIN_ALTERNATE_FCT, PIN_PUSH_PULL, PIN_PULL_DOWN, GPIO_AF5_SPI3 );
+		        GpioInit( &obj->Miso, misoPort, misoPin, PIN_ALTERNATE_FCT, PIN_PUSH_PULL, PIN_PULL_DOWN, GPIO_AF5_SPI3 );
+		        GpioInit( &obj->Sclk, sclkPort, sclkPin, PIN_ALTERNATE_FCT, PIN_PUSH_PULL, PIN_PULL_DOWN, GPIO_AF5_SPI3 );
+		        GpioInit( &obj->Nss, nssPort, nssPin, PIN_ALTERNATE_FCT, PIN_PUSH_PULL, PIN_PULL_UP, GPIO_AF5_SPI3 );
+	}
+    if( nssPin == NC )
+    {
+        SpiHandle[spiId].Init.NSS = SPI_NSS_SOFT;
+        SpiFormat( obj, 8, SPI_POLARITY_LOW, SPI_PHASE_1EDGE, 0 );
+    }
+    else
+    {
+        SpiFormat( obj, 8, SPI_POLARITY_LOW, SPI_PHASE_1EDGE, 1 );
+    }
+    SpiFrequency( obj, 10000000 );
+
+    HAL_SPI_Init( &SpiHandle[spiId] );
+
+    CRITICAL_SECTION_END( );
+}
+
+void SpiDeInit( Spi_t *obj )
+{
+    HAL_SPI_DeInit( &SpiHandle[obj->SpiId] );
+
+    GpioInit( &obj->Mosi, obj->Mosi.port, obj->Mosi.pin, PIN_OUTPUT, PIN_PUSH_PULL, PIN_NO_PULL, 0 );
+    GpioInit( &obj->Miso, obj->Miso.port, obj->Miso.pin, PIN_OUTPUT, PIN_PUSH_PULL, PIN_PULL_DOWN, 0 );
+    GpioInit( &obj->Sclk, obj->Sclk.port, obj->Sclk.pin, PIN_OUTPUT, PIN_PUSH_PULL, PIN_NO_PULL, 0 );
+    GpioInit( &obj->Nss, obj->Nss.port, obj->Nss.pin, PIN_OUTPUT, PIN_PUSH_PULL, PIN_PULL_UP, 1 );
+}
+
+void SpiFormat( Spi_t *obj, int8_t bits, int8_t cpol, int8_t cpha, int8_t slave )
+{
+    SpiHandle[obj->SpiId].Init.Direction = SPI_DIRECTION_2LINES;
+    if( bits == 8 )
+    {
+        SpiHandle[obj->SpiId].Init.DataSize = SPI_DATASIZE_8BIT;
+    }
+    else
+    {
+        SpiHandle[obj->SpiId].Init.DataSize = SPI_DATASIZE_16BIT;
+    }
+    SpiHandle[obj->SpiId].Init.CLKPolarity = cpol;
+    SpiHandle[obj->SpiId].Init.CLKPhase = cpha;
+    SpiHandle[obj->SpiId].Init.FirstBit = SPI_FIRSTBIT_MSB;
+    SpiHandle[obj->SpiId].Init.TIMode = SPI_TIMODE_DISABLE;
+    SpiHandle[obj->SpiId].Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
+    SpiHandle[obj->SpiId].Init.CRCPolynomial = 7;
+
+    if( slave == 0 )
+    {
+        SpiHandle[obj->SpiId].Init.Mode = SPI_MODE_MASTER;
+    }
+    else
+    {
+        SpiHandle[obj->SpiId].Init.Mode = SPI_MODE_SLAVE;
+    }
+}
+
+void SpiFrequency( Spi_t *obj, uint32_t hz )
+{
+    uint32_t divisor = 0;
+    uint32_t sysClkTmp = SystemCoreClock;
+    uint32_t baudRate;
+
+    while( sysClkTmp > hz )
+    {
+        divisor++;
+        sysClkTmp = ( sysClkTmp >> 1 );
+
+        if( divisor >= 7 )
+        {
+            break;
+        }
+    }
+
+    baudRate =( ( ( divisor & 0x4 ) == 0 ) ? 0x0 : SPI_CR1_BR_2 ) |
+              ( ( ( divisor & 0x2 ) == 0 ) ? 0x0 : SPI_CR1_BR_1 ) |
+              ( ( ( divisor & 0x1 ) == 0 ) ? 0x0 : SPI_CR1_BR_0 );
+
+    SpiHandle[obj->SpiId].Init.BaudRatePrescaler = baudRate;
+}
+
+uint16_t SpiInOut( Spi_t *obj, uint16_t outData )
+{
+    uint8_t rxData = 0;
+
+    if( ( obj == NULL ) || ( SpiHandle[obj->SpiId].Instance ) == NULL )
+    {
+        assert_param( FAIL );
+    }
+
+    __HAL_SPI_ENABLE( &SpiHandle[obj->SpiId] );
+
+    CRITICAL_SECTION_BEGIN( );
+
+    HAL_SPI_TransmitReceive( &SpiHandle[obj->SpiId], ( uint8_t* )&outData, &rxData, 1, HAL_MAX_DELAY );
+
+    CRITICAL_SECTION_END( );
+
+    return( rxData );
+}
 /* USER CODE END 1 */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

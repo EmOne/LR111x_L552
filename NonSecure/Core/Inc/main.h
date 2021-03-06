@@ -30,7 +30,18 @@ extern "C" {
 /* Includes ------------------------------------------------------------------*/
 #include "stm32l5xx_hal.h"
 
+#include "stm32l5xx_ll_crc.h"
+#include "stm32l5xx_ll_bus.h"
+#include "stm32l5xx_ll_cortex.h"
+#include "stm32l5xx_ll_rcc.h"
+#include "stm32l5xx_ll_system.h"
+#include "stm32l5xx_ll_utils.h"
+#include "stm32l5xx_ll_pwr.h"
+#include "stm32l5xx_ll_gpio.h"
+#include "stm32l5xx_ll_dma.h"
+
 #include "secure_nsc.h" /* For export Non-secure callable APIs */
+#include "stm32l5xx_ll_exti.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -62,7 +73,6 @@ void Error_Handler(void);
 /* Private defines -----------------------------------------------------------*/
 #define GYO_INT2_Pin GPIO_PIN_3
 #define GYO_INT2_GPIO_Port GPIOE
-#define GYO_INT2_EXTI_IRQn EXTI3_IRQn
 #define WKUP_Pin GPIO_PIN_0
 #define WKUP_GPIO_Port GPIOA
 #define CURRENT_CS_Pin GPIO_PIN_4
@@ -101,7 +111,6 @@ void Error_Handler(void);
 #define LR_NSS_GPIO_Port GPIOD
 #define LR_BUSY_Pin GPIO_PIN_1
 #define LR_BUSY_GPIO_Port GPIOD
-#define LR_BUSY_EXTI_IRQn EXTI1_IRQn
 #define LR_NRST_Pin GPIO_PIN_2
 #define LR_NRST_GPIO_Port GPIOD
 #define EXT_SCL_Pin GPIO_PIN_8

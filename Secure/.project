@@ -135,5 +135,15 @@
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/Drivers/STM32L5xx_HAL_Driver/Src/stm32l5xx_hal_tim_ex.c</locationURI>
 		</link>
+		<link>
+			<name>Drivers/STM32L5xx_HAL_Driver/stm32l5xx_ll_exti.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Drivers/STM32L5xx_HAL_Driver/Src/stm32l5xx_ll_exti.c</locationURI>
+		</link>
+		<link>
+			<name>Drivers/STM32L5xx_HAL_Driver/stm32l5xx_ll_utils.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Drivers/STM32L5xx_HAL_Driver/Src/stm32l5xx_ll_utils.c</locationURI>
+		</link>
 	</linkedResources>
 </projectDescription>

@@ -87,9 +87,9 @@ static GYRO_DrvTypeDef *GyroscopeDrv;
 uint8_t BSP_GYRO_Init(void)
 {
   uint8_t ret = GYRO_ERROR;
-  uint16_t ctrl = 0x0000;
+//  uint16_t ctrl = 0x0000;
   GYRO_InitTypeDef ICG20330_InitStructure;
-  GYRO_FilterConfigTypeDef ICG20330_FilterStructure = {0, 0};
+//  GYRO_FilterConfigTypeDef ICG20330_FilterStructure = {0, 0};
 
   if (icg20330Drv.ReadID() == I_AM_ICG20330)
   {
@@ -105,28 +105,14 @@ uint8_t BSP_GYRO_Init(void)
     ICG20330_InitStructure.Endianness = ICG20330_BLE_LSB;
     ICG20330_InitStructure.Full_Scale = ICG20330_FULLSCALE_500;
 
-//    /* Configure MEMS: data rate, power mode, full scale and axes */
-//    ctrl = (uint16_t)(ICG20330_InitStructure.Power_Mode | ICG20330_InitStructure.Output_DataRate | \
-//                      ICG20330_InitStructure.Axes_Enable | ICG20330_InitStructure.Band_Width);
-//
-//    ctrl |= (uint16_t)((ICG20330_InitStructure.BlockData_Update | ICG20330_InitStructure.Endianness | \
-//                        ICG20330_InitStructure.Full_Scale) << 8);
-
     /* Initialize component */
     GyroscopeDrv->Init(&ICG20330_InitStructure);
-
-//    ICG20330_FilterStructure.HighPassFilter_Mode_Selection = ICG20330_HPM_NORMAL_MODE_RES;
-//    ICG20330_FilterStructure.HighPassFilter_CutOff_Frequency = ICG20330_FULLSCALE_63;
-//
-//    ctrl = (uint8_t)((ICG20330_FilterStructure.HighPassFilter_Mode_Selection | \
-//                      ICG20330_FilterStructure.HighPassFilter_CutOff_Frequency));
 
     /* Configure component filter */
       GyroscopeDrv->FilterConfig(0x00) ;
 
     /* Enable component filter */
     GyroscopeDrv->FilterCmd(0x1B);
-//    GyroscopeDrv->FilterCmd(ICG20330_HPM_NORMAL_MODE_RES | ICG20330_FULLSCALE_500);
 
     ret = GYRO_OK;
   }

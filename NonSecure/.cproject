@@ -74,6 +74,10 @@
                                     <listOptionValue builtIn="false" value="USE_HAL_DRIVER"/>
                                     									
                                     <listOptionValue builtIn="false" value="STM32L552xx"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="STM32L5"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="REGION_AS923"/>
                                     								
                                 </option>
                                 								
@@ -96,6 +100,14 @@
                                     <listOptionValue builtIn="false" value="&quot;${workspace_loc:/LR111x_L552VE/Drivers/BSP/Components/Common}&quot;"/>
                                     									
                                     <listOptionValue builtIn="false" value="&quot;${workspace_loc:/LR111x_L552VE/Drivers/BSP/Components/icg20330}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/LR111x_L552VE/Drivers/BSP/Components/lr1110}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/LR111x_L552VE/Drivers/BSP/lr1110_driver/src}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/LR111x_L552VE/Drivers/BSP/EEPROM_Emul/Core}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/LR111x_L552VE/Drivers/BSP/EEPROM_Emul/Porting/STM32L5}&quot;"/>
                                     								
                                 </option>
                                 								
@@ -155,9 +167,9 @@
                     					
                     <sourceEntries>
                         						
-                        <entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Core"/>
+                        <entry excluding="Src/eeprom-board.c|Src/nvmm.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Core"/>
                         						
-                        <entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Drivers"/>
+                        <entry excluding="BSP/EEPROM_Emul/Porting/STM32L5/flash_interface.c|BSP/EEPROM_Emul/Core/eeprom_emul.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Drivers"/>
                         					
                     </sourceEntries>
                     				
@@ -313,9 +325,9 @@
                     					
                     <sourceEntries>
                         						
-                        <entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Core"/>
+                        <entry excluding="Src/eeprom-board.c|Src/nvmm.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Core"/>
                         						
-                        <entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Drivers"/>
+                        <entry excluding="BSP/EEPROM_Emul/Porting/STM32L5/flash_interface.c|BSP/EEPROM_Emul/Core/eeprom_emul.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Drivers"/>
                         					
                     </sourceEntries>
                     				
@@ -356,6 +368,22 @@
             <autodiscovery enabled="false" problemReportingEnabled="true" selectedProfileId=""/>
             		
         </scannerConfigBuildInfo>
+        	
+    </storageModule>
+    	
+    <storageModule moduleId="refreshScope" versionNumber="2">
+        		
+        <configuration configurationName="Debug">
+            			
+            <resource resourceType="PROJECT" workspacePath="/LR111x_L552VE_NonSecure"/>
+            		
+        </configuration>
+        		
+        <configuration configurationName="Release">
+            			
+            <resource resourceType="PROJECT" workspacePath="/LR111x_L552VE_NonSecure"/>
+            		
+        </configuration>
         	
     </storageModule>
     

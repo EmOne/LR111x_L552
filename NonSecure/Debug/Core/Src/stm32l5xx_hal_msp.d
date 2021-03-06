@@ -22,8 +22,6 @@ Core/Src/stm32l5xx_hal_msp.o: ../Core/Src/stm32l5xx_hal_msp.c \
  ../../Drivers/STM32L5xx_HAL_Driver/Inc/stm32l5xx_hal_adc.h \
  ../../Drivers/STM32L5xx_HAL_Driver/Inc/stm32l5xx_ll_adc.h \
  ../../Drivers/STM32L5xx_HAL_Driver/Inc/stm32l5xx_hal_adc_ex.h \
- ../../Drivers/STM32L5xx_HAL_Driver/Inc/stm32l5xx_hal_crc.h \
- ../../Drivers/STM32L5xx_HAL_Driver/Inc/stm32l5xx_hal_crc_ex.h \
  ../../Drivers/STM32L5xx_HAL_Driver/Inc/stm32l5xx_hal_exti.h \
  ../../Drivers/STM32L5xx_HAL_Driver/Inc/stm32l5xx_hal_flash.h \
  ../../Drivers/STM32L5xx_HAL_Driver/Inc/stm32l5xx_hal_flash_ex.h \
@@ -43,7 +41,18 @@ Core/Src/stm32l5xx_hal_msp.o: ../Core/Src/stm32l5xx_hal_msp.c \
  ../../Drivers/STM32L5xx_HAL_Driver/Inc/stm32l5xx_hal_tim_ex.h \
  ../../Drivers/STM32L5xx_HAL_Driver/Inc/stm32l5xx_hal_uart.h \
  ../../Drivers/STM32L5xx_HAL_Driver/Inc/stm32l5xx_hal_uart_ex.h \
- ../../Secure_nsclib/secure_nsc.h
+ ../../Drivers/STM32L5xx_HAL_Driver/Inc/stm32l5xx_ll_crc.h \
+ ../../Drivers/STM32L5xx_HAL_Driver/Inc/stm32l5xx_ll_bus.h \
+ ../../Drivers/STM32L5xx_HAL_Driver/Inc/stm32l5xx_ll_cortex.h \
+ ../../Drivers/STM32L5xx_HAL_Driver/Inc/stm32l5xx_ll_rcc.h \
+ ../../Drivers/STM32L5xx_HAL_Driver/Inc/stm32l5xx_ll_system.h \
+ ../../Drivers/STM32L5xx_HAL_Driver/Inc/stm32l5xx_ll_utils.h \
+ ../../Drivers/STM32L5xx_HAL_Driver/Inc/stm32l5xx_ll_pwr.h \
+ ../../Drivers/STM32L5xx_HAL_Driver/Inc/stm32l5xx_ll_gpio.h \
+ ../../Drivers/STM32L5xx_HAL_Driver/Inc/stm32l5xx_ll_dma.h \
+ ../../Drivers/STM32L5xx_HAL_Driver/Inc/stm32l5xx_ll_dmamux.h \
+ ../../Secure_nsclib/secure_nsc.h \
+ ../../Drivers/STM32L5xx_HAL_Driver/Inc/stm32l5xx_ll_exti.h
 
 ../Core/Inc/main.h:
 
@@ -91,10 +100,6 @@ Core/Src/stm32l5xx_hal_msp.o: ../Core/Src/stm32l5xx_hal_msp.c \
 
 ../../Drivers/STM32L5xx_HAL_Driver/Inc/stm32l5xx_hal_adc_ex.h:
 
-../../Drivers/STM32L5xx_HAL_Driver/Inc/stm32l5xx_hal_crc.h:
-
-../../Drivers/STM32L5xx_HAL_Driver/Inc/stm32l5xx_hal_crc_ex.h:
-
 ../../Drivers/STM32L5xx_HAL_Driver/Inc/stm32l5xx_hal_exti.h:
 
 ../../Drivers/STM32L5xx_HAL_Driver/Inc/stm32l5xx_hal_flash.h:
@@ -133,4 +138,26 @@ Core/Src/stm32l5xx_hal_msp.o: ../Core/Src/stm32l5xx_hal_msp.c \
 
 ../../Drivers/STM32L5xx_HAL_Driver/Inc/stm32l5xx_hal_uart_ex.h:
 
+../../Drivers/STM32L5xx_HAL_Driver/Inc/stm32l5xx_ll_crc.h:
+
+../../Drivers/STM32L5xx_HAL_Driver/Inc/stm32l5xx_ll_bus.h:
+
+../../Drivers/STM32L5xx_HAL_Driver/Inc/stm32l5xx_ll_cortex.h:
+
+../../Drivers/STM32L5xx_HAL_Driver/Inc/stm32l5xx_ll_rcc.h:
+
+../../Drivers/STM32L5xx_HAL_Driver/Inc/stm32l5xx_ll_system.h:
+
+../../Drivers/STM32L5xx_HAL_Driver/Inc/stm32l5xx_ll_utils.h:
+
+../../Drivers/STM32L5xx_HAL_Driver/Inc/stm32l5xx_ll_pwr.h:
+
+../../Drivers/STM32L5xx_HAL_Driver/Inc/stm32l5xx_ll_gpio.h:
+
+../../Drivers/STM32L5xx_HAL_Driver/Inc/stm32l5xx_ll_dma.h:
+
+../../Drivers/STM32L5xx_HAL_Driver/Inc/stm32l5xx_ll_dmamux.h:
+
 ../../Secure_nsclib/secure_nsc.h:
+
+../../Drivers/STM32L5xx_HAL_Driver/Inc/stm32l5xx_ll_exti.h:

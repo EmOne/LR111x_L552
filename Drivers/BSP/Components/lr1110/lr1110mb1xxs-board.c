@@ -50,19 +50,18 @@ static void lr1110_board_init_tcxo_io( const void* context );
 
 void lr1110_board_init_io( const void* context )
 {
-    GpioInit( &( ( lr1110_t* ) context )->reset, LR_NRST_Pin, PIN_OUTPUT, PIN_PUSH_PULL, PIN_NO_PULL, 1 );
-    GpioInit( &( ( lr1110_t* ) context )->spi.Nss, LR_NSS_Pin, PIN_OUTPUT, PIN_PUSH_PULL, PIN_NO_PULL, 1 );
-    GpioInit( &( ( lr1110_t* ) context )->dio_1, LR_RFSW4_Pin, PIN_INPUT, PIN_PUSH_PULL, PIN_NO_PULL, 0 );
-    GpioInit( &( ( lr1110_t* ) context )->busy, LR_BUSY_Pin, PIN_INPUT, PIN_PUSH_PULL, PIN_NO_PULL, 0 );
-
+    GpioInit( &( ( lr1110_t* ) context )->reset, LR_NRST_GPIO_Port, LR_NRST_Pin, PIN_OUTPUT, PIN_PUSH_PULL, PIN_NO_PULL, 1 );
+    GpioInit( &( ( lr1110_t* ) context )->spi.Nss, LR_NSS_GPIO_Port, LR_NSS_Pin, PIN_OUTPUT, PIN_PUSH_PULL, PIN_NO_PULL, 1 );
+    GpioInit( &( ( lr1110_t* ) context )->dio_1, LR_RFSW4_GPIO_Port, LR_RFSW4_Pin, PIN_INPUT, PIN_PUSH_PULL, PIN_NO_PULL, 0 );
+    GpioInit( &( ( lr1110_t* ) context )->busy, LR_BUSY_GPIO_Port, LR_BUSY_Pin, PIN_INPUT, PIN_PUSH_PULL, PIN_NO_PULL, 0 );
 }
 
 void lr1110_board_deinit_io( const void* context )
 {
-    GpioInit( &( ( lr1110_t* ) context )->reset, LR_NRST_Pin, PIN_OUTPUT, PIN_PUSH_PULL, PIN_NO_PULL, 1 );
-    GpioInit( &( ( lr1110_t* ) context )->spi.Nss, LR_NSS_Pin, PIN_OUTPUT, PIN_PUSH_PULL, PIN_NO_PULL, 1 );
-    GpioInit( &( ( lr1110_t* ) context )->dio_1, LR_RFSW4_Pin, PIN_INPUT, PIN_PUSH_PULL, PIN_NO_PULL, 0 );
-    GpioInit( &( ( lr1110_t* ) context )->busy, LR_BUSY_Pin, PIN_INPUT, PIN_PUSH_PULL, PIN_NO_PULL, 0 );
+    GpioInit( &( ( lr1110_t* ) context )->reset, LR_NRST_GPIO_Port, LR_NRST_Pin, PIN_OUTPUT, PIN_PUSH_PULL, PIN_NO_PULL, 1 );
+    GpioInit( &( ( lr1110_t* ) context )->spi.Nss, LR_NSS_GPIO_Port, LR_NSS_Pin, PIN_OUTPUT, PIN_PUSH_PULL, PIN_NO_PULL, 1 );
+    GpioInit( &( ( lr1110_t* ) context )->dio_1, LR_RFSW4_GPIO_Port, LR_RFSW4_Pin, PIN_INPUT, PIN_PUSH_PULL, PIN_NO_PULL, 0 );
+    GpioInit( &( ( lr1110_t* ) context )->busy, LR_RFSW4_GPIO_Port, LR_BUSY_Pin, PIN_INPUT, PIN_PUSH_PULL, PIN_NO_PULL, 0 );
 }
 
 void lr1110_board_init_dbg_io( const void* context )
@@ -255,7 +254,7 @@ lr1110_hal_status_t lr1110_hal_write_read( const void* context, const uint8_t* c
 lr1110_hal_status_t lr1110_hal_reset( const void* context )
 {
     GpioWrite( &( ( lr1110_t* ) context )->reset, 0 );
-    HAL_Delay( 1 );
+    DelayMs( 1 );
     GpioWrite( &( ( lr1110_t* ) context )->reset, 1 );
     return LR1110_HAL_STATUS_OK;
 }
@@ -268,7 +267,6 @@ lr1110_hal_status_t lr1110_hal_wakeup( const void* context )
         // Wakeup radio
         GpioWrite( &( ( lr1110_t* ) context )->spi.Nss, 0 );
         GpioWrite( &( ( lr1110_t* ) context )->spi.Nss, 1 );
-
         // Radio is awake in STDBY_RC mode
         ( ( lr1110_t* ) context )->op_mode = LR1110_HAL_OP_MODE_STDBY_RC;
     }

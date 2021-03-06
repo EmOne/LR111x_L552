@@ -33,6 +33,8 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "stm32l552e_eval.h"
+#include "lr1110-board.h"
+#include "radio.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -53,17 +55,79 @@
 
 /* USER CODE BEGIN PV */
 
+//extern lr1110_t LR1110;
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN PFP */
 void SecureFault_Callback(void);
 void SecureError_Callback(void);
+/*!
+ * \brief  Tx Done callback prototype.
+ */
+void    LR_TxDone ( void );
+/*!
+ * \brief  Tx Timeout callback prototype.
+ */
+void    LR_TxTimeout ( void );
+/*!
+ * \brief Rx Done callback prototype.
+ *
+ * \param [IN] payload Received buffer pointer
+ * \param [IN] size    Received buffer size
+ * \param [IN] rssi    RSSI value computed while receiving the frame [dBm]
+ * \param [IN] snr     SNR value computed while receiving the frame [dB]
+ *                     FSK : N/A ( set to 0 )
+ *                     LoRa: SNR value in dB
+ */
+void    LR_RxDone ( uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr );
+/*!
+ * \brief  Rx Timeout callback prototype.
+ */
+void    LR_RxTimeout ( void );
+/*!
+ * \brief Rx Error callback prototype.
+ */
+void    LR_RxError ( void );
+/*!
+ * \brief  FHSS Change Channel callback prototype.
+ *
+ * \param [IN] currentChannel   Index number of the current channel
+ */
+void LR_FhssChangeChannel ( uint8_t currentChannel );
+
+/*!
+ * \brief CAD Done callback prototype.
+ *
+ * \param [IN] channelDetected    Channel Activity detected during the CAD
+ */
+void LR_CadDone ( bool channelActivityDetected );
+
+/*!
+ * \brief  Gnss Done Done callback prototype.
+*/
+void    LR_GnssDone( void );
+
+/*!
+ * \brief  Wifi Done Done callback prototype.
+*/
+void    LR_WifiDone( void );
+
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 static float pfData[3];
+RadioEvents_t lrEvent = { LR_TxDone, LR_TxTimeout,
+		LR_RxDone, LR_RxTimeout, LR_RxError,
+		LR_FhssChangeChannel, LR_CadDone, LR_GnssDone, LR_WifiDone
+};
+#define RF_FREQUENCY                                923000000 // Hz
+#define TX_OUTPUT_POWER                             14        // 14 dBm
+#define LORA_SYMBOL_TIMEOUT                         5         // Symbols
+#define LORA_PREAMBLE_LENGTH                        8         // Same for Tx and Rx
+
 /* USER CODE END 0 */
 
 /**
@@ -82,7 +146,8 @@ int main(void)
   HAL_Init();
 
   /* USER CODE BEGIN Init */
-
+    HAL_DBGMCU_EnableDBGStopMode( );
+    HAL_DBGMCU_EnableDBGStandbyMode( );
   /* USER CODE END Init */
 
   /* USER CODE BEGIN SysInit */
@@ -108,18 +173,47 @@ int main(void)
   MX_CRC_Init();
   MX_RNG_Init();
   /* USER CODE BEGIN 2 */
+
+  SpiInit(&LR1110.spi, SPI_3, LR_MOSI_GPIO_Port, LR_MOSI_Pin,
+		  LR_MISO_GPIO_Port, LR_MISO_Pin, LR_SCK_GPIO_Port, LR_SCK_Pin, NULL, NC);
+
+  lr1110_board_init_io( &LR1110 );
+
+  Radio.Init(&lrEvent);
+
+  Radio.SetModem(MODEM_LORA);
+  Radio.SetChannel(RF_FREQUENCY);
+  Radio.SetPublicNetwork(LR1110_RADIO_LORA_NETWORK_PUBLIC);
+  Radio.SetMaxPayloadLength( MODEM_LORA, 255 );
+
+//  Radio.SetTxConfig();
+  Radio.SetRxConfig( MODEM_LORA, LR1110_RADIO_LORA_BW_125,
+		  LR1110_RADIO_LORA_SF10, LR1110_RADIO_LORA_CR_4_5,
+		  0, LORA_PREAMBLE_LENGTH,
+          LORA_SYMBOL_TIMEOUT, true,
+          8,
+		  LR1110_RADIO_LORA_CRC_ON, false, 0,
+		  LR1110_RADIO_LORA_IQ_STANDARD, true );
+
   BSP_GYRO_Init();
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+
+  Radio.Rx(0);
+
   while (1)
   {
-	  SECURE_LEDToggle_YELLOW();
+	  if( Radio.IrqProcess != NULL )
+	          {
+	              Radio.IrqProcess( );
+	          }
 	  BSP_GYRO_GetXYZ(pfData);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+	  SECURE_LEDToggle_YELLOW();
 	  HAL_Delay(500);
   }
   /* USER CODE END 3 */
@@ -154,6 +248,88 @@ void SecureError_Callback(void)
   /* because of illegal access */
   Error_Handler();
 }
+
+/*!
+ * \brief  Tx Done callback prototype.
+ */
+void LR_TxDone ( void )
+{
+
+}
+
+/*!
+ * \brief  Tx Timeout callback prototype.
+ */
+void LR_TxTimeout ( void )
+{
+
+}
+
+/*!
+ * \brief Rx Done callback prototype.
+ *
+ * \param [IN] payload Received buffer pointer
+ * \param [IN] size    Received buffer size
+ * \param [IN] rssi    RSSI value computed while receiving the frame [dBm]
+ * \param [IN] snr     SNR value computed while receiving the frame [dB]
+ *                     FSK : N/A ( set to 0 )
+ *                     LoRa: SNR value in dB
+ */
+void LR_RxDone ( uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr )
+{
+
+}
+
+/*!
+ * \brief  Rx Timeout callback prototype.
+ */
+void LR_RxTimeout ( void )
+{
+
+}
+
+/*!
+ * \brief Rx Error callback prototype.
+ */
+void LR_RxError ( void )
+{
+
+}
+
+/*!
+ * \brief  FHSS Change Channel callback prototype.
+ *
+ * \param [IN] currentChannel   Index number of the current channel
+ */
+void LR_FhssChangeChannel ( uint8_t currentChannel ){
+
+}
+
+/*!
+ * \brief CAD Done callback prototype.
+ *
+ * \param [IN] channelDetected    Channel Activity detected during the CAD
+ */
+void LR_CadDone ( bool channelActivityDetected )
+{
+
+}
+
+/*!
+ * \brief  Gnss Done Done callback prototype.
+*/
+void    LR_GnssDone( void ) {
+
+}
+
+/*!
+ * \brief  Gnss Done Done callback prototype.
+*/
+void    LR_WifiDone( void ) {
+
+}
+
+
 /* USER CODE END 4 */
 
  /**

@@ -42,7 +42,17 @@
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
+			<name>Drivers/BSP/EEPROM_Emul</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
 			<name>Drivers/BSP/STM32L552E-EV</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>Drivers/BSP/lr1110_driver</name>
 			<type>2</type>
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
@@ -65,16 +75,6 @@
 			<name>Drivers/STM32L5xx_HAL_Driver/stm32l5xx_hal_cortex.c</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/Drivers/STM32L5xx_HAL_Driver/Src/stm32l5xx_hal_cortex.c</locationURI>
-		</link>
-		<link>
-			<name>Drivers/STM32L5xx_HAL_Driver/stm32l5xx_hal_crc.c</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Drivers/STM32L5xx_HAL_Driver/Src/stm32l5xx_hal_crc.c</locationURI>
-		</link>
-		<link>
-			<name>Drivers/STM32L5xx_HAL_Driver/stm32l5xx_hal_crc_ex.c</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Drivers/STM32L5xx_HAL_Driver/Src/stm32l5xx_hal_crc_ex.c</locationURI>
 		</link>
 		<link>
 			<name>Drivers/STM32L5xx_HAL_Driver/stm32l5xx_hal_dma.c</name>
@@ -197,12 +197,42 @@
 			<locationURI>PARENT-1-PROJECT_LOC/Drivers/STM32L5xx_HAL_Driver/Src/stm32l5xx_hal_uart_ex.c</locationURI>
 		</link>
 		<link>
-			<name>Drivers/BSP/Components/Common</name>
+			<name>Drivers/STM32L5xx_HAL_Driver/stm32l5xx_ll_crc.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Drivers/STM32L5xx_HAL_Driver/Src/stm32l5xx_ll_crc.c</locationURI>
+		</link>
+		<link>
+			<name>Drivers/STM32L5xx_HAL_Driver/stm32l5xx_ll_exti.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Drivers/STM32L5xx_HAL_Driver/Src/stm32l5xx_ll_exti.c</locationURI>
+		</link>
+		<link>
+			<name>Drivers/STM32L5xx_HAL_Driver/stm32l5xx_ll_gpio.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Drivers/STM32L5xx_HAL_Driver/Src/stm32l5xx_ll_gpio.c</locationURI>
+		</link>
+		<link>
+			<name>Drivers/STM32L5xx_HAL_Driver/stm32l5xx_ll_utils.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Drivers/STM32L5xx_HAL_Driver/Src/stm32l5xx_ll_utils.c</locationURI>
+		</link>
+		<link>
+			<name>Drivers/BSP/Components/icg20330</name>
 			<type>2</type>
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
-			<name>Drivers/BSP/Components/icg20330</name>
+			<name>Drivers/BSP/Components/lr1110</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>Drivers/BSP/EEPROM_Emul/Core</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>Drivers/BSP/EEPROM_Emul/Porting</name>
 			<type>2</type>
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
@@ -212,29 +242,9 @@
 			<locationURI>PARENT-1-PROJECT_LOC/Drivers/BSP/STM32L552E-EV/stm32l552e_eval.c</locationURI>
 		</link>
 		<link>
-			<name>Drivers/BSP/STM32L552E-EV/stm32l552e_eval.h</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Drivers/BSP/STM32L552E-EV/stm32l552e_eval.h</locationURI>
-		</link>
-		<link>
 			<name>Drivers/BSP/STM32L552E-EV/stm32l552e_eval_bus.c</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/Drivers/BSP/STM32L552E-EV/stm32l552e_eval_bus.c</locationURI>
-		</link>
-		<link>
-			<name>Drivers/BSP/STM32L552E-EV/stm32l552e_eval_bus.h</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Drivers/BSP/STM32L552E-EV/stm32l552e_eval_bus.h</locationURI>
-		</link>
-		<link>
-			<name>Drivers/BSP/STM32L552E-EV/stm32l552e_eval_conf.h</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Drivers/BSP/STM32L552E-EV/stm32l552e_eval_conf.h</locationURI>
-		</link>
-		<link>
-			<name>Drivers/BSP/STM32L552E-EV/stm32l552e_eval_errno.h</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Drivers/BSP/STM32L552E-EV/stm32l552e_eval_errno.h</locationURI>
 		</link>
 		<link>
 			<name>Drivers/BSP/STM32L552E-EV/stm32l552e_eval_idd.c</name>
@@ -242,19 +252,9 @@
 			<locationURI>PARENT-1-PROJECT_LOC/Drivers/BSP/STM32L552E-EV/stm32l552e_eval_idd.c</locationURI>
 		</link>
 		<link>
-			<name>Drivers/BSP/STM32L552E-EV/stm32l552e_eval_idd.h</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Drivers/BSP/STM32L552E-EV/stm32l552e_eval_idd.h</locationURI>
-		</link>
-		<link>
 			<name>Drivers/BSP/STM32L552E-EV/stm32l552e_eval_io.c</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/Drivers/BSP/STM32L552E-EV/stm32l552e_eval_io.c</locationURI>
-		</link>
-		<link>
-			<name>Drivers/BSP/STM32L552E-EV/stm32l552e_eval_io.h</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Drivers/BSP/STM32L552E-EV/stm32l552e_eval_io.h</locationURI>
 		</link>
 		<link>
 			<name>Drivers/BSP/STM32L552E-EV/stm32l5xx_gyroscope.c</name>
@@ -262,84 +262,14 @@
 			<locationURI>PARENT-1-PROJECT_LOC/Drivers/BSP/STM32L552E-EV/stm32l5xx_gyroscope.c</locationURI>
 		</link>
 		<link>
-			<name>Drivers/BSP/STM32L552E-EV/stm32l5xx_gyroscope.h</name>
+			<name>Drivers/BSP/lr1110_driver/.git</name>
 			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Drivers/BSP/STM32L552E-EV/stm32l5xx_gyroscope.h</locationURI>
+			<locationURI>PARENT-1-PROJECT_LOC/Drivers/BSP/lr1110_driver/.git</locationURI>
 		</link>
 		<link>
-			<name>Drivers/BSP/Components/Common/accelero.h</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Drivers/BSP/Components/Common/accelero.h</locationURI>
-		</link>
-		<link>
-			<name>Drivers/BSP/Components/Common/audio.h</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Drivers/BSP/Components/Common/audio.h</locationURI>
-		</link>
-		<link>
-			<name>Drivers/BSP/Components/Common/camera.h</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Drivers/BSP/Components/Common/camera.h</locationURI>
-		</link>
-		<link>
-			<name>Drivers/BSP/Components/Common/dpredriver.h</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Drivers/BSP/Components/Common/dpredriver.h</locationURI>
-		</link>
-		<link>
-			<name>Drivers/BSP/Components/Common/env_sensor.h</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Drivers/BSP/Components/Common/env_sensor.h</locationURI>
-		</link>
-		<link>
-			<name>Drivers/BSP/Components/Common/epd.h</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Drivers/BSP/Components/Common/epd.h</locationURI>
-		</link>
-		<link>
-			<name>Drivers/BSP/Components/Common/gyro.h</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Drivers/BSP/Components/Common/gyro.h</locationURI>
-		</link>
-		<link>
-			<name>Drivers/BSP/Components/Common/idd.h</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Drivers/BSP/Components/Common/idd.h</locationURI>
-		</link>
-		<link>
-			<name>Drivers/BSP/Components/Common/io.h</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Drivers/BSP/Components/Common/io.h</locationURI>
-		</link>
-		<link>
-			<name>Drivers/BSP/Components/Common/lcd.h</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Drivers/BSP/Components/Common/lcd.h</locationURI>
-		</link>
-		<link>
-			<name>Drivers/BSP/Components/Common/magneto.h</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Drivers/BSP/Components/Common/magneto.h</locationURI>
-		</link>
-		<link>
-			<name>Drivers/BSP/Components/Common/motion_sensor.h</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Drivers/BSP/Components/Common/motion_sensor.h</locationURI>
-		</link>
-		<link>
-			<name>Drivers/BSP/Components/Common/pwrmon.h</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Drivers/BSP/Components/Common/pwrmon.h</locationURI>
-		</link>
-		<link>
-			<name>Drivers/BSP/Components/Common/ts.h</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Drivers/BSP/Components/Common/ts.h</locationURI>
-		</link>
-		<link>
-			<name>Drivers/BSP/Components/Common/usbtypecswitch.h</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Drivers/BSP/Components/Common/usbtypecswitch.h</locationURI>
+			<name>Drivers/BSP/lr1110_driver/src</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
 			<name>Drivers/BSP/Components/icg20330/icg20330.c</name>
@@ -347,9 +277,69 @@
 			<locationURI>PARENT-1-PROJECT_LOC/Drivers/BSP/Components/icg20330/icg20330.c</locationURI>
 		</link>
 		<link>
-			<name>Drivers/BSP/Components/icg20330/icg20330.h</name>
+			<name>Drivers/BSP/Components/lr1110/lr1110mb1xxs-board.c</name>
 			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Drivers/BSP/Components/icg20330/icg20330.h</locationURI>
+			<locationURI>PARENT-1-PROJECT_LOC/Drivers/BSP/Components/lr1110/lr1110mb1xxs-board.c</locationURI>
+		</link>
+		<link>
+			<name>Drivers/BSP/Components/lr1110/radio.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Drivers/BSP/Components/lr1110/radio.c</locationURI>
+		</link>
+		<link>
+			<name>Drivers/BSP/EEPROM_Emul/Core/eeprom_emul.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Drivers/BSP/EEPROM_Emul/Core/eeprom_emul.c</locationURI>
+		</link>
+		<link>
+			<name>Drivers/BSP/EEPROM_Emul/Porting/STM32L5</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>Drivers/BSP/lr1110_driver/src/lr1110_bootloader.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Drivers/BSP/lr1110_driver/src/lr1110_bootloader.c</locationURI>
+		</link>
+		<link>
+			<name>Drivers/BSP/lr1110_driver/src/lr1110_crypto_engine.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Drivers/BSP/lr1110_driver/src/lr1110_crypto_engine.c</locationURI>
+		</link>
+		<link>
+			<name>Drivers/BSP/lr1110_driver/src/lr1110_driver_version.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Drivers/BSP/lr1110_driver/src/lr1110_driver_version.c</locationURI>
+		</link>
+		<link>
+			<name>Drivers/BSP/lr1110_driver/src/lr1110_gnss.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Drivers/BSP/lr1110_driver/src/lr1110_gnss.c</locationURI>
+		</link>
+		<link>
+			<name>Drivers/BSP/lr1110_driver/src/lr1110_radio.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Drivers/BSP/lr1110_driver/src/lr1110_radio.c</locationURI>
+		</link>
+		<link>
+			<name>Drivers/BSP/lr1110_driver/src/lr1110_regmem.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Drivers/BSP/lr1110_driver/src/lr1110_regmem.c</locationURI>
+		</link>
+		<link>
+			<name>Drivers/BSP/lr1110_driver/src/lr1110_system.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Drivers/BSP/lr1110_driver/src/lr1110_system.c</locationURI>
+		</link>
+		<link>
+			<name>Drivers/BSP/lr1110_driver/src/lr1110_wifi.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Drivers/BSP/lr1110_driver/src/lr1110_wifi.c</locationURI>
+		</link>
+		<link>
+			<name>Drivers/BSP/EEPROM_Emul/Porting/STM32L5/flash_interface.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Drivers/BSP/EEPROM_Emul/Porting/STM32L5/flash_interface.c</locationURI>
 		</link>
 	</linkedResources>
 </projectDescription>

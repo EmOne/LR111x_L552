@@ -114,4 +114,6 @@ lr1110_hal_operating_mode_t lr1110_hal_get_operating_mode( const void* context )
  */
 void lr1110_hal_set_operating_mode( const void* context, const lr1110_hal_operating_mode_t op_mode );
 
+extern lr1110_t LR1110;
+
 #endif  // __LR1110_H__

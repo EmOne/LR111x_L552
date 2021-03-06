@@ -31,8 +31,6 @@ extern "C" {
 
 /* USER CODE END Includes */
 
-extern CRC_HandleTypeDef hcrc;
-
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */

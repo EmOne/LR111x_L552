@@ -23,6 +23,8 @@ SUBDIRS := \
 Core/Src \
 Core/Startup \
 Drivers/BSP/Components/icg20330 \
+Drivers/BSP/Components/lr1110 \
 Drivers/BSP/STM32L552E-EV \
+Drivers/BSP/lr1110_driver/src \
 Drivers/STM32L5xx_HAL_Driver \
 
