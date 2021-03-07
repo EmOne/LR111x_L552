@@ -74,7 +74,8 @@ void MX_GPIO_Init(void)
                           |GPIO_PIN_15|GPIO_PIN_5|EXT_SCL_Pin|EXT_SDA_Pin, GPIO_PIN_NSEC);
 
   /*IO attributes management functions */
-  HAL_GPIO_ConfigPinAttributes(GPIOD, LR_RFSW4_Pin|LR_NSS_Pin|LR_BUSY_Pin|LR_NRST_Pin, GPIO_PIN_NSEC);
+  HAL_GPIO_ConfigPinAttributes(GPIOD, LR_RFSW2_Pin|LR_RFSW3_Pin|LR_IRQ_Pin|LR_NSS_Pin
+                          |LR_BUSY_Pin|LR_NRST_Pin, GPIO_PIN_NSEC);
 
   /*Configure GPIO pins : PAPin PAPin */
   GPIO_InitStruct.Pin = MB1_TX_Pin|MB1_RX_Pin;
@@ -83,31 +84,12 @@ void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : PDPin PDPin */
-  GPIO_InitStruct.Pin = LR_RFSW2_Pin|LR_RFSW3_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
-
   /*Configure GPIO pin : PtPin */
   GPIO_InitStruct.Pin = WP_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(WP_GPIO_Port, &GPIO_InitStruct);
-
-  /*Configure the EXTI line attribute */
-  HAL_EXTI_ConfigLineAttributes(EXTI_LINE_12, EXTI_LINE_SEC);
-
-  /*Configure the EXTI line attribute */
-  HAL_EXTI_ConfigLineAttributes(EXTI_LINE_13, EXTI_LINE_SEC);
-
-  /* EXTI interrupt init*/
-  HAL_NVIC_SetPriority(EXTI12_IRQn, 0, 0);
-  HAL_NVIC_EnableIRQ(EXTI12_IRQn);
-
-  HAL_NVIC_SetPriority(EXTI13_IRQn, 0, 0);
-  HAL_NVIC_EnableIRQ(EXTI13_IRQn);
 
 }
 

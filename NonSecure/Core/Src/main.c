@@ -35,6 +35,7 @@
 #include "stm32l552e_eval.h"
 #include "lr1110-board.h"
 #include "radio.h"
+#include "stdio.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -119,6 +120,7 @@ void    LR_WifiDone( void );
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 static float pfData[3];
+static int32_t iddValue[2];
 RadioEvents_t lrEvent = { LR_TxDone, LR_TxTimeout,
 		LR_RxDone, LR_RxTimeout, LR_RxError,
 		LR_FhssChangeChannel, LR_CadDone, LR_GnssDone, LR_WifiDone
@@ -173,7 +175,10 @@ int main(void)
   MX_CRC_Init();
   MX_RNG_Init();
   /* USER CODE BEGIN 2 */
+  BSP_GYRO_Init();
 
+  BSP_IDD_Init(0);
+  BSP_IDD_Init(1);
   SpiInit(&LR1110.spi, SPI_3, LR_MOSI_GPIO_Port, LR_MOSI_Pin,
 		  LR_MISO_GPIO_Port, LR_MISO_Pin, LR_SCK_GPIO_Port, LR_SCK_Pin, NULL, NC);
 
@@ -195,7 +200,7 @@ int main(void)
 		  LR1110_RADIO_LORA_CRC_ON, false, 0,
 		  LR1110_RADIO_LORA_IQ_STANDARD, true );
 
-  BSP_GYRO_Init();
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -205,10 +210,12 @@ int main(void)
 
   while (1)
   {
-	  if( Radio.IrqProcess != NULL )
-	          {
-	              Radio.IrqProcess( );
-	          }
+		if (Radio.IrqProcess != NULL) {
+			Radio.IrqProcess();
+		}
+	  BSP_IDD_StartMeasurement(0);
+	  BSP_IDD_GetValue(0, (uint32_t *) &iddValue[0]);
+	  BSP_IDD_GetValue(1, (uint32_t *) &iddValue[1]);
 	  BSP_GYRO_GetXYZ(pfData);
     /* USER CODE END WHILE */
 
@@ -254,7 +261,7 @@ void SecureError_Callback(void)
  */
 void LR_TxDone ( void )
 {
-
+	printf("LR_TxDone\r\n");
 }
 
 /*!
@@ -262,7 +269,7 @@ void LR_TxDone ( void )
  */
 void LR_TxTimeout ( void )
 {
-
+	printf("LR_TxTimeout\r\n");
 }
 
 /*!
@@ -277,6 +284,9 @@ void LR_TxTimeout ( void )
  */
 void LR_RxDone ( uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr )
 {
+//	SECURE_LEDToggle_RED();
+	printf("LR_RxDone - len=%d;rssi=%d;snr=%d\r\n", size, rssi, snr);
+	printf("LR_RxDone - %S\r\n", payload);
 
 }
 
@@ -285,7 +295,8 @@ void LR_RxDone ( uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr )
  */
 void LR_RxTimeout ( void )
 {
-
+//	SECURE_LEDToggle_RED();
+	printf("LR_RxTimeout\r\n");
 }
 
 /*!
@@ -293,7 +304,7 @@ void LR_RxTimeout ( void )
  */
 void LR_RxError ( void )
 {
-
+	printf("LR_RxError\r\n");
 }
 
 /*!
@@ -301,8 +312,9 @@ void LR_RxError ( void )
  *
  * \param [IN] currentChannel   Index number of the current channel
  */
-void LR_FhssChangeChannel ( uint8_t currentChannel ){
-
+void LR_FhssChangeChannel ( uint8_t currentChannel )
+{
+	printf("LR_FhssChangeChannel - %d\r\n", currentChannel);
 }
 
 /*!
@@ -312,21 +324,23 @@ void LR_FhssChangeChannel ( uint8_t currentChannel ){
  */
 void LR_CadDone ( bool channelActivityDetected )
 {
-
+	printf("LR_CadDone - %d\r\n", channelActivityDetected);
 }
 
 /*!
  * \brief  Gnss Done Done callback prototype.
 */
-void    LR_GnssDone( void ) {
-
+void    LR_GnssDone( void )
+{
+	printf("LR_GnssDone\r\n");
 }
 
 /*!
  * \brief  Gnss Done Done callback prototype.
 */
-void    LR_WifiDone( void ) {
-
+void    LR_WifiDone( void )
+{
+	printf("LR_GnssDone\r\n");
 }
 
 

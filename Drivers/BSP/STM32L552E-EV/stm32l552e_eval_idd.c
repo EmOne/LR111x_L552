@@ -21,6 +21,96 @@
 /* Includes ------------------------------------------------------------------*/
 #include "stm32l552e_eval_idd.h"
 #include "stm32l552e_eval_io.h"
+#include "adc.h"
+#include "spi.h"
+
+int32_t   BSP_IDD_Init(uint32_t Instance)
+{
+	int32_t status = BSP_ERROR_NONE;
+	return status;
+}
+int32_t   BSP_IDD_DeInit(uint32_t Instance)
+{
+	int32_t status = BSP_ERROR_NONE;
+	return status;
+}
+int32_t   BSP_IDD_Reset(uint32_t Instance)
+{
+	int32_t status = BSP_ERROR_NONE;
+	return status;
+}
+int32_t   BSP_IDD_EnterLowPower(uint32_t Instance)
+{
+	int32_t status = BSP_ERROR_NONE;
+	return status;
+}
+int32_t   BSP_IDD_ExitLowPower(uint32_t Instance)
+{
+	int32_t status = BSP_ERROR_NONE;
+	return status;
+}
+int32_t   BSP_IDD_StartMeasurement(uint32_t Instance)
+{
+	int32_t status = BSP_ERROR_NONE;
+	if(Instance == 0){
+		HAL_ADC_Start(&hadc2);
+		while ((HAL_ADC_GetState(&hadc2) & HAL_ADC_STATE_REG_EOC) == 0)
+			HAL_ADC_PollForConversion(&hadc2, 1000);
+		HAL_ADC_Stop(&hadc2);
+	} else {
+
+	}
+	return status;
+}
+int32_t   BSP_IDD_Config(uint32_t Instance, BSP_IDD_Config_t * IddConfig)
+{
+	int32_t status = BSP_ERROR_NONE;
+
+	return status;
+}
+int32_t   BSP_IDD_GetValue(uint32_t Instance, uint32_t *IddValue)
+{
+	int32_t status = BSP_ERROR_NONE;
+	if(Instance == 0) {
+		*IddValue = HAL_ADC_GetValue(&hadc2);
+	} else {
+		uint8_t tmp[2] = {0};
+		HAL_GPIO_WritePin(CURRENT_CS_GPIO_Port, CURRENT_CS_Pin, GPIO_PIN_RESET);
+		HAL_SPI_Receive(&hspi1, tmp, 2, 1000);
+		HAL_GPIO_WritePin(CURRENT_CS_GPIO_Port, CURRENT_CS_Pin, GPIO_PIN_SET);
+		*IddValue = (tmp[1] << 8) | tmp[0];
+	}
+	return status;
+}
+int32_t   BSP_IDD_EnableIT(uint32_t Instance)
+{
+	int32_t status = BSP_ERROR_NONE;
+	return status;
+}
+int32_t   BSP_IDD_ClearIT(uint32_t Instance)
+{
+	int32_t status = BSP_ERROR_NONE;
+	return status;
+}
+int32_t   BSP_IDD_GetITStatus(uint32_t Instance)
+{
+	int32_t status = BSP_ERROR_NONE;
+	return status;
+}
+int32_t   BSP_IDD_DisableIT(uint32_t Instance)
+{
+	int32_t status = BSP_ERROR_NONE;
+	return status;
+}
+
+void      BSP_IDD_Callback(uint32_t Instance)
+{
+
+}
+void      BSP_IDD_IRQHandler(uint32_t Instance)
+{
+
+}
 
 #if (USE_BSP_IO_CLASS == 1)
 

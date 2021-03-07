@@ -78,7 +78,13 @@ void MX_GPIO_Init(void)
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
   /*Configure GPIO pins : PDPin PDPin */
-  GPIO_InitStruct.Pin = LR_RFSW4_Pin|LR_BUSY_Pin;
+  GPIO_InitStruct.Pin = LR_RFSW2_Pin|LR_RFSW3_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : PDPin PDPin */
+  GPIO_InitStruct.Pin = LR_IRQ_Pin|LR_BUSY_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
@@ -123,31 +129,31 @@ void GpioInit( Gpio_t *obj, void* port, uint16_t pin, PinModes mode, PinConfigs 
 
         obj->pinIndex = pin; //( 0x01 << ( obj->pin & 0x0F ) );
         obj->port = port;
-//        if( ( obj->pin & 0xF0 ) == 0x00 )
-//        {
-//            obj->port = GPIOA;
-//            __HAL_RCC_GPIOA_CLK_ENABLE( );
-//        }
-//        else if( ( obj->pin & 0xF0 ) == 0x10 )
-//        {
-//            obj->port = GPIOB;
-//            __HAL_RCC_GPIOB_CLK_ENABLE( );
-//        }
-//        else if( ( obj->pin & 0xF0 ) == 0x20 )
-//        {
-//            obj->port = GPIOC;
-//            __HAL_RCC_GPIOC_CLK_ENABLE( );
-//        }
-//        else if( ( obj->pin & 0xF0 ) == 0x30 )
-//        {
-//            obj->port = GPIOD;
-//            __HAL_RCC_GPIOD_CLK_ENABLE( );
-//        }
-//        else
-//        {
-//            obj->port = GPIOH;
-//            __HAL_RCC_GPIOH_CLK_ENABLE( );
-//        }
+        if( ( obj->port ) == GPIOA )
+        {
+            obj->port = GPIOA;
+            __HAL_RCC_GPIOA_CLK_ENABLE( );
+        }
+        else if( ( obj->port ) == GPIOB )
+        {
+            obj->port = GPIOB;
+            __HAL_RCC_GPIOB_CLK_ENABLE( );
+        }
+        else if( ( obj->port ) == GPIOC )
+        {
+            obj->port = GPIOC;
+            __HAL_RCC_GPIOC_CLK_ENABLE( );
+        }
+        else if( ( obj->port ) == GPIOD )
+        {
+            obj->port = GPIOD;
+            __HAL_RCC_GPIOD_CLK_ENABLE( );
+        }
+        else
+        {
+            obj->port = GPIOH;
+            __HAL_RCC_GPIOH_CLK_ENABLE( );
+        }
 
         GPIO_InitStructure.Pin =  obj->pinIndex ;
         GPIO_InitStructure.Pull = obj->pull = type;

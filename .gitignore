@@ -1,4 +1,4 @@
 *.d
 *.su
 *.o
-Debug/
+Debug

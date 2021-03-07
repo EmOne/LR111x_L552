@@ -34,6 +34,7 @@ extern "C" {
 #include "stm32l552e_eval_io.h"
 #endif
 #include "stm32l5xx_gyroscope.h"
+#include "stm32l552e_eval_idd.h"
 
 /** @addtogroup BSP
   * @{

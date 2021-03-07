@@ -120,8 +120,8 @@ void Error_Handler(void);
 #define LR_RFSW2_GPIO_Port GPIOD
 #define LR_RFSW3_Pin GPIO_PIN_13
 #define LR_RFSW3_GPIO_Port GPIOD
-#define LR_RFSW4_Pin GPIO_PIN_14
-#define LR_RFSW4_GPIO_Port GPIOD
+#define LR_IRQ_Pin GPIO_PIN_14
+#define LR_IRQ_GPIO_Port GPIOD
 #define OTG_FS_CC1_Pin GPIO_PIN_15
 #define OTG_FS_CC1_GPIO_Port GPIOA
 #define LR_SCK_Pin GPIO_PIN_10

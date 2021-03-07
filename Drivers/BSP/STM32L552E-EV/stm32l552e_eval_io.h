@@ -29,10 +29,10 @@ extern "C" {
 /* Includes ------------------------------------------------------------------*/
 #include "stm32l552e_eval_conf.h"
 #include "stm32l552e_eval_errno.h"
-#include "../Components/Common/io.h"
 #include "../Components/Common/idd.h"
 
 #if (USE_BSP_IO_CLASS == 1)
+#include "../Components/Common/io.h"
 #include "../Components/mfxstm32l152/mfxstm32l152.h"
 /** @addtogroup BSP
   * @{

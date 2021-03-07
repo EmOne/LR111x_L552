@@ -31,12 +31,12 @@
 
 #include "lr1110-board.h"
 
-#define LR1110_SHIELD_HAS_TCXO                      1
+#define LR1110_SHIELD_HAS_TCXO                      0
 
-#if( LR1110_SHIELD_HAS_TCXO == 1 )
+//#if( LR1110_SHIELD_HAS_TCXO == 1 )
     #undef BOARD_TCXO_WAKEUP_TIME
     #define BOARD_TCXO_WAKEUP_TIME                  5 // 5 milliseconds
-#endif
+//#endif
 
 /*!
  * Debug GPIO pins objects
@@ -52,7 +52,7 @@ void lr1110_board_init_io( const void* context )
 {
     GpioInit( &( ( lr1110_t* ) context )->reset, LR_NRST_GPIO_Port, LR_NRST_Pin, PIN_OUTPUT, PIN_PUSH_PULL, PIN_NO_PULL, 1 );
     GpioInit( &( ( lr1110_t* ) context )->spi.Nss, LR_NSS_GPIO_Port, LR_NSS_Pin, PIN_OUTPUT, PIN_PUSH_PULL, PIN_NO_PULL, 1 );
-    GpioInit( &( ( lr1110_t* ) context )->dio_1, LR_RFSW4_GPIO_Port, LR_RFSW4_Pin, PIN_INPUT, PIN_PUSH_PULL, PIN_NO_PULL, 0 );
+    GpioInit( &( ( lr1110_t* ) context )->dio_1, LR_IRQ_GPIO_Port, LR_IRQ_Pin, PIN_INPUT, PIN_PUSH_PULL, PIN_NO_PULL, 0 );
     GpioInit( &( ( lr1110_t* ) context )->busy, LR_BUSY_GPIO_Port, LR_BUSY_Pin, PIN_INPUT, PIN_PUSH_PULL, PIN_NO_PULL, 0 );
 }
 
@@ -60,8 +60,8 @@ void lr1110_board_deinit_io( const void* context )
 {
     GpioInit( &( ( lr1110_t* ) context )->reset, LR_NRST_GPIO_Port, LR_NRST_Pin, PIN_OUTPUT, PIN_PUSH_PULL, PIN_NO_PULL, 1 );
     GpioInit( &( ( lr1110_t* ) context )->spi.Nss, LR_NSS_GPIO_Port, LR_NSS_Pin, PIN_OUTPUT, PIN_PUSH_PULL, PIN_NO_PULL, 1 );
-    GpioInit( &( ( lr1110_t* ) context )->dio_1, LR_RFSW4_GPIO_Port, LR_RFSW4_Pin, PIN_INPUT, PIN_PUSH_PULL, PIN_NO_PULL, 0 );
-    GpioInit( &( ( lr1110_t* ) context )->busy, LR_RFSW4_GPIO_Port, LR_BUSY_Pin, PIN_INPUT, PIN_PUSH_PULL, PIN_NO_PULL, 0 );
+    GpioInit( &( ( lr1110_t* ) context )->dio_1, LR_IRQ_GPIO_Port, LR_IRQ_Pin, PIN_INPUT, PIN_PUSH_PULL, PIN_NO_PULL, 0 );
+    GpioInit( &( ( lr1110_t* ) context )->busy, LR_BUSY_GPIO_Port, LR_BUSY_Pin, PIN_INPUT, PIN_PUSH_PULL, PIN_NO_PULL, 0 );
 }
 
 void lr1110_board_init_dbg_io( const void* context )

@@ -57,7 +57,6 @@ Drivers/BSP/STM32L552E-EV/stm32l552e_eval_io.o: \
  ../../Secure_nsclib/secure_nsc.h \
  ../../Drivers/STM32L5xx_HAL_Driver/Inc/stm32l5xx_ll_exti.h \
  C:/Users/anol_/STM32CubeIDE/workspace_1.6.0/LR111x_L552VE/Drivers/BSP/STM32L552E-EV/stm32l552e_eval_errno.h \
- c:\users\anol_\stm32cubeide\workspace_1.6.0\lr111x_l552ve\drivers\bsp\components\common\io.h \
  c:\users\anol_\stm32cubeide\workspace_1.6.0\lr111x_l552ve\drivers\bsp\components\common\idd.h \
  C:/Users/anol_/STM32CubeIDE/workspace_1.6.0/LR111x_L552VE/Drivers/BSP/STM32L552E-EV/stm32l552e_eval_bus.h
 
@@ -174,8 +173,6 @@ C:/Users/anol_/STM32CubeIDE/workspace_1.6.0/LR111x_L552VE/Drivers/BSP/STM32L552E
 ../../Drivers/STM32L5xx_HAL_Driver/Inc/stm32l5xx_ll_exti.h:
 
 C:/Users/anol_/STM32CubeIDE/workspace_1.6.0/LR111x_L552VE/Drivers/BSP/STM32L552E-EV/stm32l552e_eval_errno.h:
-
-c:\users\anol_\stm32cubeide\workspace_1.6.0\lr111x_l552ve\drivers\bsp\components\common\io.h:
 
 c:\users\anol_\stm32cubeide\workspace_1.6.0\lr111x_l552ve\drivers\bsp\components\common\idd.h:
 

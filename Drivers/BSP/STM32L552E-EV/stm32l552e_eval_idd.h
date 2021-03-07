@@ -31,11 +31,7 @@
 #include "stm32l552e_eval_errno.h"
 #include "../Components/Common/idd.h"
 
-#include "../Components/Common/gyro.h"
-#include "../Components/icg20330/icg20330.h"
 
-#if (USE_BSP_IO_CLASS == 1)
-#include "../Components/mfxstm32l152/mfxstm32l152.h"
 /** @addtogroup BSP
   * @{
   */
@@ -118,7 +114,8 @@ void      BSP_IDD_IRQHandler(uint32_t Instance);
 /**
   * @}
   */
-
+#if (USE_BSP_IO_CLASS == 1)
+#include "../Components/mfxstm32l152/mfxstm32l152.h"
 #endif /* #if (USE_BSP_IO_CLASS == 1) */
 
 #ifdef __cplusplus
