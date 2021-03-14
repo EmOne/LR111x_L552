@@ -45,7 +45,7 @@ extern "C" {
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "util_console.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/

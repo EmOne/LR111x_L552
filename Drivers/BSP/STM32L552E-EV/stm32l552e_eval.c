@@ -1540,6 +1540,112 @@ void BoardCriticalSectionEnd( uint32_t *mask )
     __set_PRIMASK( *mask );
 }
 
+/*!
+ * Possible power sources
+ */
+enum BoardPowerSources
+{
+    USB_POWER = 0,
+    BATTERY_POWER,
+};
+
+/*!
+ * Factory power supply
+ */
+#define FACTORY_POWER_SUPPLY                        3300 // mV
+
+/*!
+ * VREF calibration value
+ */
+#define VREFINT_CAL                                 ( *( uint16_t* )0x1FF80078U )
+
+/*!
+ * ADC maximum value
+ */
+// #if (USE_ENCODER == 1)
+#define ADC_MAX_VALUE                               4095
+// #else
+// #define ADC_MAX_VALUE                               1023
+// #endif
+/*!
+ * VREF bandgap value
+ */
+#define ADC_VREF_BANDGAP                            1224 // mV
+
+/*!
+ * Battery thresholds
+ */
+#define BATTERY_MAX_LEVEL                           3000 // mV
+#define BATTERY_MIN_LEVEL                           2400 // mV
+#define BATTERY_SHUTDOWN_LEVEL                      2300 // mV
+
+static uint16_t BatteryVoltage = BATTERY_MAX_LEVEL;
+static uint16_t vref = 0;
+uint16_t BoardBatteryMeasureVolage( void )
+{
+
+    uint32_t batteryVoltage = 0;
+
+    // Read the current Voltage
+    vref = BSP_IDD_StartMeasurement(2);
+//    vref = AdcReadChannel( &Adc , ADC_CHANNEL_17 );
+
+    // We don't use the VREF from calibValues here.
+    // calculate the Voltage in millivolt
+    batteryVoltage = ( uint32_t )ADC_VREF_BANDGAP * ( uint32_t )ADC_MAX_VALUE;
+    batteryVoltage = batteryVoltage / ( uint32_t )vref;
+
+    return batteryVoltage;
+}
+
+uint32_t BoardGetBatteryVoltage( void )
+{
+    return BatteryVoltage;
+}
+
+uint8_t BoardGetBatteryLevel( void )
+{
+    uint8_t batteryLevel = 0;
+
+    BatteryVoltage = BoardBatteryMeasureVolage( );
+
+    if( GetBoardPowerSource( ) == USB_POWER )
+    {
+        batteryLevel = 0;
+    }
+    else
+    {
+        if( BatteryVoltage >= BATTERY_MAX_LEVEL )
+        {
+            batteryLevel = 254;
+        }
+        else if( ( BatteryVoltage > BATTERY_MIN_LEVEL ) && ( BatteryVoltage < BATTERY_MAX_LEVEL ) )
+        {
+            batteryLevel = ( ( 253 * ( BatteryVoltage - BATTERY_MIN_LEVEL ) ) / ( BATTERY_MAX_LEVEL - BATTERY_MIN_LEVEL ) ) + 1;
+        }
+        else if( ( BatteryVoltage > BATTERY_SHUTDOWN_LEVEL ) && ( BatteryVoltage <= BATTERY_MIN_LEVEL ) )
+        {
+            batteryLevel = 1;
+        }
+        else //if( BatteryVoltage <= BATTERY_SHUTDOWN_LEVEL )
+        {
+            batteryLevel = 255;
+        }
+    }
+    return batteryLevel;
+}
+
+uint8_t GetBoardPowerSource( void )
+{
+//    if( UsbIsConnected == false )
+//    {
+        return BATTERY_POWER;
+//    }
+//    else
+//    {
+//        return USB_POWER;
+//    }
+}
 /**
   * @}
   */

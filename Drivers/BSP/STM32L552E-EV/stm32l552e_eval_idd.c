@@ -24,6 +24,8 @@
 #include "adc.h"
 #include "spi.h"
 
+static int32_t vref;
+
 int32_t   BSP_IDD_Init(uint32_t Instance)
 {
 	int32_t status = BSP_ERROR_NONE;
@@ -52,13 +54,23 @@ int32_t   BSP_IDD_ExitLowPower(uint32_t Instance)
 int32_t   BSP_IDD_StartMeasurement(uint32_t Instance)
 {
 	int32_t status = BSP_ERROR_NONE;
-	if(Instance == 0){
+	if(Instance == 0)
+	{
 		HAL_ADC_Start(&hadc2);
 		while ((HAL_ADC_GetState(&hadc2) & HAL_ADC_STATE_REG_EOC) == 0)
 			HAL_ADC_PollForConversion(&hadc2, 1000);
 		HAL_ADC_Stop(&hadc2);
-	} else {
-
+	}
+	else if (Instance == 1)
+	{
+		HAL_ADC_Start(&hadc1);
+		while ((HAL_ADC_GetState(&hadc1) & HAL_ADC_STATE_REG_EOC) == 0)
+			HAL_ADC_PollForConversion(&hadc1, 1000);
+		HAL_ADC_Stop(&hadc1);
+	}
+	else
+	{
+		HAL_ADC_Start_DMA(&hadc1, vref, 2);
 	}
 	return status;
 }
@@ -71,14 +83,21 @@ int32_t   BSP_IDD_Config(uint32_t Instance, BSP_IDD_Config_t * IddConfig)
 int32_t   BSP_IDD_GetValue(uint32_t Instance, uint32_t *IddValue)
 {
 	int32_t status = BSP_ERROR_NONE;
-	if(Instance == 0) {
+	if(Instance == 0)
+	{
 		*IddValue = HAL_ADC_GetValue(&hadc2);
-	} else {
+	}
+	else if(Instance == 1)
+	{
 		uint8_t tmp[2] = {0};
 		HAL_GPIO_WritePin(CURRENT_CS_GPIO_Port, CURRENT_CS_Pin, GPIO_PIN_RESET);
 		HAL_SPI_Receive(&hspi1, tmp, 2, 1000);
 		HAL_GPIO_WritePin(CURRENT_CS_GPIO_Port, CURRENT_CS_Pin, GPIO_PIN_SET);
 		*IddValue = (tmp[1] << 8) | tmp[0];
+	}
+	else
+	{
+		*IddValue = vref;
 	}
 	return status;
 }

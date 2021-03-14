@@ -9,6 +9,7 @@ S_SRCS :=
 C_SRCS := 
 S_UPPER_SRCS := 
 O_SRCS := 
+OBJCOPY_HEX := 
 SIZE_OUTPUT := 
 OBJDUMP_LIST := 
 EXECUTABLES := 
@@ -27,4 +28,12 @@ Drivers/BSP/Components/lr1110 \
 Drivers/BSP/STM32L552E-EV \
 Drivers/BSP/lr1110_driver/src \
 Drivers/STM32L5xx_HAL_Driver \
+Middlewares/Third_Party/LoRaWAN/Crypto \
+Middlewares/Third_Party/LoRaWAN/Mac \
+Middlewares/Third_Party/LoRaWAN/Mac/region \
+Middlewares/Third_Party/LoRaWAN/Patterns/Advanced/LmHandler \
+Middlewares/Third_Party/LoRaWAN/Patterns/Advanced/LmHandler/packages \
+Middlewares/Third_Party/LoRaWAN/Patterns/Advanced \
+Middlewares/Third_Party/LoRaWAN/Patterns/Basic \
+Middlewares/Third_Party/LoRaWAN/Utilities \
 
