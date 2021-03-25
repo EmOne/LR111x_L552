@@ -1,7 +1,7 @@
 /*!
  * \file      soft-se-hal.h
  *
- * \brief     Secure Element hardware abstraction layer implementation
+ * \brief     Secure Element hardware abstraction layer
  *
  * \copyright Revised BSD License, see section \ref LICENSE.
  *
@@ -23,17 +23,25 @@
  * \endcode
  *
  */
-#include "main.h"
-#include "radio.h"
+#ifndef __SOFT_SE_HAL_H__
+#define __SOFT_SE_HAL_H__
 
-#include "lr1110-se-hal.h"
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-void LR1110SeHalGetUniqueId( uint8_t *id )
-{
-    BoardGetUniqueId( id );
+#include <stdint.h>
+#include <stdbool.h>
+
+/*!
+ * \brief Get a 64 bits unique ID
+ *
+ * \param [IN] id Pointer to an array that will contain the Unique ID
+ */
+void SoftSeHalGetUniqueId( uint8_t *id );
+
+#ifdef __cplusplus
 }
+#endif
 
-uint32_t LR1110SeHalGetRandomNumber( void )
-{
-    return Radio.Random( );
-}
+#endif  //  __SOFT_SE_HAL_H__

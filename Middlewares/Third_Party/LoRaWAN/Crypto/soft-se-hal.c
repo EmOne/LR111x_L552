@@ -23,17 +23,11 @@
  * \endcode
  *
  */
-#include "main.h"
-#include "radio.h"
+#include "board.h"
 
-#include "lr1110-se-hal.h"
+#include "soft-se-hal.h"
 
-void LR1110SeHalGetUniqueId( uint8_t *id )
+void SoftSeHalGetUniqueId( uint8_t *id )
 {
     BoardGetUniqueId( id );
-}
-
-uint32_t LR1110SeHalGetRandomNumber( void )
-{
-    return Radio.Random( );
 }

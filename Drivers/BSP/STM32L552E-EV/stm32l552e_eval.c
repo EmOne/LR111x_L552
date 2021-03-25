@@ -31,7 +31,9 @@
 /** @addtogroup BSP
   * @{
   */
-
+#define         ID1                                 ( 0x0BFA0590 )
+#define         ID2                                 ( 0x0BFA0594 )
+#define         ID3                                 ( 0x0BFA0594 )
 /** @defgroup STM32L552E-EV STM32L552E-EV
   * @{
   */
@@ -1646,6 +1648,52 @@ uint8_t GetBoardPowerSource( void )
 //        return USB_POWER;
 //    }
 }
+
+uint32_t BoardGetRandomSeed( void )
+{
+    return ( ( *( uint32_t* )ID1 ) ^ ( *( uint32_t* )ID2 ) ^ ( *( uint32_t* )ID3 ) );
+}
+
+void BoardGetUniqueId( uint8_t *id )
+{
+    id[7] = ( ( *( uint32_t* )ID1 )+ ( *( uint32_t* )ID3 ) ) >> 24;
+    id[6] = ( ( *( uint32_t* )ID1 )+ ( *( uint32_t* )ID3 ) ) >> 16;
+    id[5] = ( ( *( uint32_t* )ID1 )+ ( *( uint32_t* )ID3 ) ) >> 8;
+    id[4] = ( ( *( uint32_t* )ID1 )+ ( *( uint32_t* )ID3 ) );
+    id[3] = ( ( *( uint32_t* )ID2 ) ) >> 24;
+    id[2] = ( ( *( uint32_t* )ID2 ) ) >> 16;
+    id[1] = ( ( *( uint32_t* )ID2 ) ) >> 8;
+    id[0] = ( ( *( uint32_t* )ID2 ) );
+}
+
+bool EepromMcuIsErasingOnGoing( void );
+/*!
+ * \brief Manages the entry into ARM cortex deep-sleep mode
+ */
+void BoardLowPowerHandler( void )
+{
+	 // Wait for any cleanup to complete before entering standby/shutdown mode
+//	    while( EepromMcuIsErasingOnGoing( ) == true ){ }
+
+	    __disable_irq( );
+	    /*!
+	     * If an interrupt has occurred after __disable_irq( ), it is kept pending
+	     * and cortex will not enter low power anyway
+	     */
+
+	    LpmEnterLowPower( );
+
+	    __enable_irq( );
+}
+
+void BoardResetMcu( void )
+{
+    CRITICAL_SECTION_BEGIN( );
+
+    //Restart system
+    NVIC_SystemReset( );
+}
+
 /**
   * @}
   */

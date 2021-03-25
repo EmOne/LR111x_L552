@@ -825,7 +825,7 @@ LoRaMacCryptoStatus_t LoRaMacCryptoInit( LoRaMacCryptoNvmData_t* nvm )
     // Set default LoRaWAN version
     CryptoNvm->LrWanVersion.Fields.Major = 1;
     CryptoNvm->LrWanVersion.Fields.Minor = 1;
-    CryptoNvm->LrWanVersion.Fields.Patch = 1;
+    CryptoNvm->LrWanVersion.Fields.Rfu = 1;
     CryptoNvm->LrWanVersion.Fields.Revision = 0;
 
     // Reset frame counters

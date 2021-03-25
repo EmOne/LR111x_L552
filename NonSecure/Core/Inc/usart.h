@@ -42,7 +42,7 @@ void MX_LPUART1_UART_Init(void);
 void MX_USART3_UART_Init(void);
 
 /* USER CODE BEGIN Prototypes */
-
+uint8_t UartGetChar( UART_HandleTypeDef *obj, uint8_t *data );
 /* USER CODE END Prototypes */
 
 #ifdef __cplusplus

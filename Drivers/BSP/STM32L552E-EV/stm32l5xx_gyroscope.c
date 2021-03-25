@@ -21,6 +21,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "stm32l5xx_gyroscope.h"
 #include "stm32l552e_eval_bus.h"
+#include "delay.h"
 /** @addtogroup BSP
   * @{
   */
@@ -259,10 +260,10 @@ void    GYRO_IO_Init(void)
 	BSP_I2C1_Init();
 
 	HAL_GPIO_WritePin(GYO_DEN_GPIO_Port, GYO_DEN_Pin, GPIO_PIN_RESET);
-	HAL_Delay(50);
+	DelayMs(50);
 
 	GYRO_IO_Write(&data, ICG20330_PWR_MGMT_1_ADDR, 1);
-	HAL_Delay(100);
+	DelayMs(100);
 }
 void    GYRO_IO_DeInit(void)
 {

@@ -97,31 +97,31 @@ extern lora_AppData_t AppData;
 
 
 
-/*!
- * MAC event info status strings.
- */
-const char* EventInfoStatusStrings[] =
-{ 
-    "OK", "Error", "Tx timeout", "Rx 1 timeout",
-    "Rx 2 timeout", "Rx1 error", "Rx2 error",
-    "Join failed", "Downlink repeated", "Tx DR payload size error",
-    "Downlink too many frames loss", "Address fail", "MIC fail",
-    "Multicast faile", "Beacon locked", "Beacon lost", "Beacon not found"
-};
+///*!
+// * MAC event info status strings.
+// */
+//const char* EventInfoStatusStrings[] =
+//{
+//    "OK", "Error", "Tx timeout", "Rx 1 timeout",
+//    "Rx 2 timeout", "Rx1 error", "Rx2 error",
+//    "Join failed", "Downlink repeated", "Tx DR payload size error",
+//    "Downlink too many frames loss", "Address fail", "MIC fail",
+//    "Multicast faile", "Beacon locked", "Beacon lost", "Beacon not found"
+//};
 
-/*!
- * MAC status strings
- */
-const char* MacStatusStrings[] =
-{
-    "OK", "Busy", "Service unknown", "Parameter invalid", "Frequency invalid",
-    "Datarate invalid", "Freuqency or datarate invalid", "No network joined",
-    "Length error", "Device OFF", "Region not supported", "Skipped APP data",
-    "DutyC restricted", "No channel found", "No free channel found",
-    "Busy beacon reserved time", "Busy ping-slot window time",
-    "Busy uplink collision", "Crypto error", "FCnt handler error",
-    "MAC command error", "ERROR"
-};
+///*!
+// * MAC status strings
+// */
+//const char* MacStatusStrings[] =
+//{
+//    "OK", "Busy", "Service unknown", "Parameter invalid", "Frequency invalid",
+//    "Datarate invalid", "Freuqency or datarate invalid", "No network joined",
+//    "Length error", "Device OFF", "Region not supported", "Skipped APP data",
+//    "DutyC restricted", "No channel found", "No free channel found",
+//    "Busy beacon reserved time", "Busy ping-slot window time",
+//    "Busy uplink collision", "Crypto error", "FCnt handler error",
+//    "MAC command error", "ERROR"
+//};
 
 const char* MlmeReqStrings[] =
 {
@@ -672,7 +672,7 @@ bool LORA_send(lora_AppData_t* AppData, LoraConfirm_t IsTxConfirmed)
             mcpsReq.Req.Confirmed.fPort = AppData->Port;
             mcpsReq.Req.Confirmed.fBufferSize = AppData->BuffSize;
             mcpsReq.Req.Confirmed.fBuffer = AppData->Buff;
-            mcpsReq.Req.Confirmed.NbTrials = 8;
+//            mcpsReq.Req.Confirmed.NbTrials = 8;
             mcpsReq.Req.Confirmed.Datarate = LoRaParamInit->TxDatarate;
         }
     }

@@ -45,7 +45,9 @@ extern "C" {
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "utilities.h"
 #include "util_console.h"
+#include "stm32l552e_eval.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/

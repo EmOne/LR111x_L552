@@ -23,7 +23,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include <stdint.h>
-
+#include <stdbool.h>
 /* Exported types ------------------------------------------------------------*/
 /**
   * @brief  non-secure callback ID enumeration definition
@@ -39,7 +39,9 @@ typedef enum
 /* Exported functions ------------------------------------------------------- */
 void SECURE_RegisterCallback(SECURE_CallbackIDTypeDef CallbackId, void *func);
 void SECURE_LEDToggle_RED(void);
+void SECURE_LED_RED(bool onoff);
 void SECURE_LEDToggle_YELLOW(void);
+void SECURE_LED_YELLOW(bool onoff);
 #endif /* SECURE_NSC_H */
 /* USER CODE END Non_Secure_CallLib_h */
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

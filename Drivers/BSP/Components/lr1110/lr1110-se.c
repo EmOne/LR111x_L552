@@ -123,7 +123,7 @@ SecureElementStatus_t SecureElementSetKey( KeyIdentifier_t keyID, uint8_t* key )
     if( ( keyID == MC_KEY_0 ) || ( keyID == MC_KEY_1 ) || ( keyID == MC_KEY_2 ) || ( keyID == MC_KEY_3 ) )
     {  // Decrypt the key if its a Mckey
 
-        lr1110_crypto_derive_and_store_key( &LR1110, ( lr1110_crypto_status_t* ) &status,
+    	lr1110_crypto_derive_key( &LR1110, ( lr1110_crypto_status_t* ) &status,
                                             convert_key_id_from_se_to_lr1110( MC_KE_KEY ),
                                             convert_key_id_from_se_to_lr1110( keyID ), key );
 
@@ -214,7 +214,7 @@ SecureElementStatus_t SecureElementDeriveAndStoreKey( uint8_t* input, KeyIdentif
         return SECURE_ELEMENT_ERROR_NPE;
     }
 
-    lr1110_crypto_derive_and_store_key( &LR1110, ( lr1110_crypto_status_t* ) &status,
+    lr1110_crypto_derive_key( &LR1110, ( lr1110_crypto_status_t* ) &status,
                                         convert_key_id_from_se_to_lr1110( rootKeyID ),
                                         convert_key_id_from_se_to_lr1110( targetKeyID ), input );
 

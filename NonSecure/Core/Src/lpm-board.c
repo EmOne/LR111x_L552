@@ -142,14 +142,30 @@ LpmGetMode_t LpmGetMode(void)
 
 __weak void LpmEnterSleepMode( void )
 {
+	HAL_PWR_EnterSLEEPMode(PWR_MAINREGULATOR_ON, PWR_SLEEPENTRY_WFI);
 }
 
 __weak void LpmExitSleepMode( void )
 {
+	// Disable IRQ while the MCU is not running on HSI
+	    CRITICAL_SECTION_BEGIN( );
+
+	    // Initilizes the peripherals
+//	    BoardInitMcu( );
+
+	    CRITICAL_SECTION_END( );
 }
 
 __weak void LpmEnterStopMode( void )
 {
+	CRITICAL_SECTION_BEGIN( );
+
+//	    BoardDeInitMcu( );
+
+	    CRITICAL_SECTION_END( );
+
+	    // Enter Stop Mode
+	    HAL_PWR_EnterSTOPMode( PWR_LOWPOWERREGULATOR_ON, PWR_STOPENTRY_WFI );
 }
 
 __weak void LpmExitStopMode( void )

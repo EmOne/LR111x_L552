@@ -73,9 +73,19 @@ CMSE_NS_ENTRY/*secureportNON_SECURE_CALLABLE*/ void SECURE_LEDToggle_RED(void)
 	HAL_GPIO_TogglePin(MB1_RX_GPIO_Port, MB1_RX_Pin);
 }
 
+CMSE_NS_ENTRY/*secureportNON_SECURE_CALLABLE*/ void SECURE_LED_RED(bool onoff)
+{
+	HAL_GPIO_WritePin(MB1_RX_GPIO_Port, MB1_RX_Pin, onoff);
+}
+
 CMSE_NS_ENTRY/*secureportNON_SECURE_CALLABLE*/ void SECURE_LEDToggle_YELLOW(void)
 {
 	HAL_GPIO_TogglePin(MB1_TX_GPIO_Port, MB1_TX_Pin);
+}
+
+CMSE_NS_ENTRY/*secureportNON_SECURE_CALLABLE*/ void SECURE_LED_YELLOW(bool onoff)
+{
+	HAL_GPIO_WritePin(MB1_TX_GPIO_Port, MB1_TX_Pin, onoff);
 }
 /**
   * @}

@@ -344,7 +344,31 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef* uartHandle)
 }
 
 /* USER CODE BEGIN 1 */
-
+uint8_t UartGetChar( UART_HandleTypeDef *obj, uint8_t *data )
+{
+//	if( obj->UartId == UART_USB_CDC )
+//	    {
+//	#if defined( USE_USB_CDC )
+//	        return UartUsbGetChar( obj, data );
+//	#else
+//	        return 255; // Not supported
+//	#endif
+//	    }
+//	    else
+//	    {
+//	        CRITICAL_SECTION_BEGIN( );
+//
+//	        if( IsFifoEmpty( &obj->FifoRx ) == false )
+//	        {
+//	            *data = FifoPop( &obj->FifoRx );
+//	            CRITICAL_SECTION_END( );
+//	            return 0;
+//	        }
+//	        CRITICAL_SECTION_END( );
+//	        return 1;
+//	    }
+	return HAL_UART_Receive(obj, data, 1, 100);
+}
 /* USER CODE END 1 */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

@@ -56,7 +56,7 @@ Maintainer: Miguel Luis and Gregory Cristian
 #define ALIGN(n)             __attribute__((aligned(n)))
 
 /* delay definition */
- #define DelayMs(n)             HAL_Delay(n) 
+//#define DelayMs(n)             HAL_Delay(n)
 
 typedef uint32_t TimerTime_t;
 #define TIMERTIME_T_MAX                             ( ( uint32_t )~0 )

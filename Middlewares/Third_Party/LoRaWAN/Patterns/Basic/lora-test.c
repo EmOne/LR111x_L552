@@ -140,7 +140,7 @@ static bool certif_tx( void )
           mcpsReq.Req.Confirmed.fPort = CERTIF_PORT;
           mcpsReq.Req.Confirmed.fBufferSize = certifParam.DataBufferSize;
           mcpsReq.Req.Confirmed.fBuffer = &(certifParam.DataBuffer);
-          mcpsReq.Req.Confirmed.NbTrials = 8;
+//          mcpsReq.Req.Confirmed.NbTrials = 8;
           mcpsReq.Req.Confirmed.Datarate = DR_0;
       }
   }
@@ -279,7 +279,7 @@ void certif_rx( McpsIndication_t *mcpsIndication, MlmeReqJoin_t* JoinParameters)
           else if( mcpsIndication->BufferSize == 7 )
           {
               MlmeReq_t mlmeReq;
-              mlmeReq.Type = MLME_TXCW_1;
+              mlmeReq.Type = MLME_TXCW;
               mlmeReq.Req.TxCw.Timeout = ( uint16_t )( ( mcpsIndication->Buffer[1] << 8 ) | mcpsIndication->Buffer[2] );
               mlmeReq.Req.TxCw.Frequency = ( uint32_t )( ( mcpsIndication->Buffer[3] << 16 ) | ( mcpsIndication->Buffer[4] << 8 ) | mcpsIndication->Buffer[5] ) * 100;
               mlmeReq.Req.TxCw.Power = mcpsIndication->Buffer[6];
