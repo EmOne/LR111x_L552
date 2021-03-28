@@ -57,6 +57,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
+#define TX_CW	1
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -166,11 +167,12 @@ static TimerEvent_t TxTimer;
  * Timer to handle the state of LED1
  */
 static TimerEvent_t Led1Timer;
-
+volatile bool Led1TimerEvent = false;
 /*!
  * Timer to handle the state of LED2
  */
 static TimerEvent_t Led2Timer;
+volatile bool Led2TimerEvent = false;
 
 /*!
  * Timer to handle the state of LED beacon indicator
@@ -178,6 +180,17 @@ static TimerEvent_t Led2Timer;
 static TimerEvent_t LedBeaconTimer;
 
 extern lr1110_t LR1110;
+
+#ifdef TX_CW
+#define RF_FREQUENCY                                923000000 // Hz
+#define TX_OUTPUT_POWER                             22        // 14 dBm
+#define TX_TIMEOUT									1000
+/*!
+ * Radio events function pointer
+ */
+static RadioEvents_t RadioEvents;
+void OnRadioTxTimeout( void );
+#endif /* TX_CW */
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -283,7 +296,7 @@ static volatile uint32_t TxPeriodicity = 0;
 /* USER CODE BEGIN 0 */
 static float pfData[3];
 static int32_t iddValue[2];
-
+static float latitude, longitude, meters;
 /* USER CODE END 0 */
 
 /**
@@ -346,6 +359,16 @@ int main(void)
   TimerInit( &LedBeaconTimer, OnLedBeaconTimerEvent );
   TimerSetValue( &LedBeaconTimer, 5000 );
 
+#ifdef TX_CW
+  RadioEvents.TxTimeout = OnRadioTxTimeout;
+  RadioEvents.TxDone = OnRadioTxTimeout;
+  Radio.Init( &RadioEvents );
+
+  Radio.SetTxContinuousWave( RF_FREQUENCY, TX_OUTPUT_POWER, TX_TIMEOUT );
+  TimerSetValue( &Led1Timer, 500 );
+  TimerSetValue( &Led2Timer, 200 );
+  TimerStart( &Led1Timer );
+#else
   // Initialize transmission periodicity variable
   TxPeriodicity = APP_TX_DUTYCYCLE + randr( -APP_TX_DUTYCYCLE_RND, APP_TX_DUTYCYCLE_RND );
 
@@ -374,19 +397,47 @@ int main(void)
   LmHandlerJoin( );
 
   StartTxProcess( LORAMAC_HANDLER_TX_ON_TIMER );
-
+#endif /* TX_CW */
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-		// Process characters sent over the command line interface
-		CliProcess(&hlpuart1);
+
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+#ifdef TX_CW
+	  // Process Radio IRQ
+	         if( Radio.IrqProcess != NULL )
+	         {
+	             Radio.IrqProcess( );
+	         }
+	         if( Led1TimerEvent == true )
+	         {
+	             Led1TimerEvent = false;
 
+	             // Switch LED 1 OFF
+	             SECURE_LED_RED( 1 );
+	             // Switch LED 2 ON
+	             SECURE_LED_YELLOW( 0 );
+	             TimerStart( &Led2Timer );
+	         }
+
+	         if( Led2TimerEvent == true )
+	         {
+	             Led2TimerEvent = false;
+
+	             // Switch LED 2 OFF
+	             SECURE_LED_YELLOW( 1 );
+	             // Switch LED 1 ON
+	             SECURE_LED_RED( 0 );
+	             TimerStart( &Led1Timer );
+	         }
+#else
+		// Process characters sent over the command line interface
+		CliProcess(&hlpuart1);
 
 		// Processes the LoRaMac events
 		LmHandlerProcess();
@@ -407,6 +458,7 @@ int main(void)
 			BoardLowPowerHandler();
 		}
 		CRITICAL_SECTION_END();
+#endif /* TX_CW */
   }
   /* USER CODE END 3 */
 }
@@ -574,7 +626,9 @@ static void PrepareTxFrame( void )
     CayenneLppReset( );
     CayenneLppAddDigitalInput( channel++, AppLedStateOn );
     CayenneLppAddAnalogInput( channel++, BoardGetBatteryLevel( ) * 100 / 254 );
-
+    CayenneLppAddAnalogInput( channel++, iddValue[0]);
+    CayenneLppAddGyrometer(channel++, pfData[0], pfData[1], pfData[2]);
+    CayenneLppAddGps(channel++, latitude, longitude, meters);
     CayenneLppCopy( AppData.Buffer );
     AppData.BufferSize = CayenneLppGetSize( );
 
@@ -660,10 +714,14 @@ static void OnTxTimerEvent( void* context )
  */
 static void OnLed1TimerEvent( void* context )
 {
+#ifdef TX_CW
+	Led1TimerEvent = true;
+#else
     TimerStop( &Led1Timer );
     // Switch LED 1 OFF
 //    GpioWrite( &Led1, 0 );
     SECURE_LED_YELLOW(false);
+#endif
 }
 
 /*!
@@ -671,11 +729,26 @@ static void OnLed1TimerEvent( void* context )
  */
 static void OnLed2TimerEvent( void* context )
 {
+#ifdef TX_CW
+    Led2TimerEvent = true;
+#else
     TimerStop( &Led2Timer );
     // Switch LED 2 OFF
 //    GpioWrite( &Led2, 0 );
     SECURE_LED_RED(false);
+#endif
 }
+
+#ifdef TX_CW
+/*!
+ * \brief Function executed on Radio Tx Timeout event
+ */
+void OnRadioTxTimeout( void )
+{
+    // Restarts continuous wave transmission when timeout expires
+    Radio.SetTxContinuousWave( RF_FREQUENCY, TX_OUTPUT_POWER, TX_TIMEOUT );
+}
+#endif /* TX_CW */
 
 /*!
  * \brief Function executed on Beacon timer Timeout event

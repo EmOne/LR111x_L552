@@ -124,6 +124,7 @@ void lr1110_board_init( const void* context, lr1110_dio_irq_handler dio_irq )
     rf_switch_configuration.standby = 0;
     rf_switch_configuration.rx      = LR1110_SYSTEM_RFSW0_HIGH;
     rf_switch_configuration.tx      = LR1110_SYSTEM_RFSW0_HIGH | LR1110_SYSTEM_RFSW1_HIGH;
+    rf_switch_configuration.tx_hp   = LR1110_SYSTEM_RFSW1_HIGH;
     rf_switch_configuration.wifi    = 0;
     rf_switch_configuration.gnss    = 0;
 

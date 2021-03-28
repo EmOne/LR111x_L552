@@ -3,3 +3,5 @@
 *.o
 Debug
 *.prefs
+NonSecure/Debug
+Secure/Debug

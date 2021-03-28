@@ -21,7 +21,18 @@
 #include "usart.h"
 
 /* USER CODE BEGIN 0 */
+#include "fifo.h"
+Fifo_t fifo_dgb_tx;
+Fifo_t fifo_dgb_rx;
+Fifo_t fifo_tx;
+Fifo_t fifo_rx;
 
+#define DBG_LEN	1024u
+
+uint8_t DBG_TX[DBG_LEN];
+uint8_t DBG_RX[DBG_LEN];
+uint8_t dbg_buf_RX;
+uint8_t data_buf_RX;
 /* USER CODE END 0 */
 
 UART_HandleTypeDef hlpuart1;
@@ -37,14 +48,15 @@ void MX_LPUART1_UART_Init(void)
 {
 
   /* USER CODE BEGIN LPUART1_Init 0 */
-
+	FifoInit(&fifo_dgb_tx, DBG_TX, DBG_LEN);
+	FifoInit(&fifo_dgb_rx, DBG_RX, DBG_LEN);
   /* USER CODE END LPUART1_Init 0 */
 
   /* USER CODE BEGIN LPUART1_Init 1 */
 
   /* USER CODE END LPUART1_Init 1 */
   hlpuart1.Instance = LPUART1;
-  hlpuart1.Init.BaudRate = 209700;
+  hlpuart1.Init.BaudRate = 115200;
   hlpuart1.Init.WordLength = UART_WORDLENGTH_8B;
   hlpuart1.Init.StopBits = UART_STOPBITS_1;
   hlpuart1.Init.Parity = UART_PARITY_NONE;
@@ -71,7 +83,7 @@ void MX_LPUART1_UART_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN LPUART1_Init 2 */
-
+  HAL_UART_Receive_DMA(&hlpuart1, &dbg_buf_RX, 1);
   /* USER CODE END LPUART1_Init 2 */
 
 }
@@ -115,7 +127,7 @@ void MX_USART3_UART_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN USART3_Init 2 */
-
+  HAL_UART_Receive_DMA(&huart3, &data_buf_RX, 1);
   /* USER CODE END USART3_Init 2 */
 
 }
@@ -344,6 +356,15 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef* uartHandle)
 }
 
 /* USER CODE BEGIN 1 */
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+{
+	if (huart->Instance == LPUART1) {
+		FifoPush(&fifo_dgb_rx, dbg_buf_RX);
+	} else if (huart->Instance == USART3) {
+		FifoPush(&fifo_rx, data_buf_RX);
+	}
+}
+
 uint8_t UartGetChar( UART_HandleTypeDef *obj, uint8_t *data )
 {
 //	if( obj->UartId == UART_USB_CDC )
@@ -356,18 +377,18 @@ uint8_t UartGetChar( UART_HandleTypeDef *obj, uint8_t *data )
 //	    }
 //	    else
 //	    {
-//	        CRITICAL_SECTION_BEGIN( );
-//
-//	        if( IsFifoEmpty( &obj->FifoRx ) == false )
-//	        {
-//	            *data = FifoPop( &obj->FifoRx );
-//	            CRITICAL_SECTION_END( );
-//	            return 0;
-//	        }
-//	        CRITICAL_SECTION_END( );
-//	        return 1;
+	        CRITICAL_SECTION_BEGIN( );
+
+	        if( IsFifoEmpty( &fifo_dgb_rx ) == false )
+	        {
+	            *data = FifoPop( &fifo_dgb_rx );
+	            CRITICAL_SECTION_END( );
+	            return 0;
+	        }
+	        CRITICAL_SECTION_END( );
+	        return 1;
 //	    }
-	return HAL_UART_Receive(obj, data, 1, 100);
+//	return HAL_UART_Receive(obj, data, 1, 100);
 }
 /* USER CODE END 1 */
 
