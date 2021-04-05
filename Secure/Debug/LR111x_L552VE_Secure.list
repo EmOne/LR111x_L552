@@ -274,7 +274,7 @@ void MX_GPIO_Init(void)
  c00038c:	f000 fd86 	bl	c000e9c <HAL_GPIO_ConfigPinAttributes>
   HAL_GPIO_ConfigPinAttributes(GPIOB, EXT_AN_Pin|DBG_RX_Pin|DBG_TX_Pin|GPIO_PIN_14
  c000390:	2200      	movs	r2, #0
- c000392:	f64c 7122 	movw	r1, #53026	; 0xcf22
+ c000392:	f64c 7132 	movw	r1, #53042	; 0xcf32
  c000396:	4812      	ldr	r0, [pc, #72]	; (c0003e0 <MX_GPIO_Init+0x10c>)
  c000398:	f000 fd80 	bl	c000e9c <HAL_GPIO_ConfigPinAttributes>
   HAL_GPIO_ConfigPinAttributes(GPIOD, LR_RFSW2_Pin|LR_RFSW3_Pin|LR_IRQ_Pin|LR_NSS_Pin

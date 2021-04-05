@@ -119,6 +119,8 @@ void Error_Handler(void);
 #define LR_BUSY_GPIO_Port GPIOD
 #define LR_NRST_Pin GPIO_PIN_2
 #define LR_NRST_GPIO_Port GPIOD
+#define CHARGE_CE_Pin GPIO_PIN_4
+#define CHARGE_CE_GPIO_Port GPIOB
 #define EXT_SCL_Pin GPIO_PIN_8
 #define EXT_SCL_GPIO_Port GPIOB
 #define EXT_SDA_Pin GPIO_PIN_9

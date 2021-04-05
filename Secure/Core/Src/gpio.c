@@ -71,7 +71,8 @@ void MX_GPIO_Init(void)
 
   /*IO attributes management functions */
   HAL_GPIO_ConfigPinAttributes(GPIOB, EXT_AN_Pin|DBG_RX_Pin|DBG_TX_Pin|GPIO_PIN_14
-                          |GPIO_PIN_15|GPIO_PIN_5|EXT_SCL_Pin|EXT_SDA_Pin, GPIO_PIN_NSEC);
+                          |GPIO_PIN_15|CHARGE_CE_Pin|GPIO_PIN_5|EXT_SCL_Pin
+                          |EXT_SDA_Pin, GPIO_PIN_NSEC);
 
   /*IO attributes management functions */
   HAL_GPIO_ConfigPinAttributes(GPIOD, LR_RFSW2_Pin|LR_RFSW3_Pin|LR_IRQ_Pin|LR_NSS_Pin

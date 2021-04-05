@@ -494,9 +494,9 @@ void RadioInit( RadioEvents_t* events )
     lr1110_system_set_standby( &LR1110, LR1110_SYSTEM_STANDBY_CFG_RC );
     lr1110_hal_set_operating_mode( &LR1110, LR1110_HAL_OP_MODE_STDBY_RC );
 
-    lr1110_system_set_reg_mode( &LR1110, LR1110_SYSTEM_REG_MODE_DCDC );
+    lr1110_system_set_reg_mode( &LR1110, LR1110_SYSTEM_REG_MODE_LDO );
 
-    lr1110_radio_set_tx_params( &LR1110, 0, LR1110_RADIO_RAMP_208_US );
+    lr1110_radio_set_tx_params( &LR1110, 0, LR1110_RADIO_RAMP_200_US );
     lr1110_system_set_dio_irq_params( &LR1110, LR1110_SYSTEM_IRQ_ALL_MASK, LR1110_SYSTEM_IRQ_NONE );
 
     // Initialize driver timeout timers
@@ -1213,6 +1213,14 @@ static void lr1110_system_irq_process( const void* radio, uint32_t* irq )
     lr1110_system_get_status( radio, &stat1, &stat2, irq );
     lr1110_system_clear_irq_status( radio, *irq );
 
+    // Check if DIO1 pin is High. If it is the case revert IrqFired to true
+	CRITICAL_SECTION_BEGIN( );
+	if( lr1110_get_dio_1_pin_state( radio ) == 1 )
+	{
+		IrqFired = true;
+	}
+	CRITICAL_SECTION_END( );
+
     if( ( ( *irq & LR1110_SYSTEM_IRQ_TX_DONE ) != 0 ) || ( ( *irq & LR1110_SYSTEM_IRQ_CAD_DONE ) != 0 ) ||
         ( ( *irq & LR1110_SYSTEM_IRQ_TIMEOUT ) != 0 ) )
     {
@@ -1269,7 +1277,7 @@ void RadioIrqProcess( void )
                 if( ( RadioEvents != NULL ) && ( RadioEvents->RxDone != NULL ) )
                 {
                     RadioEvents->RxDone( RadioRxPayload, rxbuffer_status.pld_len_in_bytes,
-                                         lora_packet_status.rssi_pkt_in_dbm, lora_packet_status.snr_pkt_in_db);
+                                         lora_packet_status.rssi_packet_in_dbm, lora_packet_status.snr_packet_in_db);
                 }
             }
             else

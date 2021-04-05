@@ -89,12 +89,17 @@ void lr1110_board_set_rf_tx_power( const void* context, int8_t power )
             power = -9;
         }
     }
-    lr1110_radio_set_tx_params( context, power, LR1110_RADIO_RAMP_32_US );
+    lr1110_radio_set_tx_params( context, power, LR1110_RADIO_RAMP_40_US );
 }
 
 uint32_t lr1110_board_get_tcxo_wakeup_time( const void* context )
 {
     return BOARD_TCXO_WAKEUP_TIME;
+}
+
+uint32_t lr1110_get_dio_1_pin_state( const void* context )
+{
+    return GpioRead( &( ( lr1110_t* ) context )->dio_1 );
 }
 
 void lr1110_board_init( const void* context, lr1110_dio_irq_handler dio_irq )
@@ -125,16 +130,17 @@ void lr1110_board_init( const void* context, lr1110_dio_irq_handler dio_irq )
     rf_switch_configuration.rx      = LR1110_SYSTEM_RFSW0_HIGH;
     rf_switch_configuration.tx      = LR1110_SYSTEM_RFSW0_HIGH | LR1110_SYSTEM_RFSW1_HIGH;
     rf_switch_configuration.tx_hp   = LR1110_SYSTEM_RFSW1_HIGH;
+    rf_switch_configuration.tx_hf   = LR1110_SYSTEM_RFSW1_HIGH;
     rf_switch_configuration.wifi    = 0;
     rf_switch_configuration.gnss    = 0;
 
     lr1110_system_set_dio_as_rf_switch( context, &rf_switch_configuration );
 
     lr1110_radio_pa_cfg_t paConfig = {
-        .pa_sel        = LR1110_RADIO_PA_SEL_LP,
-        .pa_reg_supply = LR1110_RADIO_PA_REG_SUPPLY_VREG,
-        .pa_duty_cycle  = 0x04,
-        .pa_hp_sel     = 0x00,
+        .pa_sel        = LR1110_RADIO_PA_SEL_HP,
+        .pa_reg_supply = LR1110_RADIO_PA_REG_SUPPLY_VBAT,
+        .pa_duty_cycle = 0x07,
+        .pa_hp_sel     = 0x07,
     };
     lr1110_radio_set_pa_cfg( context, &paConfig );
 

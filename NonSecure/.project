@@ -347,9 +347,29 @@
 			<locationURI>PARENT-1-PROJECT_LOC/Drivers/BSP/lr1110_driver/src/lr1110_bootloader.c</locationURI>
 		</link>
 		<link>
+			<name>Drivers/BSP/lr1110_driver/src/lr1110_bootloader.h</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Drivers/BSP/lr1110_driver/src/lr1110_bootloader.h</locationURI>
+		</link>
+		<link>
+			<name>Drivers/BSP/lr1110_driver/src/lr1110_bootloader_types.h</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Drivers/BSP/lr1110_driver/src/lr1110_bootloader_types.h</locationURI>
+		</link>
+		<link>
 			<name>Drivers/BSP/lr1110_driver/src/lr1110_crypto_engine.c</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/Drivers/BSP/lr1110_driver/src/lr1110_crypto_engine.c</locationURI>
+		</link>
+		<link>
+			<name>Drivers/BSP/lr1110_driver/src/lr1110_crypto_engine.h</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Drivers/BSP/lr1110_driver/src/lr1110_crypto_engine.h</locationURI>
+		</link>
+		<link>
+			<name>Drivers/BSP/lr1110_driver/src/lr1110_crypto_engine_types.h</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Drivers/BSP/lr1110_driver/src/lr1110_crypto_engine_types.h</locationURI>
 		</link>
 		<link>
 			<name>Drivers/BSP/lr1110_driver/src/lr1110_driver_version.c</name>
@@ -357,9 +377,29 @@
 			<locationURI>PARENT-1-PROJECT_LOC/Drivers/BSP/lr1110_driver/src/lr1110_driver_version.c</locationURI>
 		</link>
 		<link>
+			<name>Drivers/BSP/lr1110_driver/src/lr1110_driver_version.h</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Drivers/BSP/lr1110_driver/src/lr1110_driver_version.h</locationURI>
+		</link>
+		<link>
 			<name>Drivers/BSP/lr1110_driver/src/lr1110_gnss.c</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/Drivers/BSP/lr1110_driver/src/lr1110_gnss.c</locationURI>
+		</link>
+		<link>
+			<name>Drivers/BSP/lr1110_driver/src/lr1110_gnss.h</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Drivers/BSP/lr1110_driver/src/lr1110_gnss.h</locationURI>
+		</link>
+		<link>
+			<name>Drivers/BSP/lr1110_driver/src/lr1110_gnss_types.h</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Drivers/BSP/lr1110_driver/src/lr1110_gnss_types.h</locationURI>
+		</link>
+		<link>
+			<name>Drivers/BSP/lr1110_driver/src/lr1110_hal.h</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Drivers/BSP/lr1110_driver/src/lr1110_hal.h</locationURI>
 		</link>
 		<link>
 			<name>Drivers/BSP/lr1110_driver/src/lr1110_radio.c</name>
@@ -367,9 +407,24 @@
 			<locationURI>PARENT-1-PROJECT_LOC/Drivers/BSP/lr1110_driver/src/lr1110_radio.c</locationURI>
 		</link>
 		<link>
+			<name>Drivers/BSP/lr1110_driver/src/lr1110_radio.h</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Drivers/BSP/lr1110_driver/src/lr1110_radio.h</locationURI>
+		</link>
+		<link>
+			<name>Drivers/BSP/lr1110_driver/src/lr1110_radio_types.h</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Drivers/BSP/lr1110_driver/src/lr1110_radio_types.h</locationURI>
+		</link>
+		<link>
 			<name>Drivers/BSP/lr1110_driver/src/lr1110_regmem.c</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/Drivers/BSP/lr1110_driver/src/lr1110_regmem.c</locationURI>
+		</link>
+		<link>
+			<name>Drivers/BSP/lr1110_driver/src/lr1110_regmem.h</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Drivers/BSP/lr1110_driver/src/lr1110_regmem.h</locationURI>
 		</link>
 		<link>
 			<name>Drivers/BSP/lr1110_driver/src/lr1110_system.c</name>
@@ -377,9 +432,34 @@
 			<locationURI>PARENT-1-PROJECT_LOC/Drivers/BSP/lr1110_driver/src/lr1110_system.c</locationURI>
 		</link>
 		<link>
+			<name>Drivers/BSP/lr1110_driver/src/lr1110_system.h</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Drivers/BSP/lr1110_driver/src/lr1110_system.h</locationURI>
+		</link>
+		<link>
+			<name>Drivers/BSP/lr1110_driver/src/lr1110_system_types.h</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Drivers/BSP/lr1110_driver/src/lr1110_system_types.h</locationURI>
+		</link>
+		<link>
+			<name>Drivers/BSP/lr1110_driver/src/lr1110_types.h</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Drivers/BSP/lr1110_driver/src/lr1110_types.h</locationURI>
+		</link>
+		<link>
 			<name>Drivers/BSP/lr1110_driver/src/lr1110_wifi.c</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/Drivers/BSP/lr1110_driver/src/lr1110_wifi.c</locationURI>
+		</link>
+		<link>
+			<name>Drivers/BSP/lr1110_driver/src/lr1110_wifi.h</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Drivers/BSP/lr1110_driver/src/lr1110_wifi.h</locationURI>
+		</link>
+		<link>
+			<name>Drivers/BSP/lr1110_driver/src/lr1110_wifi_types.h</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Drivers/BSP/lr1110_driver/src/lr1110_wifi_types.h</locationURI>
 		</link>
 		<link>
 			<name>Middlewares/Third_Party/LoRaWAN/Advanced/CayenneLpp.c</name>

@@ -28,6 +28,7 @@ static int32_t vref;
 
 int32_t   BSP_IDD_Init(uint32_t Instance)
 {
+	HAL_GPIO_WritePin(CHARGE_CE_GPIO_Port, CHARGE_CE_Pin, GPIO_PIN_RESET);
 	int32_t status = BSP_ERROR_NONE;
 	return status;
 }

@@ -56,6 +56,9 @@ void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(GPIOD, LR_NSS_Pin|LR_NRST_Pin, GPIO_PIN_SET);
 
   /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(CHARGE_CE_GPIO_Port, CHARGE_CE_Pin, GPIO_PIN_SET);
+
+  /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GYO_DEN_GPIO_Port, GYO_DEN_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin : PtPin */
@@ -101,6 +104,13 @@ void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : PtPin */
+  GPIO_InitStruct.Pin = CHARGE_CE_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(CHARGE_CE_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pin : PtPin */
   GPIO_InitStruct.Pin = GYO_DEN_Pin;
@@ -270,58 +280,74 @@ void GpioSetInterrupt( Gpio_t *obj, IrqModes irqMode, IrqPriorities irqPriority,
         switch( obj->pinIndex )
         {
         case GPIO_PIN_0:
+        	GpioIrq[0] = obj;
             IRQnb = EXTI0_IRQn;
             break;
         case GPIO_PIN_1:
+        	GpioIrq[1] = obj;
             IRQnb = EXTI1_IRQn;
             break;
         case GPIO_PIN_2:
+        	GpioIrq[2] = obj;
             IRQnb = EXTI2_IRQn;
             break;
         case GPIO_PIN_3:
+        	GpioIrq[3] = obj;
             IRQnb = EXTI3_IRQn;
             break;
         case GPIO_PIN_4:
+        	GpioIrq[4] = obj;
             IRQnb = EXTI4_IRQn;
             break;
         case GPIO_PIN_5:
+        	GpioIrq[5] = obj;
             IRQnb = EXTI5_IRQn;
             break;
         case GPIO_PIN_6:
+        	GpioIrq[6] = obj;
             IRQnb = EXTI6_IRQn;
             break;
         case GPIO_PIN_7:
+        	GpioIrq[7] = obj;
             IRQnb = EXTI7_IRQn;
             break;
         case GPIO_PIN_8:
+        	GpioIrq[8] = obj;
             IRQnb = EXTI8_IRQn;
             break;
         case GPIO_PIN_9:
+        	GpioIrq[9] = obj;
             IRQnb = EXTI9_IRQn;
             break;
         case GPIO_PIN_10:
+        	GpioIrq[10] = obj;
             IRQnb = EXTI10_IRQn;
             break;
         case GPIO_PIN_11:
+        	GpioIrq[11] = obj;
             IRQnb = EXTI11_IRQn;
             break;
         case GPIO_PIN_12:
+        	GpioIrq[12] = obj;
             IRQnb = EXTI12_IRQn;
             break;
         case GPIO_PIN_13:
+        	GpioIrq[13] = obj;
             IRQnb = EXTI13_IRQn;
             break;
         case GPIO_PIN_14:
+        	GpioIrq[14] = obj;
             IRQnb = EXTI14_IRQn;
             break;
         case GPIO_PIN_15:
+        	GpioIrq[15] = obj;
             IRQnb = EXTI15_IRQn;
             break;
         default:
             break;
         }
 
-        GpioIrq[( obj->pin ) & 0x0F] = obj;
+//        GpioIrq[( obj->pin ) & 0x0F] = obj;
 
         HAL_NVIC_SetPriority( IRQnb , priority, 0 );
         HAL_NVIC_EnableIRQ( IRQnb );

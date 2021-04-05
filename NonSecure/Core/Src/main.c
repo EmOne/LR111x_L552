@@ -57,11 +57,11 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-#define TX_CW	1
+//#define TX_CW	1
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
-/* USER CODE BEGIN PM */
+/* USER CODE BEGIN PM *y/
 
 /* USER CODE END PM */
 
@@ -183,8 +183,8 @@ extern lr1110_t LR1110;
 
 #ifdef TX_CW
 #define RF_FREQUENCY                                923000000 // Hz
-#define TX_OUTPUT_POWER                             22        // 14 dBm
-#define TX_TIMEOUT									1000
+#define TX_OUTPUT_POWER                             20        // 14 dBm
+#define TX_TIMEOUT									100
 /*!
  * Radio events function pointer
  */
