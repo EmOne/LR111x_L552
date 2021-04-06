@@ -264,6 +264,11 @@ LmHandlerErrorStatus_t LmHandlerInit( LmHandlerCallbacks_t *handlerCallbacks,
     else
     {
 #if( OVER_THE_AIR_ACTIVATION == 0 )
+    	static uint8_t FNwkSIntKey[] = LORAWAN_F_NWK_S_INT_KEY;
+    	static uint8_t SNwkSIntKey[] = LORAWAN_S_NWK_S_INT_KEY;
+    	static uint8_t NwkSEncKey[] = LORAWAN_NWK_S_ENC_KEY;
+    	static uint8_t AppSKey[] = LORAWAN_APP_S_KEY;
+
         // Tell the MAC layer which network server version are we connecting too.
         mibReq.Type = MIB_ABP_LORAWAN_VERSION;
         mibReq.Param.AbpLrWanVersion.Value = ABP_ACTIVATION_LRWAN_VERSION;
@@ -272,6 +277,22 @@ LmHandlerErrorStatus_t LmHandlerInit( LmHandlerCallbacks_t *handlerCallbacks,
         mibReq.Type = MIB_NET_ID;
         mibReq.Param.NetID = LORAWAN_NETWORK_ID;
         LoRaMacMibSetRequestConfirm( &mibReq );
+
+        mibReq.Type = MIB_F_NWK_S_INT_KEY;
+		mibReq.Param.FNwkSIntKey = FNwkSIntKey;
+		LoRaMacMibSetRequestConfirm( &mibReq );
+
+		mibReq.Type = MIB_S_NWK_S_INT_KEY;
+		mibReq.Param.SNwkSIntKey = SNwkSIntKey;
+		LoRaMacMibSetRequestConfirm( &mibReq );
+
+		mibReq.Type = MIB_NWK_S_ENC_KEY;
+		mibReq.Param.NwkSEncKey = NwkSEncKey;
+		LoRaMacMibSetRequestConfirm( &mibReq );
+
+		mibReq.Type = MIB_APP_S_KEY;
+		mibReq.Param.AppSKey = AppSKey;
+		LoRaMacMibSetRequestConfirm( &mibReq );
 
 #if( STATIC_DEVICE_ADDRESS != 1 )
         // Random seed initialization
