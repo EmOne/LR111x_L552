@@ -1582,14 +1582,15 @@ enum BoardPowerSources
 #define BATTERY_SHUTDOWN_LEVEL                      2300 // mV
 
 static uint16_t BatteryVoltage = BATTERY_MAX_LEVEL;
-static uint16_t vref = 0;
+extern uint16_t vref;
 uint16_t BoardBatteryMeasureVolage( void )
 {
 
     uint32_t batteryVoltage = 0;
 
     // Read the current Voltage
-    vref = BSP_IDD_StartMeasurement(2);
+    BSP_IDD_StartMeasurement(2);
+    BSP_IDD_GetValue(2, &vref);
 //    vref = AdcReadChannel( &Adc , ADC_CHANNEL_17 );
 
     // We don't use the VREF from calibValues here.
@@ -1597,7 +1598,7 @@ uint16_t BoardBatteryMeasureVolage( void )
     batteryVoltage = ( uint32_t )ADC_VREF_BANDGAP * ( uint32_t )ADC_MAX_VALUE;
     batteryVoltage = batteryVoltage / ( uint32_t )vref;
 
-    return batteryVoltage;
+    return (batteryVoltage / 10);
 }
 
 uint32_t BoardGetBatteryVoltage( void )

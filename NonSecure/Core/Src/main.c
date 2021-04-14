@@ -58,10 +58,11 @@
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
 //#define TX_CW	1
+//#define RX_SENSE	1
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
-/* USER CODE BEGIN PM *y/
+/* USER CODE BEGIN PM */
 
 /* USER CODE END PM */
 
@@ -84,7 +85,7 @@
 /*!
  * Defines the application data transmission duty cycle. 5s, value in [ms].
  */
-#define APP_TX_DUTYCYCLE                            5000
+#define APP_TX_DUTYCYCLE                            5000 * 6
 
 /*!
  * Defines a random delay for application data transmission duty cycle. 1s,
@@ -104,7 +105,7 @@
  *
  * \remark Please note that LORAWAN_DEFAULT_DATARATE is used only when ADR is disabled
  */
-#define LORAWAN_DEFAULT_DATARATE                    DR_0
+#define LORAWAN_DEFAULT_DATARATE                    DR_2
 
 /*!
  * LoRaWAN confirmed messages
@@ -181,7 +182,7 @@ static TimerEvent_t LedBeaconTimer;
 
 extern lr1110_t LR1110;
 
-#ifdef TX_CW
+#if defined( TX_CW ) || defined( RX_SENSE )
 #define RF_FREQUENCY                                923000000 // Hz
 #define TX_OUTPUT_POWER                             20        // 14 dBm
 #define TX_TIMEOUT									100
@@ -190,6 +191,22 @@ extern lr1110_t LR1110;
  */
 static RadioEvents_t RadioEvents;
 void OnRadioTxTimeout( void );
+#define LORA_BANDWIDTH                              0         // [0: 125 kHz,
+                                                              //  1: 250 kHz,
+                                                              //  2: 500 kHz,
+                                                              //  3: Reserved]
+#define LORA_SPREADING_FACTOR                       10        // [SF7..SF12]
+#define LORA_CODINGRATE                             1         // [1: 4/5,
+                                                              //  2: 4/6,
+                                                              //  3: 4/7,
+                                                              //  4: 4/8]
+#define LORA_SYMBOL_TIMEOUT                         5         // Symbols
+#define LORA_PREAMBLE_LENGTH                        8         // Same for Tx and Rx
+#define LORA_FIX_LENGTH_PAYLOAD_ON                  false
+#define LORA_IQ_INVERSION_ON                        false
+void OnRadioRxDone( uint8_t* payload, uint16_t size, int16_t rssi, int8_t snr );
+void OnRadioRxTimeout( void );
+static int16_t iRssi;
 #endif /* TX_CW */
 /* USER CODE END PV */
 
@@ -350,6 +367,9 @@ int main(void)
 		  LR_MISO_GPIO_Port, LR_MISO_Pin, LR_SCK_GPIO_Port, LR_SCK_Pin, NULL, NC);
   lr1110_board_init_io( &LR1110 );
 
+//  lr1110_gnss_set_scan_mode(&LR1110, LR1110_GNSS_SINGLE_SCAN_MODE, inter_capture_delay_second);
+//  lr1110_gnss_scan_autonomous(&LR1110, );
+
   TimerInit( &Led1Timer, OnLed1TimerEvent );
   TimerSetValue( &Led1Timer, 25 );
 
@@ -368,6 +388,23 @@ int main(void)
   TimerSetValue( &Led1Timer, 500 );
   TimerSetValue( &Led2Timer, 200 );
   TimerStart( &Led1Timer );
+#elif RX_SENSE
+  // Radio initialization
+      RadioEvents.RxDone = OnRadioRxDone;
+      RadioEvents.RxTimeout = OnRadioRxTimeout;
+      RadioEvents.RxError = OnRadioRxTimeout;
+
+      Radio.Init( &RadioEvents );
+
+      Radio.SetChannel( RF_FREQUENCY );
+
+      Radio.SetRxConfig( MODEM_LORA, LORA_BANDWIDTH, LORA_SPREADING_FACTOR,
+                                         LORA_CODINGRATE, 0, LORA_PREAMBLE_LENGTH,
+                                         LORA_SYMBOL_TIMEOUT, LORA_FIX_LENGTH_PAYLOAD_ON,
+                                         0, true, 0, 0, LORA_IQ_INVERSION_ON, true );
+
+      Radio.Rx( 0 ); // Continuous Rx
+      TimerStart( &LedBeaconTimer );
 #else
   // Initialize transmission periodicity variable
   TxPeriodicity = APP_TX_DUTYCYCLE + randr( -APP_TX_DUTYCYCLE_RND, APP_TX_DUTYCYCLE_RND );
@@ -408,11 +445,13 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-#ifdef TX_CW
+#if defined( TX_CW ) || defined( RX_SENSE )
 	  // Process Radio IRQ
 	         if( Radio.IrqProcess != NULL )
 	         {
 	             Radio.IrqProcess( );
+	             iRssi = Radio.Rssi(MODEM_LORA);
+	             printf("White noise rssi: %d dBm\r\n", iRssi);
 	         }
 	         if( Led1TimerEvent == true )
 	         {
@@ -441,10 +480,6 @@ int main(void)
 
 		// Processes the LoRaMac events
 		LmHandlerProcess();
-		BSP_IDD_StartMeasurement(0);
-		BSP_IDD_GetValue(0, (uint32_t*) &iddValue[0]);
-		BSP_IDD_GetValue(1, (uint32_t*) &iddValue[1]);
-		BSP_GYRO_GetXYZ(pfData);
 
 		// Process application uplinks management
 		UplinkProcess();
@@ -619,6 +654,12 @@ static void PrepareTxFrame( void )
         return;
     }
 
+    BSP_GYRO_GetXYZ(pfData);
+    BSP_GYRO_LowPower();
+	BSP_IDD_StartMeasurement(0);
+	BSP_IDD_GetValue(0, (uint32_t*) &iddValue[0]);
+	BSP_IDD_GetValue(1, (uint32_t*) &iddValue[1]);
+
     uint8_t channel = 0;
 
     AppData.Port = LORAWAN_APP_PORT;
@@ -636,7 +677,7 @@ static void PrepareTxFrame( void )
     {
         // Switch LED 1 ON
 //        GpioWrite( &Led1, 1 );
-        SECURE_LED_YELLOW(true);
+        SECURE_LED_YELLOW(false);
         TimerStart( &Led1Timer );
     }
 }
@@ -720,7 +761,7 @@ static void OnLed1TimerEvent( void* context )
     TimerStop( &Led1Timer );
     // Switch LED 1 OFF
 //    GpioWrite( &Led1, 0 );
-    SECURE_LED_YELLOW(false);
+    SECURE_LED_YELLOW(true);
 #endif
 }
 
@@ -747,6 +788,20 @@ void OnRadioTxTimeout( void )
 {
     // Restarts continuous wave transmission when timeout expires
     Radio.SetTxContinuousWave( RF_FREQUENCY, TX_OUTPUT_POWER, TX_TIMEOUT );
+}
+#elif defined( RX_SENSE )
+void OnRadioRxTimeout( void )
+{
+	Led1TimerEvent = true;
+	SECURE_LEDToggle_RED();
+	Radio.Rx( 0 );
+}
+
+void OnRadioRxDone( uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr )
+{
+	Led2TimerEvent = true;
+	SECURE_LEDToggle_YELLOW();
+	Radio.Rx( 0 );
 }
 #endif /* TX_CW */
 

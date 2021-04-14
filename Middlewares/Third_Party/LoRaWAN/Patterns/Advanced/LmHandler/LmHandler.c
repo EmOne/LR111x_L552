@@ -227,6 +227,14 @@ static void LmHandlerPackagesNotify( PackageNotifyTypes_t notifyType, void *para
 
 static void LmHandlerPackagesProcess( void );
 
+#if( OVER_THE_AIR_ACTIVATION == 0 )
+    	static uint8_t FNwkSIntKey[] = LORAWAN_F_NWK_S_INT_KEY;
+    	static uint8_t SNwkSIntKey[] = LORAWAN_S_NWK_S_INT_KEY;
+    	static uint8_t NwkSEncKey[] = LORAWAN_NWK_S_ENC_KEY;
+    	static uint8_t AppSKey[] = LORAWAN_APP_S_KEY;
+#endif
+    	static uint8_t AppKey[] = LORAWAN_APP_KEY;
+
 LmHandlerErrorStatus_t LmHandlerInit( LmHandlerCallbacks_t *handlerCallbacks,
                                       LmHandlerParams_t *handlerParams )
 {
@@ -264,10 +272,6 @@ LmHandlerErrorStatus_t LmHandlerInit( LmHandlerCallbacks_t *handlerCallbacks,
     else
     {
 #if( OVER_THE_AIR_ACTIVATION == 0 )
-    	static uint8_t FNwkSIntKey[] = LORAWAN_F_NWK_S_INT_KEY;
-    	static uint8_t SNwkSIntKey[] = LORAWAN_S_NWK_S_INT_KEY;
-    	static uint8_t NwkSEncKey[] = LORAWAN_NWK_S_ENC_KEY;
-    	static uint8_t AppSKey[] = LORAWAN_APP_S_KEY;
 
         // Tell the MAC layer which network server version are we connecting too.
         mibReq.Type = MIB_ABP_LORAWAN_VERSION;
@@ -304,23 +308,28 @@ LmHandlerErrorStatus_t LmHandlerInit( LmHandlerCallbacks_t *handlerCallbacks,
         mibReq.Type = MIB_DEV_ADDR;
         mibReq.Param.DevAddr = CommissioningParams.DevAddr;
         LoRaMacMibSetRequestConfirm( &mibReq );
+
 #endif // #if( OVER_THE_AIR_ACTIVATION == 0 )
     }
 
-    // Read secure-element DEV_EUI, JOI_EUI and SE_PIN values.
-    mibReq.Type = MIB_DEV_EUI;
-    LoRaMacMibGetRequestConfirm( &mibReq );
-    memcpy1( CommissioningParams.DevEui, mibReq.Param.DevEui, 8 );
+	mibReq.Type = MIB_APP_KEY;
+	mibReq.Param.AppKey = AppKey;
+	LoRaMacMibSetRequestConfirm( &mibReq );
 
-    mibReq.Type = MIB_JOIN_EUI;
-    LoRaMacMibGetRequestConfirm( &mibReq );
-    memcpy1( CommissioningParams.JoinEui, mibReq.Param.JoinEui, 8 );
+	// Read secure-element DEV_EUI, JOI_EUI and SE_PIN values.
+	mibReq.Type = MIB_DEV_EUI;
+	LoRaMacMibGetRequestConfirm( &mibReq );
+	memcpy1( CommissioningParams.DevEui, mibReq.Param.DevEui, 8 );
 
-    mibReq.Type = MIB_SE_PIN;
-    LoRaMacMibGetRequestConfirm( &mibReq );
-    memcpy1( CommissioningParams.SePin, mibReq.Param.SePin, 4 );
+	mibReq.Type = MIB_JOIN_EUI;
+	LoRaMacMibGetRequestConfirm( &mibReq );
+	memcpy1( CommissioningParams.JoinEui, mibReq.Param.JoinEui, 8 );
 
-    mibReq.Type = MIB_PUBLIC_NETWORK;
+	mibReq.Type = MIB_SE_PIN;
+	LoRaMacMibGetRequestConfirm( &mibReq );
+	memcpy1( CommissioningParams.SePin, mibReq.Param.SePin, 4 );
+
+		mibReq.Type = MIB_PUBLIC_NETWORK;
     mibReq.Param.EnablePublicNetwork = LmHandlerParams->PublicNetworkEnable;
     LoRaMacMibSetRequestConfirm( &mibReq );
 

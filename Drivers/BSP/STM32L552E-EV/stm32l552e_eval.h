@@ -478,6 +478,8 @@ uint8_t GetBoardPowerSource( void );
 // */
 //Version_t BoardGetVersion( void );
 
+//void BoardInitMcu( void );
+
 /**
   * @}
   */

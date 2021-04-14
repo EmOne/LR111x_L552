@@ -110,7 +110,7 @@ uint8_t BSP_GYRO_Init(void)
     GyroscopeDrv->Init(&ICG20330_InitStructure);
 
     /* Configure component filter */
-      GyroscopeDrv->FilterConfig(0x00) ;
+      GyroscopeDrv->FilterConfig(0x02) ;
 
     /* Enable component filter */
     GyroscopeDrv->FilterCmd(0x1B);

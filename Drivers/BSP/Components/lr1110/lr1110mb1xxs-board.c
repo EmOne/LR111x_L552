@@ -30,6 +30,7 @@
 #include "lr1110_regmem.h"
 
 #include "lr1110-board.h"
+#include "lr1110_gnss.h"
 
 #define LR1110_SHIELD_HAS_TCXO                      0
 

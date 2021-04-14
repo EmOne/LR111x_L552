@@ -30,6 +30,7 @@
 #include "se-identity.h"
 #include "lr1110-se-hal.h"
 
+#define SECURE_ELEMENT_PRE_PROVISIONED
 /*!
  * Number of supported crypto keys
  */
