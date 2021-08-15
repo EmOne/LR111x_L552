@@ -42,6 +42,11 @@
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
+			<name>Middlewares/STM32_USB_Device_Library</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
 			<name>Middlewares/Third_Party</name>
 			<type>2</type>
 			<locationURI>virtual:/virtual</locationURI>
@@ -92,6 +97,16 @@
 			<locationURI>PARENT-1-PROJECT_LOC/Drivers/STM32L5xx_HAL_Driver/Src/stm32l5xx_hal_cortex.c</locationURI>
 		</link>
 		<link>
+			<name>Drivers/STM32L5xx_HAL_Driver/stm32l5xx_hal_crc.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Drivers/STM32L5xx_HAL_Driver/Src/stm32l5xx_hal_crc.c</locationURI>
+		</link>
+		<link>
+			<name>Drivers/STM32L5xx_HAL_Driver/stm32l5xx_hal_crc_ex.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Drivers/STM32L5xx_HAL_Driver/Src/stm32l5xx_hal_crc_ex.c</locationURI>
+		</link>
+		<link>
 			<name>Drivers/STM32L5xx_HAL_Driver/stm32l5xx_hal_dma.c</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/Drivers/STM32L5xx_HAL_Driver/Src/stm32l5xx_hal_dma.c</locationURI>
@@ -127,6 +142,11 @@
 			<locationURI>PARENT-1-PROJECT_LOC/Drivers/STM32L5xx_HAL_Driver/Src/stm32l5xx_hal_gpio.c</locationURI>
 		</link>
 		<link>
+			<name>Drivers/STM32L5xx_HAL_Driver/stm32l5xx_hal_gtzc.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Drivers/STM32L5xx_HAL_Driver/Src/stm32l5xx_hal_gtzc.c</locationURI>
+		</link>
+		<link>
 			<name>Drivers/STM32L5xx_HAL_Driver/stm32l5xx_hal_i2c.c</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/Drivers/STM32L5xx_HAL_Driver/Src/stm32l5xx_hal_i2c.c</locationURI>
@@ -140,6 +160,16 @@
 			<name>Drivers/STM32L5xx_HAL_Driver/stm32l5xx_hal_icache.c</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/Drivers/STM32L5xx_HAL_Driver/Src/stm32l5xx_hal_icache.c</locationURI>
+		</link>
+		<link>
+			<name>Drivers/STM32L5xx_HAL_Driver/stm32l5xx_hal_pcd.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Drivers/STM32L5xx_HAL_Driver/Src/stm32l5xx_hal_pcd.c</locationURI>
+		</link>
+		<link>
+			<name>Drivers/STM32L5xx_HAL_Driver/stm32l5xx_hal_pcd_ex.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Drivers/STM32L5xx_HAL_Driver/Src/stm32l5xx_hal_pcd_ex.c</locationURI>
 		</link>
 		<link>
 			<name>Drivers/STM32L5xx_HAL_Driver/stm32l5xx_hal_pwr.c</name>
@@ -212,11 +242,6 @@
 			<locationURI>PARENT-1-PROJECT_LOC/Drivers/STM32L5xx_HAL_Driver/Src/stm32l5xx_hal_uart_ex.c</locationURI>
 		</link>
 		<link>
-			<name>Drivers/STM32L5xx_HAL_Driver/stm32l5xx_ll_crc.c</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Drivers/STM32L5xx_HAL_Driver/Src/stm32l5xx_ll_crc.c</locationURI>
-		</link>
-		<link>
 			<name>Drivers/STM32L5xx_HAL_Driver/stm32l5xx_ll_exti.c</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/Drivers/STM32L5xx_HAL_Driver/Src/stm32l5xx_ll_exti.c</locationURI>
@@ -227,9 +252,29 @@
 			<locationURI>PARENT-1-PROJECT_LOC/Drivers/STM32L5xx_HAL_Driver/Src/stm32l5xx_ll_gpio.c</locationURI>
 		</link>
 		<link>
+			<name>Drivers/STM32L5xx_HAL_Driver/stm32l5xx_ll_ucpd.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Drivers/STM32L5xx_HAL_Driver/Src/stm32l5xx_ll_ucpd.c</locationURI>
+		</link>
+		<link>
+			<name>Drivers/STM32L5xx_HAL_Driver/stm32l5xx_ll_usb.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Drivers/STM32L5xx_HAL_Driver/Src/stm32l5xx_ll_usb.c</locationURI>
+		</link>
+		<link>
 			<name>Drivers/STM32L5xx_HAL_Driver/stm32l5xx_ll_utils.c</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/Drivers/STM32L5xx_HAL_Driver/Src/stm32l5xx_ll_utils.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/STM32_USB_Device_Library/Class</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/STM32_USB_Device_Library/Core</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
 			<name>Middlewares/Third_Party/LoRaWAN</name>
@@ -288,6 +333,21 @@
 		</link>
 		<link>
 			<name>Drivers/BSP/lr1110_driver/src</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/STM32_USB_Device_Library/Class/CDC</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/STM32_USB_Device_Library/Core/Inc</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/STM32_USB_Device_Library/Core/Src</name>
 			<type>2</type>
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
@@ -460,6 +520,51 @@
 			<name>Drivers/BSP/lr1110_driver/src/lr1110_wifi_types.h</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/Drivers/BSP/lr1110_driver/src/lr1110_wifi_types.h</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/STM32_USB_Device_Library/Class/CDC/Inc</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/STM32_USB_Device_Library/Class/CDC/Src</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/STM32_USB_Device_Library/Core/Inc/usbd_core.h</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_core.h</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/STM32_USB_Device_Library/Core/Inc/usbd_ctlreq.h</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ctlreq.h</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/STM32_USB_Device_Library/Core/Inc/usbd_def.h</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_def.h</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/STM32_USB_Device_Library/Core/Inc/usbd_ioreq.h</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ioreq.h</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/STM32_USB_Device_Library/Core/Src/usbd_core.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/STM32_USB_Device_Library/Core/Src/usbd_ioreq.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.c</locationURI>
 		</link>
 		<link>
 			<name>Middlewares/Third_Party/LoRaWAN/Advanced/CayenneLpp.c</name>
@@ -665,6 +770,16 @@
 			<name>Drivers/BSP/EEPROM_Emul/Porting/STM32L5/flash_interface.c</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/Drivers/BSP/EEPROM_Emul/Porting/STM32L5/flash_interface.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/STM32_USB_Device_Library/Class/CDC/Inc/usbd_cdc.h</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc/usbd_cdc.h</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.c</locationURI>
 		</link>
 		<link>
 			<name>Middlewares/Third_Party/LoRaWAN/Advanced/LmHandler/LmHandler.c</name>

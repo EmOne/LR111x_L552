@@ -66,6 +66,7 @@ void HAL_MspInit(void)
   /* USER CODE BEGIN MspInit 0 */
 
   /* USER CODE END MspInit 0 */
+  PWR_PVDTypeDef sConfigPVD = {0};
 
   __HAL_RCC_SYSCFG_CLK_ENABLE();
   __HAL_RCC_PWR_CLK_ENABLE();
@@ -80,13 +81,26 @@ void HAL_MspInit(void)
   /* FPU_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(FPU_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(FPU_IRQn);
-  /* ICACHE_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(ICACHE_IRQn, 0, 0);
-  HAL_NVIC_EnableIRQ(ICACHE_IRQn);
 
-  /** Disable the internal Pull-Up in Dead Battery pins of UCPD peripheral
+  /** PVD Configuration
   */
-  HAL_PWREx_DisableUCPDDeadBattery();
+  sConfigPVD.PVDLevel = PWR_PVDLEVEL_0;
+  sConfigPVD.Mode = PWR_PVD_MODE_NORMAL;
+  HAL_PWR_ConfigPVD(&sConfigPVD);
+  /** Enable the PVD Output
+  */
+  HAL_PWR_EnablePVD();
+  /** PWR Non-Privilege/Non-Secure Items Configurations
+  */
+  HAL_PWR_ConfigAttributes(PWR_WKUP1, PWR_NSEC |PWR_NPRIV);
+  HAL_PWR_ConfigAttributes(PWR_WKUP2, PWR_NSEC |PWR_NPRIV);
+  HAL_PWR_ConfigAttributes(PWR_WKUP3, PWR_NSEC |PWR_NPRIV);
+  HAL_PWR_ConfigAttributes(PWR_WKUP4, PWR_NSEC |PWR_NPRIV);
+  HAL_PWR_ConfigAttributes(PWR_WKUP5, PWR_NSEC |PWR_NPRIV);
+  HAL_PWR_ConfigAttributes(PWR_VDM, PWR_NSEC |PWR_NPRIV);
+  HAL_PWR_ConfigAttributes(PWR_APC, PWR_NSEC |PWR_NPRIV);
+  HAL_PWR_ConfigAttributes(PWR_LPM, PWR_NSEC |PWR_NPRIV);
+  HAL_PWR_ConfigAttributes(PWR_VB, PWR_NSEC |PWR_NPRIV);
 
   /* USER CODE BEGIN MspInit 1 */
 

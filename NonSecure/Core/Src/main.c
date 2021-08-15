@@ -22,18 +22,27 @@
 #include "adc.h"
 #include "crc.h"
 #include "dma.h"
+#include "gtzc.h"
 #include "i2c.h"
+#include "icache.h"
 #include "usart.h"
 #include "rng.h"
 #include "rtc.h"
 #include "spi.h"
 #include "tim.h"
+#include "ucpd.h"
+#include "usb_device.h"
 #include "gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "stm32l552e_eval.h"
 #include "lr1110-board.h"
+#include "lr1110_wifi.h"
+#include "lr1110_gnss.h"
+#include "lr1110_bootloader.h"
+#include "lr1110_driver_version.h"
+
 #include "radio.h"
 #include "stdio.h"
 #include "stdbool.h"
@@ -336,6 +345,9 @@ int main(void)
     HAL_DBGMCU_EnableDBGStandbyMode( );
   /* USER CODE END Init */
 
+  /* GTZC initialisation */
+  MX_GTZC_NS_Init();
+
   /* USER CODE BEGIN SysInit */
   /* Register SecureFault callback defined in non-secure and to be called by secure handler */
     SECURE_RegisterCallback(SECURE_FAULT_CB_ID, (void *)SecureFault_Callback);
@@ -358,17 +370,20 @@ int main(void)
   MX_LPUART1_UART_Init();
   MX_CRC_Init();
   MX_RNG_Init();
+  MX_UCPD1_Init();
+  MX_USB_Device_Init();
+  MX_USART2_UART_Init();
+  MX_ICACHE_Init();
   /* USER CODE BEGIN 2 */
   RtcInit();
   BSP_GYRO_Init();
+#if V010
   BSP_IDD_Init(0);
   BSP_IDD_Init(1);
+#endif
   SpiInit(&LR1110.spi, SPI_3, LR_MOSI_GPIO_Port, LR_MOSI_Pin,
 		  LR_MISO_GPIO_Port, LR_MISO_Pin, LR_SCK_GPIO_Port, LR_SCK_Pin, NULL, NC);
   lr1110_board_init_io( &LR1110 );
-
-//  lr1110_gnss_set_scan_mode(&LR1110, LR1110_GNSS_SINGLE_SCAN_MODE, inter_capture_delay_second);
-//  lr1110_gnss_scan_autonomous(&LR1110, );
 
   TimerInit( &Led1Timer, OnLed1TimerEvent );
   TimerSetValue( &Led1Timer, 25 );
@@ -660,6 +675,12 @@ static void PrepareTxFrame( void )
 	BSP_IDD_GetValue(0, (uint32_t*) &iddValue[0]);
 	BSP_IDD_GetValue(1, (uint32_t*) &iddValue[1]);
 
+//	lr1110_wifi_get_nb_results(&LR1110, &LR1110.wifi.nb_results);
+//	lr1110_wifi_read_basic_complete_results(&LR1110, 0, LR1110.wifi.nb_results, LR1110.wifi.all_results);
+
+//	lr1110_gnss_set_scan_mode(&LR1110, LR1110_GNSS_SINGLE_SCAN_MODE, inter_capture_delay_second);
+//	lr1110_gnss_scan_autonomous(&LR1110, );
+
     uint8_t channel = 0;
 
     AppData.Port = LORAWAN_APP_PORT;
@@ -673,7 +694,8 @@ static void PrepareTxFrame( void )
     CayenneLppCopy( AppData.Buffer );
     AppData.BufferSize = CayenneLppGetSize( );
 
-    if( LmHandlerSend( &AppData, LmHandlerParams.IsTxConfirmed ) == LORAMAC_HANDLER_SUCCESS )
+
+
     {
         // Switch LED 1 ON
 //        GpioWrite( &Led1, 1 );
@@ -818,7 +840,7 @@ static void OnLedBeaconTimerEvent( void* context )
 }
 /* USER CODE END 4 */
 
- /**
+/**
   * @brief  Period elapsed callback in non blocking mode
   * @note   This function is called  when TIM6 interrupt took place, inside
   * HAL_TIM_IRQHandler(). It makes a direct call to HAL_IncTick() to increment

@@ -38,7 +38,7 @@ extern "C" {
 /* Includes ------------------------------------------------------------------*/
 #include "stm32l5xx_hal.h"
 
-#include "stm32l5xx_ll_crc.h"
+#include "stm32l5xx_ll_ucpd.h"
 #include "stm32l5xx_ll_bus.h"
 #include "stm32l5xx_ll_cortex.h"
 #include "stm32l5xx_ll_rcc.h"
@@ -88,8 +88,12 @@ void Error_Handler(void);
 /* Private defines -----------------------------------------------------------*/
 #define GYO_INT2_Pin GPIO_PIN_3
 #define GYO_INT2_GPIO_Port GPIOE
+#define OSC_OUT_Pin GPIO_PIN_1
+#define OSC_OUT_GPIO_Port GPIOH
 #define WKUP_Pin GPIO_PIN_0
 #define WKUP_GPIO_Port GPIOA
+#define MB1_DE_Pin GPIO_PIN_1
+#define MB1_DE_GPIO_Port GPIOA
 #define MB1_TX_Pin GPIO_PIN_2
 #define MB1_TX_GPIO_Port GPIOA
 #define MB1_RX_Pin GPIO_PIN_3
@@ -136,8 +140,18 @@ void Error_Handler(void);
 #define LR_BUSY_GPIO_Port GPIOD
 #define LR_NRST_Pin GPIO_PIN_2
 #define LR_NRST_GPIO_Port GPIOD
-#define CHARGE_CE_Pin GPIO_PIN_4
-#define CHARGE_CE_GPIO_Port GPIOB
+#define S1_Pin GPIO_PIN_3
+#define S1_GPIO_Port GPIOD
+#define S2_Pin GPIO_PIN_4
+#define S2_GPIO_Port GPIOD
+#define S3_Pin GPIO_PIN_5
+#define S3_GPIO_Port GPIOD
+#define S4_Pin GPIO_PIN_6
+#define S4_GPIO_Port GPIOD
+#define S5_Pin GPIO_PIN_7
+#define S5_GPIO_Port GPIOD
+#define LDO_EN_Pin GPIO_PIN_4
+#define LDO_EN_GPIO_Port GPIOB
 #define EXT_SCL_Pin GPIO_PIN_8
 #define EXT_SCL_GPIO_Port GPIOB
 #define EXT_SDA_Pin GPIO_PIN_9

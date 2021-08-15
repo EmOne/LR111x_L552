@@ -65,13 +65,13 @@ void I2C1_EV_IRQHandler(void);
 void I2C1_ER_IRQHandler(void);
 void SPI1_IRQHandler(void);
 void USART3_IRQHandler(void);
-void LPUART1_IRQHandler(void);
+void USB_FS_IRQHandler(void);
 void DMA2_Channel2_IRQHandler(void);
 void DMA2_Channel3_IRQHandler(void);
-void DMA2_Channel6_IRQHandler(void);
 void RNG_IRQHandler(void);
 void FPU_IRQHandler(void);
 void SPI3_IRQHandler(void);
+void ICACHE_IRQHandler(void);
 /* USER CODE BEGIN EFP */
 
 /* USER CODE END EFP */

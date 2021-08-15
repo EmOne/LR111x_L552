@@ -259,7 +259,8 @@ void    GYRO_IO_Init(void)
 
 	BSP_I2C1_Init();
 
-	HAL_GPIO_WritePin(GYO_DEN_GPIO_Port, GYO_DEN_Pin, GPIO_PIN_RESET);
+	SECURE_GYO_DEN(GPIO_PIN_RESET);
+
 	DelayMs(50);
 
 	GYRO_IO_Write(&data, ICG20330_PWR_MGMT_1_ADDR, 1);

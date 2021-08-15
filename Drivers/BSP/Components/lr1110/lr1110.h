@@ -32,6 +32,12 @@ extern "C" {
 #include "radio.h"
 #include "lr1110_hal.h"
 #include "lr1110_radio_types.h"
+#include "lr1110_wifi_types.h"
+#include "lr1110_gnss_types.h"
+#include "lr1110_system_types.h"
+#include "lr1110_crypto_engine_types.h"
+#include "lr1110_bootloader_types.h"
+#include "lr1110_driver_version.h"
 
 /*!
  * \brief The type describing the modulation parameters for every packet types
@@ -75,6 +81,12 @@ typedef enum lr1110_hal_operating_mode_e
     LR1110_HAL_OP_MODE_CAD            //! The radio is in channel activity detection mode
 } lr1110_hal_operating_mode_t;
 
+typedef struct lr1110_wifi_s
+{
+	uint8_t nb_results;
+	lr1110_wifi_basic_complete_result_t all_results[LR1110_WIFI_MAX_RESULTS];
+} lr1110_wifi_t ;
+
 /*!
  * Radio hardware and global parameters
  */
@@ -87,6 +99,8 @@ typedef struct lr1110_s
     lr1110_hal_operating_mode_t op_mode;
     lr1110_modulation_params_t  modulation_params;
     lr1110_packet_params_t      packet_params;
+    lr1110_wifi_t wifi;
+    // lr1110_gnss_t gnss;
 } lr1110_t;
 
 /*!

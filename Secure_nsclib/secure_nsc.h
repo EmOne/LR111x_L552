@@ -42,6 +42,10 @@ void SECURE_LEDToggle_RED(void);
 void SECURE_LED_RED(bool onoff);
 void SECURE_LEDToggle_YELLOW(void);
 void SECURE_LED_YELLOW(bool onoff);
+void SECURE_GYO_DEN(bool onoff);
+void SECURE_CURRENT_CS(bool onoff);
+void SECURE_CHARGE_CE(bool onoff);
+
 #endif /* SECURE_NSC_H */
 /* USER CODE END Non_Secure_CallLib_h */
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

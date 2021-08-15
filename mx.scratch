@@ -54,9 +54,13 @@
           <Cincludes>
             <include>NonSecure\Core\Inc</include>
             <include>Secure_nsclib</include>
+            <include>NonSecure\USB_Device\App</include>
+            <include>NonSecure\USB_Device\Target</include>
             <include>Drivers\STM32L5xx_HAL_Driver\Inc</include>
             <include>Drivers\CMSIS\Device\ST\STM32L5xx\Include</include>
             <include>Drivers\STM32L5xx_HAL_Driver\Inc\Legacy</include>
+            <include>Middlewares\ST\STM32_USB_Device_Library\Core\Inc</include>
+            <include>Middlewares\ST\STM32_USB_Device_Library\Class\CDC\Inc</include>
             <include>Drivers\CMSIS\Include</include>
           </Cincludes>
           <definestoremove>
@@ -78,7 +82,13 @@
           <name>NonSecure\Core\Src</name>
         </sourceEntry>
         <sourceEntry>
+          <name>NonSecure\USB_Device</name>
+        </sourceEntry>
+        <sourceEntry>
           <name>Drivers</name>
+        </sourceEntry>
+        <sourceEntry>
+          <name>Middlewares</name>
         </sourceEntry>
       </sourceEntries>
       <Groups>
@@ -91,6 +101,9 @@
             </file>
             <file>
               <name>Drivers/STM32L5xx_HAL_Driver/Src/stm32l5xx_ll_exti.c</name>
+            </file>
+            <file>
+              <name>Drivers/STM32L5xx_HAL_Driver/Src/stm32l5xx_hal_gtzc.c</name>
             </file>
             <file>
               <name>Drivers/STM32L5xx_HAL_Driver/Src/stm32l5xx_hal.c</name>
@@ -153,16 +166,25 @@
               <name>Drivers/STM32L5xx_HAL_Driver/Src/stm32l5xx_hal_tim_ex.c</name>
             </file>
             <file>
+              <name>Drivers/STM32L5xx_HAL_Driver/Src/stm32l5xx_hal_pcd.c</name>
+            </file>
+            <file>
+              <name>Drivers/STM32L5xx_HAL_Driver/Src/stm32l5xx_hal_pcd_ex.c</name>
+            </file>
+            <file>
+              <name>Drivers/STM32L5xx_HAL_Driver/Src/stm32l5xx_ll_usb.c</name>
+            </file>
+            <file>
               <name>Drivers/STM32L5xx_HAL_Driver/Src/stm32l5xx_hal_adc.c</name>
             </file>
             <file>
               <name>Drivers/STM32L5xx_HAL_Driver/Src/stm32l5xx_hal_adc_ex.c</name>
             </file>
             <file>
-              <name>Drivers/STM32L5xx_HAL_Driver/Src/stm32l5xx_ll_crc.c</name>
+              <name>Drivers/STM32L5xx_HAL_Driver/Src/stm32l5xx_hal_crc.c</name>
             </file>
             <file>
-              <name>Drivers/STM32L5xx_HAL_Driver/Src/stm32l5xx_ll_gpio.c</name>
+              <name>Drivers/STM32L5xx_HAL_Driver/Src/stm32l5xx_hal_crc_ex.c</name>
             </file>
             <file>
               <name>Drivers/STM32L5xx_HAL_Driver/Src/stm32l5xx_hal_uart.c</name>
@@ -182,6 +204,33 @@
             <file>
               <name>Drivers/STM32L5xx_HAL_Driver/Src/stm32l5xx_hal_spi_ex.c</name>
             </file>
+            <file>
+              <name>Drivers/STM32L5xx_HAL_Driver/Src/stm32l5xx_ll_ucpd.c</name>
+            </file>
+            <file>
+              <name>Drivers/STM32L5xx_HAL_Driver/Src/stm32l5xx_ll_gpio.c</name>
+            </file>
+            <file>
+              <name>Drivers/STM32L5xx_HAL_Driver/Src/stm32l5xx_ll_dma.c</name>
+            </file>
+          </group>
+        </group>
+        <group>
+          <name>Middlewares</name>
+          <group>
+            <name>ST/STM32_USB_Device_Library/</name>
+            <file>
+              <name>Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.c</name>
+            </file>
+            <file>
+              <name>Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.c</name>
+            </file>
+            <file>
+              <name>Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.c</name>
+            </file>
+            <file>
+              <name>Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.c</name>
+            </file>
           </group>
         </group>
       </Groups>
@@ -190,7 +239,23 @@
       <ProjectName>LR111x_L552VE_S_CM33</ProjectName>
       <ProjectNature>C</ProjectNature>
       <Secure>1</Secure>
-      <filestoremove/>
+      <filestoremove>
+        <file>
+          <name>Secure\Core\Src\icache.c</name>
+        </file>
+        <file>
+          <name>Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_core.c</name>
+        </file>
+        <file>
+          <name>Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_ctlreq.c</name>
+        </file>
+        <file>
+          <name>Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_ioreq.c</name>
+        </file>
+        <file>
+          <name>Middlewares\ST\STM32_USB_Device_Library\Class\CDC\Src\usbd_cdc.c</name>
+        </file>
+      </filestoremove>
       <sourceEntriesToRemove>
         <sourceEntry/>
       </sourceEntriesToRemove>
@@ -229,8 +294,8 @@
           <Cincludes>
             <include>Secure\Core\Inc</include>
             <include>Secure_nsclib</include>
-            <include>Drivers\CMSIS\Device\ST\STM32L5xx\Include</include>
             <include>Drivers\STM32L5xx_HAL_Driver\Inc</include>
+            <include>Drivers\CMSIS\Device\ST\STM32L5xx\Include</include>
             <include>Drivers\STM32L5xx_HAL_Driver\Inc\Legacy</include>
             <include>Drivers\CMSIS\Include</include>
           </Cincludes>
@@ -266,6 +331,9 @@
             </file>
             <file>
               <name>Drivers/STM32L5xx_HAL_Driver/Src/stm32l5xx_ll_exti.c</name>
+            </file>
+            <file>
+              <name>Drivers/STM32L5xx_HAL_Driver/Src/stm32l5xx_hal_gtzc.c</name>
             </file>
             <file>
               <name>Drivers/STM32L5xx_HAL_Driver/Src/stm32l5xx_hal.c</name>
@@ -314,9 +382,6 @@
             </file>
             <file>
               <name>Drivers/STM32L5xx_HAL_Driver/Src/stm32l5xx_hal_icache.c</name>
-            </file>
-            <file>
-              <name>Drivers/STM32L5xx_HAL_Driver/Src/stm32l5xx_hal_gtzc.c</name>
             </file>
             <file>
               <name>Drivers/STM32L5xx_HAL_Driver/Src/stm32l5xx_hal_rtc.c</name>

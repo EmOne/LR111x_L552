@@ -56,7 +56,7 @@
 /* USER CODE END 0 */
 
 /* External variables --------------------------------------------------------*/
-extern DMA_HandleTypeDef hdma_adc1;
+extern PCD_HandleTypeDef hpcd_USB_FS;
 extern ADC_HandleTypeDef hadc1;
 extern ADC_HandleTypeDef hadc2;
 extern I2C_HandleTypeDef hi2c1;
@@ -64,7 +64,6 @@ extern DMA_HandleTypeDef hdma_lpuart1_rx;
 extern DMA_HandleTypeDef hdma_lpuart1_tx;
 extern DMA_HandleTypeDef hdma_usart3_rx;
 extern DMA_HandleTypeDef hdma_usart3_tx;
-extern UART_HandleTypeDef hlpuart1;
 extern UART_HandleTypeDef huart3;
 extern RNG_HandleTypeDef hrng;
 extern RTC_HandleTypeDef hrtc;
@@ -343,17 +342,17 @@ void USART3_IRQHandler(void)
 }
 
 /**
-  * @brief This function handles LPUART1 global interrupt / LPUART1 wake-up interrupt through EXTI line 31.
+  * @brief This function handles USB FS global interrupt / USB FS wake-up interrupt through EXTI line 34.
   */
-void LPUART1_IRQHandler(void)
+void USB_FS_IRQHandler(void)
 {
-  /* USER CODE BEGIN LPUART1_IRQn 0 */
+  /* USER CODE BEGIN USB_FS_IRQn 0 */
 
-  /* USER CODE END LPUART1_IRQn 0 */
-  HAL_UART_IRQHandler(&hlpuart1);
-  /* USER CODE BEGIN LPUART1_IRQn 1 */
+  /* USER CODE END USB_FS_IRQn 0 */
+  HAL_PCD_IRQHandler(&hpcd_USB_FS);
+  /* USER CODE BEGIN USB_FS_IRQn 1 */
 
-  /* USER CODE END LPUART1_IRQn 1 */
+  /* USER CODE END USB_FS_IRQn 1 */
 }
 
 /**
@@ -382,20 +381,6 @@ void DMA2_Channel3_IRQHandler(void)
   /* USER CODE BEGIN DMA2_Channel3_IRQn 1 */
 
   /* USER CODE END DMA2_Channel3_IRQn 1 */
-}
-
-/**
-  * @brief This function handles DMA2 channel6 global interrupt.
-  */
-void DMA2_Channel6_IRQHandler(void)
-{
-  /* USER CODE BEGIN DMA2_Channel6_IRQn 0 */
-
-  /* USER CODE END DMA2_Channel6_IRQn 0 */
-  HAL_DMA_IRQHandler(&hdma_adc1);
-  /* USER CODE BEGIN DMA2_Channel6_IRQn 1 */
-
-  /* USER CODE END DMA2_Channel6_IRQn 1 */
 }
 
 /**
@@ -437,6 +422,20 @@ void SPI3_IRQHandler(void)
   /* USER CODE BEGIN SPI3_IRQn 1 */
 
   /* USER CODE END SPI3_IRQn 1 */
+}
+
+/**
+  * @brief This function handles Instruction cache global interrupt.
+  */
+void ICACHE_IRQHandler(void)
+{
+  /* USER CODE BEGIN ICACHE_IRQn 0 */
+
+  /* USER CODE END ICACHE_IRQn 0 */
+  HAL_ICACHE_IRQHandler();
+  /* USER CODE BEGIN ICACHE_IRQn 1 */
+
+  /* USER CODE END ICACHE_IRQn 1 */
 }
 
 /* USER CODE BEGIN 1 */

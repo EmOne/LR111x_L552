@@ -30,7 +30,10 @@
 #include "lr1110_regmem.h"
 
 #include "lr1110-board.h"
+
 #include "lr1110_gnss.h"
+#include "lr1110_wifi.h"
+#include "lr1110_bootloader.h"
 
 #define LR1110_SHIELD_HAS_TCXO                      0
 
@@ -126,6 +129,14 @@ void lr1110_board_init( const void* context, lr1110_dio_irq_handler dio_irq )
 
     // Initialize RF switch control
     lr1110_system_rfswitch_cfg_t rf_switch_configuration;
+#if 010
+    rf_switch_configuration.enable  = LR1110_SYSTEM_RFSW0_HIGH | LR1110_SYSTEM_RFSW1_HIGH;
+    rf_switch_configuration.standby = 0;
+    rf_switch_configuration.rx      = LR1110_SYSTEM_RFSW0_HIGH;
+    rf_switch_configuration.tx      = LR1110_SYSTEM_RFSW0_HIGH | LR1110_SYSTEM_RFSW1_HIGH;
+    rf_switch_configuration.wifi    = 0;
+    rf_switch_configuration.gnss    = 0;
+#else
     rf_switch_configuration.enable  = LR1110_SYSTEM_RFSW0_HIGH | LR1110_SYSTEM_RFSW1_HIGH |
     		LR1110_SYSTEM_RFSW2_HIGH | LR1110_SYSTEM_RFSW3_HIGH;
     rf_switch_configuration.standby = 0;
@@ -135,14 +146,24 @@ void lr1110_board_init( const void* context, lr1110_dio_irq_handler dio_irq )
     rf_switch_configuration.tx_hf   = LR1110_SYSTEM_RFSW1_HIGH;
     rf_switch_configuration.wifi    = LR1110_SYSTEM_RFSW3_HIGH;
     rf_switch_configuration.gnss    = LR1110_SYSTEM_RFSW2_HIGH;
+#endif
 
     lr1110_system_set_dio_as_rf_switch( context, &rf_switch_configuration );
 
     lr1110_radio_pa_cfg_t paConfig = {
-        .pa_sel        = LR1110_RADIO_PA_SEL_HP,
-        .pa_reg_supply = LR1110_RADIO_PA_REG_SUPPLY_VBAT,
-        .pa_duty_cycle = 0x07,
-        .pa_hp_sel     = 0x07,
+#if 010
+        .pa_sel        = LR1110_RADIO_PA_SEL_LP,
+        .pa_reg_supply = LR1110_RADIO_PA_REG_SUPPLY_DCDC,
+        .pa_duty_cycle = 0x04,
+        .pa_hp_sel     = 0x00,
+#elif 020
+		.pa_sel        = LR1110_RADIO_PA_SEL_HP,
+		.pa_reg_supply = LR1110_RADIO_PA_REG_SUPPLY_VBAT,
+		.pa_duty_cycle = 0x07,
+		.pa_hp_sel     = 0x07,
+#else
+#error "LR111x PA Configuration"
+#endif
     };
     lr1110_radio_set_pa_cfg( context, &paConfig );
 

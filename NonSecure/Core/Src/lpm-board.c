@@ -174,6 +174,12 @@ __weak void LpmExitStopMode( void )
 
 __weak void LpmEnterOffMode( void )
 {
+    CRITICAL_SECTION_BEGIN( );
+
+    //	    BoardDeInitMcu( );
+
+	    CRITICAL_SECTION_END( );
+	    HAL_PWR_EnterSTOPMode( PWR_LOWPOWERREGULATOR_ON, PWR_STOPENTRY_WFI );
 }
 
 __weak void LpmExitOffMode( void )

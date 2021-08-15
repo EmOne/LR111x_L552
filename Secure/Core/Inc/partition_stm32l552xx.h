@@ -460,14 +460,14 @@
 // Interrupts 64..95
 //   <o.0>  UART4_IRQn          <0=> Secure state
 //   <o.1>  UART5_IRQn          <0=> Secure state
-//   <o.2>  LPUART1_IRQn        <1=> Non-Secure state
+//   <o.2>  LPUART1_IRQn        <0=> Secure state
 //   <o.3>  LPTIM1_IRQn         <0=> Secure state
 //   <o.4>  LPTIM2_IRQn         <0=> Secure state
 //   <o.5>  TIM15_IRQn          <0=> Secure state
 //   <o.6>  TIM16_IRQn          <0=> Secure state
 //   <o.7>  TIM17_IRQn          <0=> Secure state
 //   <o.8>  COMP_IRQn           <0=> Secure state
-//   <o.9>  USB_FS_IRQn         <0=> Secure state
+//   <o.9>  USB_FS_IRQn         <1=> Non-Secure state
 //   <o.10> CRS_IRQn            <0=> Secure state
 //   <o.11> FMC_IRQn            <0=> Secure state
 //   <o.12> OCTOSPI1_IRQn       <0=> Secure state
@@ -479,7 +479,7 @@
 //   <o.18> DMA2_Channel3_IRQn  <1=> Non-Secure state
 //   <o.19> DMA2_Channel4_IRQn  <0=> Secure state
 //   <o.20> DMA2_Channel5_IRQn  <0=> Secure state
-//   <o.21> DMA2_Channel6_IRQn  <1=> Non-Secure state
+//   <o.21> DMA2_Channel6_IRQn  <0=> Secure state
 //   <o.22> DMA2_Channel7_IRQn  <0=> Secure state
 //   <o.23> DMA2_Channel8_IRQn  <0=> Secure state
 //   <o.24> I2C3_EV_IRQn        <0=> Secure state
@@ -491,7 +491,7 @@
 //   <o.31> FPU_IRQn            <1=> Non-Secure state
 */
 
-#define NVIC_INIT_ITNS2_VAL      0xC0260004
+#define NVIC_INIT_ITNS2_VAL      0xC0060200
 
 /*
 //   </e>
@@ -514,11 +514,11 @@
 //   <o.8>  DFSDM1_FLT2_IRQn    <0=> Secure state
 //   <o.9>  DFSDM1_FLT3_IRQn    <0=> Secure state
 //   <o.10> UCPD1_IRQn          <0=> Secure state
-//   <o.11> ICACHE_IRQn         <0=> Secure state
+//   <o.11> ICACHE_IRQn         <1=> Non-Secure state
 //   <o.12> OTFDEC1_IRQn        <0=> Secure state
 */
 
-#define NVIC_INIT_ITNS3_VAL      0x00000008
+#define NVIC_INIT_ITNS3_VAL      0x00000808
 
 /*
 //   </e>

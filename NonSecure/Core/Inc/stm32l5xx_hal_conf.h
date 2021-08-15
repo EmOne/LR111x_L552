@@ -35,12 +35,12 @@
 #define HAL_MODULE_ENABLED
 #define HAL_ADC_MODULE_ENABLED
 /*#define HAL_COMP_MODULE_ENABLED   */
-/*#define HAL_CRC_MODULE_ENABLED   */
+#define HAL_CRC_MODULE_ENABLED
 /*#define HAL_CRYP_MODULE_ENABLED   */
 /*#define HAL_DAC_MODULE_ENABLED   */
 /*#define HAL_DFSDM_MODULE_ENABLED   */
 /*#define HAL_FDCAN_MODULE_ENABLED   */
-/*#define HAL_GTZC_MODULE_ENABLED   */
+#define HAL_GTZC_MODULE_ENABLED
 /*#define HAL_HASH_MODULE_ENABLED   */
 /*#define HAL_IRDA_MODULE_ENABLED   */
 /*#define HAL_IWDG_MODULE_ENABLED   */
@@ -51,7 +51,7 @@
 /*#define HAL_OPAMP_MODULE_ENABLED   */
 /*#define HAL_OSPI_MODULE_ENABLED   */
 /*#define HAL_OTFDEC_MODULE_ENABLED   */
-/*#define HAL_PCD_MODULE_ENABLED   */
+#define HAL_PCD_MODULE_ENABLED
 /*#define HAL_PKA_MODULE_ENABLED   */
 /*#define HAL_RCC_MODULE_ENABLED   */
 #define HAL_RNG_MODULE_ENABLED
@@ -167,7 +167,7 @@
   */
 
 #define  VDD_VALUE					  3300UL /*!< Value of VDD in mv */
-#define  TICK_INT_PRIORITY            0UL    /*!< tick interrupt priority */
+#define  TICK_INT_PRIORITY            7UL    /*!< tick interrupt priority */
 #define  USE_RTOS                     0U
 
 /* ########################## Assert Selection ############################## */

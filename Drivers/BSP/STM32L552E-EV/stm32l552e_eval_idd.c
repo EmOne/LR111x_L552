@@ -28,7 +28,8 @@ uint32_t vref;
 
 int32_t   BSP_IDD_Init(uint32_t Instance)
 {
-	HAL_GPIO_WritePin(CHARGE_CE_GPIO_Port, CHARGE_CE_Pin, GPIO_PIN_RESET);
+	SECURE_CHARGE_CE(GPIO_PIN_RESET);
+//	HAL_GPIO_WritePin(CHARGE_CE_GPIO_Port, CHARGE_CE_Pin, GPIO_PIN_RESET);
 	int32_t status = BSP_ERROR_NONE;
 	return status;
 }
@@ -100,9 +101,11 @@ int32_t   BSP_IDD_GetValue(uint32_t Instance, uint32_t *IddValue)
 	else if(Instance == 1)
 	{
 		uint8_t tmp[2] = {0};
-		HAL_GPIO_WritePin(CURRENT_CS_GPIO_Port, CURRENT_CS_Pin, GPIO_PIN_RESET);
+		SECURE_CURRENT_CS(GPIO_PIN_RESET);
+//		HAL_GPIO_WritePin(CURRENT_CS_GPIO_Port, CURRENT_CS_Pin, GPIO_PIN_RESET);
 		HAL_SPI_Receive(&hspi1, tmp, 2, 1000);
-		HAL_GPIO_WritePin(CURRENT_CS_GPIO_Port, CURRENT_CS_Pin, GPIO_PIN_SET);
+		SECURE_CURRENT_CS(GPIO_PIN_SET);
+//		HAL_GPIO_WritePin(CURRENT_CS_GPIO_Port, CURRENT_CS_Pin, GPIO_PIN_SET);
 		*IddValue = (tmp[1] << 8) | tmp[0];
 	}
 	else

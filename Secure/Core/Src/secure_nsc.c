@@ -87,6 +87,22 @@ CMSE_NS_ENTRY/*secureportNON_SECURE_CALLABLE*/ void SECURE_LED_YELLOW(bool onoff
 {
 	HAL_GPIO_WritePin(MB1_TX_GPIO_Port, MB1_TX_Pin, onoff);
 }
+
+CMSE_NS_ENTRY/*secureportNON_SECURE_CALLABLE*/ void SECURE_GYO_DEN(bool onoff)
+{
+	HAL_GPIO_WritePin(GYO_DEN_GPIO_Port, GYO_DEN_Pin, onoff);
+}
+
+CMSE_NS_ENTRY/*secureportNON_SECURE_CALLABLE*/ void SECURE_CURRENT_CS(bool onoff)
+{
+	HAL_GPIO_WritePin(CURRENT_CS_GPIO_Port, CURRENT_CS_Pin, onoff);
+}
+
+CMSE_NS_ENTRY/*secureportNON_SECURE_CALLABLE*/ void SECURE_CHARGE_CE(bool onoff)
+{
+	HAL_GPIO_WritePin(LDO_EN_GPIO_Port, LDO_EN_Pin, onoff);
+}
+
 /**
   * @}
   */

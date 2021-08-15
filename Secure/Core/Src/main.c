@@ -21,7 +21,6 @@
 #include "main.h"
 #include "dma.h"
 #include "gtzc.h"
-#include "icache.h"
 #include "rtc.h"
 #include "gpio.h"
 
@@ -85,7 +84,8 @@ int main(void)
   HAL_Init();
 
   /* USER CODE BEGIN Init */
-
+//  HAL_PWREx_EnableVddUSB();
+//  HAL_PWREx_EnableBatteryCharging();
   /* USER CODE END Init */
 
   /* Configure the system clock */
@@ -101,7 +101,6 @@ int main(void)
   MX_GPIO_Init();
   MX_DMA_Init();
   MX_RTC_Init();
-  MX_ICACHE_Init();
   /* USER CODE BEGIN 2 */
 
   /* USER CODE END 2 */

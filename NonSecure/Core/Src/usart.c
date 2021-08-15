@@ -9,10 +9,10 @@
   * <h2><center>&copy; Copyright (c) 2021 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
-  * This software component is licensed by ST under BSD 3-Clause license,
-  * the "License"; You may not use this file except in compliance with the
-  * License. You may obtain a copy of the License at:
-  *                        opensource.org/licenses/BSD-3-Clause
+  * This software component is licensed by ST under Ultimate Liberty license
+  * SLA0044, the "License"; You may not use this file except in compliance with
+  * the License. You may obtain a copy of the License at:
+  *                             www.st.com/SLA0044
   *
   ******************************************************************************
   */
@@ -36,6 +36,7 @@ uint8_t data_buf_RX;
 /* USER CODE END 0 */
 
 UART_HandleTypeDef hlpuart1;
+UART_HandleTypeDef huart2;
 UART_HandleTypeDef huart3;
 DMA_HandleTypeDef hdma_lpuart1_rx;
 DMA_HandleTypeDef hdma_lpuart1_tx;
@@ -56,7 +57,7 @@ void MX_LPUART1_UART_Init(void)
 
   /* USER CODE END LPUART1_Init 1 */
   hlpuart1.Instance = LPUART1;
-  hlpuart1.Init.BaudRate = 209700;
+  hlpuart1.Init.BaudRate = 115200;
   hlpuart1.Init.WordLength = UART_WORDLENGTH_8B;
   hlpuart1.Init.StopBits = UART_STOPBITS_1;
   hlpuart1.Init.Parity = UART_PARITY_NONE;
@@ -65,7 +66,7 @@ void MX_LPUART1_UART_Init(void)
   hlpuart1.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
   hlpuart1.Init.ClockPrescaler = UART_PRESCALER_DIV1;
   hlpuart1.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
-  hlpuart1.FifoMode = UART_FIFOMODE_DISABLE;
+  hlpuart1.FifoMode = UART_FIFOMODE_ENABLE;
   if (HAL_UART_Init(&hlpuart1) != HAL_OK)
   {
     Error_Handler();
@@ -78,13 +79,59 @@ void MX_LPUART1_UART_Init(void)
   {
     Error_Handler();
   }
-  if (HAL_UARTEx_DisableFifoMode(&hlpuart1) != HAL_OK)
+  if (HAL_UARTEx_EnableFifoMode(&hlpuart1) != HAL_OK)
   {
     Error_Handler();
   }
   /* USER CODE BEGIN LPUART1_Init 2 */
   HAL_UART_Receive_DMA(&hlpuart1, &dbg_buf_RX, 1);
   /* USER CODE END LPUART1_Init 2 */
+
+}
+/* USART2 init function */
+
+void MX_USART2_UART_Init(void)
+{
+
+  /* USER CODE BEGIN USART2_Init 0 */
+
+  /* USER CODE END USART2_Init 0 */
+
+  /* USER CODE BEGIN USART2_Init 1 */
+
+  /* USER CODE END USART2_Init 1 */
+  huart2.Instance = USART2;
+  huart2.Init.BaudRate = 115200;
+  huart2.Init.WordLength = UART_WORDLENGTH_8B;
+  huart2.Init.StopBits = UART_STOPBITS_2;
+  huart2.Init.Parity = UART_PARITY_NONE;
+  huart2.Init.Mode = UART_MODE_TX_RX;
+  huart2.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+  huart2.Init.OverSampling = UART_OVERSAMPLING_16;
+  huart2.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
+  huart2.Init.ClockPrescaler = UART_PRESCALER_DIV1;
+  huart2.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_AUTOBAUDRATE_INIT;
+  huart2.AdvancedInit.AutoBaudRateEnable = UART_ADVFEATURE_AUTOBAUDRATE_ENABLE;
+  huart2.AdvancedInit.AutoBaudRateMode = UART_ADVFEATURE_AUTOBAUDRATE_ONSTARTBIT;
+  if (HAL_RS485Ex_Init(&huart2, UART_DE_POLARITY_HIGH, 0, 0) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  if (HAL_UARTEx_SetTxFifoThreshold(&huart2, UART_TXFIFO_THRESHOLD_1_8) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  if (HAL_UARTEx_SetRxFifoThreshold(&huart2, UART_RXFIFO_THRESHOLD_1_8) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  if (HAL_UARTEx_DisableFifoMode(&huart2) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN USART2_Init 2 */
+
+  /* USER CODE END USART2_Init 2 */
 
 }
 /* USART3 init function */
@@ -182,7 +229,7 @@ void HAL_UART_MspInit(UART_HandleTypeDef* uartHandle)
       Error_Handler();
     }
 
-    if (HAL_DMA_ConfigChannelAttributes(&hdma_lpuart1_rx, DMA_CHANNEL_NPRIV) != HAL_OK)
+    if (HAL_DMA_ConfigChannelAttributes(&hdma_lpuart1_rx, DMA_CHANNEL_PRIV) != HAL_OK)
     {
       Error_Handler();
     }
@@ -204,19 +251,49 @@ void HAL_UART_MspInit(UART_HandleTypeDef* uartHandle)
       Error_Handler();
     }
 
-    if (HAL_DMA_ConfigChannelAttributes(&hdma_lpuart1_tx, DMA_CHANNEL_NPRIV) != HAL_OK)
+    if (HAL_DMA_ConfigChannelAttributes(&hdma_lpuart1_tx, DMA_CHANNEL_PRIV) != HAL_OK)
     {
       Error_Handler();
     }
 
     __HAL_LINKDMA(uartHandle,hdmatx,hdma_lpuart1_tx);
 
-    /* LPUART1 interrupt Init */
-    HAL_NVIC_SetPriority(LPUART1_IRQn, 0, 0);
-    HAL_NVIC_EnableIRQ(LPUART1_IRQn);
   /* USER CODE BEGIN LPUART1_MspInit 1 */
 
   /* USER CODE END LPUART1_MspInit 1 */
+  }
+  else if(uartHandle->Instance==USART2)
+  {
+  /* USER CODE BEGIN USART2_MspInit 0 */
+
+  /* USER CODE END USART2_MspInit 0 */
+
+  /** Initializes the peripherals clock
+  */
+    PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_USART2;
+    PeriphClkInit.Usart2ClockSelection = RCC_USART2CLKSOURCE_PCLK1;
+    if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
+    {
+      Error_Handler();
+    }
+
+    /* USART2 clock enable */
+    __HAL_RCC_USART2_CLK_ENABLE();
+
+    __HAL_RCC_GPIOA_CLK_ENABLE();
+    /**USART2 GPIO Configuration
+    PA1     ------> USART2_DE
+    */
+    GPIO_InitStruct.Pin = MB1_DE_Pin;
+    GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+    GPIO_InitStruct.Pull = GPIO_NOPULL;
+    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+    GPIO_InitStruct.Alternate = GPIO_AF7_USART2;
+    HAL_GPIO_Init(MB1_DE_GPIO_Port, &GPIO_InitStruct);
+
+  /* USER CODE BEGIN USART2_MspInit 1 */
+
+  /* USER CODE END USART2_MspInit 1 */
   }
   else if(uartHandle->Instance==USART3)
   {
@@ -264,7 +341,7 @@ void HAL_UART_MspInit(UART_HandleTypeDef* uartHandle)
       Error_Handler();
     }
 
-    if (HAL_DMA_ConfigChannelAttributes(&hdma_usart3_rx, DMA_CHANNEL_NPRIV) != HAL_OK)
+    if (HAL_DMA_ConfigChannelAttributes(&hdma_usart3_rx, DMA_CHANNEL_PRIV) != HAL_OK)
     {
       Error_Handler();
     }
@@ -286,7 +363,7 @@ void HAL_UART_MspInit(UART_HandleTypeDef* uartHandle)
       Error_Handler();
     }
 
-    if (HAL_DMA_ConfigChannelAttributes(&hdma_usart3_tx, DMA_CHANNEL_NPRIV) != HAL_OK)
+    if (HAL_DMA_ConfigChannelAttributes(&hdma_usart3_tx, DMA_CHANNEL_PRIV) != HAL_OK)
     {
       Error_Handler();
     }
@@ -322,12 +399,26 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef* uartHandle)
     /* LPUART1 DMA DeInit */
     HAL_DMA_DeInit(uartHandle->hdmarx);
     HAL_DMA_DeInit(uartHandle->hdmatx);
-
-    /* LPUART1 interrupt Deinit */
-    HAL_NVIC_DisableIRQ(LPUART1_IRQn);
   /* USER CODE BEGIN LPUART1_MspDeInit 1 */
 
   /* USER CODE END LPUART1_MspDeInit 1 */
+  }
+  else if(uartHandle->Instance==USART2)
+  {
+  /* USER CODE BEGIN USART2_MspDeInit 0 */
+
+  /* USER CODE END USART2_MspDeInit 0 */
+    /* Peripheral clock disable */
+    __HAL_RCC_USART2_CLK_DISABLE();
+
+    /**USART2 GPIO Configuration
+    PA1     ------> USART2_DE
+    */
+    HAL_GPIO_DeInit(MB1_DE_GPIO_Port, MB1_DE_Pin);
+
+  /* USER CODE BEGIN USART2_MspDeInit 1 */
+
+  /* USER CODE END USART2_MspDeInit 1 */
   }
   else if(uartHandle->Instance==USART3)
   {
