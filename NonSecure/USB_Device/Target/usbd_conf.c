@@ -765,7 +765,7 @@ USBD_StatusTypeDef USBD_LL_BatterryCharging(USBD_HandleTypeDef *pdev)
    * @brief  Handle USB VBUS detection upon external interrupt
    * @param  GPIO_Pin
    */
-void USB_VBUS_detection_Callback(void* context)
+void USB_VBUS_detection_Callback(void * context)
 {
 //  if (GPIO_Pin == GPIO_PIN_12)
 //  {

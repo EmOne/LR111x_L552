@@ -67,7 +67,7 @@
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
 //#define TX_CW	1
-#define RX_SENSE	1
+//#define RX_SENSE	1
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -94,7 +94,7 @@
 /*!
  * Defines the application data transmission duty cycle. 5s, value in [ms].
  */
-#define APP_TX_DUTYCYCLE                            5000 * 6
+#define APP_TX_DUTYCYCLE                            5000 * 9
 
 /*!
  * Defines a random delay for application data transmission duty cycle. 1s,
@@ -215,8 +215,6 @@ void OnRadioTxTimeout( void );
 #define LORA_IQ_INVERSION_ON                        false
 void OnRadioRxDone( uint8_t* payload, uint16_t size, int16_t rssi, int8_t snr );
 void OnRadioRxTimeout( void );
-void OnRadioWifiDone( void );
-void OnRadioGnssDone( void );
 static int16_t iRssi;
 #endif /* TX_CW */
 /* USER CODE END PV */
@@ -317,6 +315,10 @@ static volatile uint8_t IsMacProcessPending = 0;
 static volatile uint8_t IsTxFramePending = 0;
 
 static volatile uint32_t TxPeriodicity = 0;
+
+static void OnRadioWifiDone( void );
+
+static void OnRadioGnssDone( void );
 
 /* USER CODE END PFP */
 
@@ -707,7 +709,7 @@ static void PrepareTxFrame( void )
     AppData.BufferSize = CayenneLppGetSize( );
 
 
-
+    if( LmHandlerSend( &AppData, LmHandlerParams.IsTxConfirmed ) == LORAMAC_HANDLER_SUCCESS )
     {
 #ifdef VERSION_020
         // Switch LED 1 ON
@@ -865,6 +867,28 @@ void OnRadioRxDone( uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr )
 	Radio.Rx( 0 );
 }
 
+
+#endif /* TX_CW */
+
+/*!
+ * \brief Function executed on Beacon timer Timeout event
+ */
+static void OnLedBeaconTimerEvent( void* context )
+{
+//    GpioWrite( &Led2, 1 );
+#ifdef VERSION_020
+    SECURE_LED_RED(true);
+#else
+#endif
+
+    lr1110_wifi_scan(&LR1110, LR1110_WIFI_TYPE_SCAN_B_G_N, 0x3FFF, LR1110_WIFI_SCAN_MODE_BEACON,
+    			3, 3, 500, true);
+
+    TimerStart( &Led2Timer );
+
+    TimerStart( &LedBeaconTimer );
+}
+
 void OnRadioWifiDone(void)
 {
 	lr1110_wifi_get_nb_results(&LR1110, &LR1110.wifi.nb_results);
@@ -904,48 +928,7 @@ void OnRadioGnssDone(void)
 {
 
 }
-#endif /* TX_CW */
-
-/*!
- * \brief Function executed on Beacon timer Timeout event
- */
-static void OnLedBeaconTimerEvent( void* context )
-{
-//    GpioWrite( &Led2, 1 );
-#ifdef VERSION_020
-    SECURE_LED_RED(true);
-#else
-#endif
-
-    lr1110_wifi_scan(&LR1110, LR1110_WIFI_TYPE_SCAN_B_G_N, 0x3FFF, LR1110_WIFI_SCAN_MODE_BEACON,
-    			3, 3, 500, true);
-
-    TimerStart( &Led2Timer );
-
-    TimerStart( &LedBeaconTimer );
-}
 /* USER CODE END 4 */
-
-/**
-  * @brief  Period elapsed callback in non blocking mode
-  * @note   This function is called  when TIM6 interrupt took place, inside
-  * HAL_TIM_IRQHandler(). It makes a direct call to HAL_IncTick() to increment
-  * a global variable "uwTick" used as application time base.
-  * @param  htim : TIM handle
-  * @retval None
-  */
-void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
-{
-  /* USER CODE BEGIN Callback 0 */
-
-  /* USER CODE END Callback 0 */
-  if (htim->Instance == TIM6) {
-    HAL_IncTick();
-  }
-  /* USER CODE BEGIN Callback 1 */
-
-  /* USER CODE END Callback 1 */
-}
 
 /**
   * @brief  This function is executed in case of error occurrence.

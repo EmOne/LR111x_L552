@@ -329,7 +329,7 @@ LmHandlerErrorStatus_t LmHandlerInit( LmHandlerCallbacks_t *handlerCallbacks,
 	LoRaMacMibGetRequestConfirm( &mibReq );
 	memcpy1( CommissioningParams.SePin, mibReq.Param.SePin, 4 );
 
-		mibReq.Type = MIB_PUBLIC_NETWORK;
+	mibReq.Type = MIB_PUBLIC_NETWORK;
     mibReq.Param.EnablePublicNetwork = LmHandlerParams->PublicNetworkEnable;
     LoRaMacMibSetRequestConfirm( &mibReq );
 

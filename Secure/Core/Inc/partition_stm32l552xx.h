@@ -428,7 +428,7 @@
 //   <o.14> TIM3_IRQn           <0=> Secure state
 //   <o.15> TIM4_IRQn           <0=> Secure state
 //   <o.16> TIM5_IRQn           <0=> Secure state
-//   <o.17> TIM6_IRQn           <1=> Non-Secure state
+//   <o.17> TIM6_IRQn           <0=> Secure state
 //   <o.18> TIM7_IRQn           <0=> Secure state
 //   <o.19> TIM8_BRK_IRQn       <0=> Secure state
 //   <o.20> TIM8_UP_IRQn        <0=> Secure state
@@ -445,7 +445,7 @@
 //   <o.31> USART3_IRQn         <1=> Non-Secure state
 */
 
-#define NVIC_INIT_ITNS1_VAL      0xC9821E26
+#define NVIC_INIT_ITNS1_VAL      0xC9801E26
 
 /*
 //   </e>

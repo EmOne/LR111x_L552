@@ -66,8 +66,8 @@ extern "C" {
 /* USER CODE END EM */
 
 /* Exported functions prototypes ---------------------------------------------*/
-extern void Error_Handler(void);
-extern void PrintHexBuffer( uint8_t *buffer, uint8_t size );
+void Error_Handler(void);
+
 /* USER CODE BEGIN EFP */
 
 /* USER CODE END EFP */

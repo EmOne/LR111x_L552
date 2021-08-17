@@ -14,7 +14,11 @@
       <ProjectName>LR111x_L552VE_NS_CM33</ProjectName>
       <ProjectNature>C</ProjectNature>
       <Secure>0</Secure>
-      <filestoremove/>
+      <filestoremove>
+        <file>
+          <name>NonSecure\Core\Src\stm32l5xx_hal_timebase_tim.c</name>
+        </file>
+      </filestoremove>
       <sourceEntriesToRemove>
         <sourceEntry/>
       </sourceEntriesToRemove>
