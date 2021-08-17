@@ -47,8 +47,8 @@ extern "C" {
   */
 
 /* Usage of COM feature */
-#define USE_BSP_COM_FEATURE 1U
-#define USE_COM_LOG         1U
+#define USE_BSP_COM_FEATURE 0U
+#define USE_COM_LOG         0U
 
 /* Usage of POT feature */
 #define USE_BSP_POT_FEATURE 0U

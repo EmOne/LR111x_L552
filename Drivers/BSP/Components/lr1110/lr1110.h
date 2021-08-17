@@ -84,7 +84,9 @@ typedef enum lr1110_hal_operating_mode_e
 typedef struct lr1110_wifi_s
 {
 	uint8_t nb_results;
+	uint8_t nb_countries;
 	lr1110_wifi_basic_complete_result_t all_results[LR1110_WIFI_MAX_RESULTS];
+	lr1110_wifi_country_code_t countries[LR1110_WIFI_MAX_RESULTS];
 } lr1110_wifi_t ;
 
 /*!
@@ -100,7 +102,7 @@ typedef struct lr1110_s
     lr1110_modulation_params_t  modulation_params;
     lr1110_packet_params_t      packet_params;
     lr1110_wifi_t wifi;
-    // lr1110_gnss_t gnss;
+//    lr1110_gnss_t gnss;
 } lr1110_t;
 
 /*!

@@ -67,7 +67,7 @@
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
 //#define TX_CW	1
-//#define RX_SENSE	1
+#define RX_SENSE	1
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -215,6 +215,8 @@ void OnRadioTxTimeout( void );
 #define LORA_IQ_INVERSION_ON                        false
 void OnRadioRxDone( uint8_t* payload, uint16_t size, int16_t rssi, int8_t snr );
 void OnRadioRxTimeout( void );
+void OnRadioWifiDone( void );
+void OnRadioGnssDone( void );
 static int16_t iRssi;
 #endif /* TX_CW */
 /* USER CODE END PV */
@@ -408,6 +410,8 @@ int main(void)
       RadioEvents.RxDone = OnRadioRxDone;
       RadioEvents.RxTimeout = OnRadioRxTimeout;
       RadioEvents.RxError = OnRadioRxTimeout;
+      RadioEvents.WifiDone = OnRadioWifiDone;
+      RadioEvents.GnssDone = OnRadioGnssDone;
 
       Radio.Init( &RadioEvents );
 
@@ -465,28 +469,33 @@ int main(void)
 	         if( Radio.IrqProcess != NULL )
 	         {
 	             Radio.IrqProcess( );
-	             iRssi = Radio.Rssi(MODEM_LORA);
-	             printf("White noise rssi: %d dBm\r\n", iRssi);
 	         }
 	         if( Led1TimerEvent == true )
 	         {
 	             Led1TimerEvent = false;
-
+#ifdef VERSION_020
 	             // Switch LED 1 OFF
 	             SECURE_LED_RED( 1 );
 	             // Switch LED 2 ON
 	             SECURE_LED_YELLOW( 0 );
+#else
+
+#endif
+
 	             TimerStart( &Led2Timer );
 	         }
 
 	         if( Led2TimerEvent == true )
 	         {
 	             Led2TimerEvent = false;
-
+#ifdef VERSION_020
 	             // Switch LED 2 OFF
 	             SECURE_LED_YELLOW( 1 );
 	             // Switch LED 1 ON
 	             SECURE_LED_RED( 0 );
+#else
+#endif
+
 	             TimerStart( &Led1Timer );
 	         }
 #else
@@ -605,7 +614,10 @@ static void OnRxData( LmHandlerAppData_t* appData, LmHandlerRxParams_t* params )
 
     // Switch LED 2 ON for each received downlink
 //    GpioWrite( &Led2, 1 );
+#ifdef VERSION_020
     SECURE_LED_RED(true);
+#else
+#endif
     TimerStart( &Led2Timer );
 }
 
@@ -697,9 +709,12 @@ static void PrepareTxFrame( void )
 
 
     {
+#ifdef VERSION_020
         // Switch LED 1 ON
 //        GpioWrite( &Led1, 1 );
         SECURE_LED_YELLOW(false);
+#else
+#endif
         TimerStart( &Led1Timer );
     }
 }
@@ -777,13 +792,17 @@ static void OnTxTimerEvent( void* context )
  */
 static void OnLed1TimerEvent( void* context )
 {
-#ifdef TX_CW
 	Led1TimerEvent = true;
+#ifdef TX_CW
+
 #else
     TimerStop( &Led1Timer );
+#ifdef VERSION_020
     // Switch LED 1 OFF
 //    GpioWrite( &Led1, 0 );
     SECURE_LED_YELLOW(true);
+#else
+#endif
 #endif
 }
 
@@ -792,13 +811,18 @@ static void OnLed1TimerEvent( void* context )
  */
 static void OnLed2TimerEvent( void* context )
 {
+	Led2TimerEvent = true;
 #ifdef TX_CW
-    Led2TimerEvent = true;
+
 #else
     TimerStop( &Led2Timer );
+#ifdef VERSION_020
     // Switch LED 2 OFF
 //    GpioWrite( &Led2, 0 );
     SECURE_LED_RED(false);
+#else
+
+#endif
 #endif
 }
 
@@ -815,15 +839,70 @@ void OnRadioTxTimeout( void )
 void OnRadioRxTimeout( void )
 {
 	Led1TimerEvent = true;
+#ifdef VERSION_020
 	SECURE_LEDToggle_RED();
+#else
+#endif
 	Radio.Rx( 0 );
 }
 
 void OnRadioRxDone( uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr )
 {
 	Led2TimerEvent = true;
+#ifdef VERSION_020
 	SECURE_LEDToggle_YELLOW();
+#else
+    if( size != 0 )
+    {
+        printf( "RX DATA     : \n" );
+        PrintHexBuffer( payload, size );
+    }
+
+    printf( "\n" );
+    printf( "RX RSSI     : %d\n", rssi );
+    printf( "RX SNR      : %d\n", snr );
+#endif
 	Radio.Rx( 0 );
+}
+
+void OnRadioWifiDone(void)
+{
+	lr1110_wifi_get_nb_results(&LR1110, &LR1110.wifi.nb_results);
+	lr1110_wifi_read_basic_complete_results(&LR1110, 0, LR1110.wifi.nb_results, LR1110.wifi.all_results);
+	printf("WiFi scan num: %d\n\n", LR1110.wifi.nb_results);
+
+	for (int wn = 0; wn < LR1110.wifi.nb_results; ++wn) {
+		printf("WiFi idx: %d Mac:", wn);
+		PrintHexBuffer(LR1110.wifi.all_results[wn].mac_address, 6);
+		printf("Beacon: %ul Channel_Info: 0x%X Data_Rate: 0X%X Frame_Type: 0x%X\n",
+				LR1110.wifi.all_results[wn].beacon_period_tu,
+				LR1110.wifi.all_results[wn].channel_info_byte,
+				LR1110.wifi.all_results[wn].data_rate_info_byte,
+				LR1110.wifi.all_results[wn].frame_type_info_byte);
+		printf("Rssi: %d Phi_Offset: %ld Timestamp: %ul\n\n",
+						LR1110.wifi.all_results[wn].rssi,
+						LR1110.wifi.all_results[wn].phi_offset,
+						LR1110.wifi.all_results[wn].timestamp_us);
+	}
+
+//    lr1110_wifi_search_country_code( &LR1110, 0x3FFF, 3, 3, 1000, false);
+//	lr1110_wifi_get_nb_country_code_results(&LR1110, &LR1110.wifi.nb_countries);
+//	lr1110_wifi_read_country_code_results(&LR1110, 0, LR1110.wifi.nb_countries, LR1110.wifi.countries);
+//
+//	printf("\nCountries num: %d\n\n", LR1110.wifi.nb_countries);
+//
+//	for (int cn = 0; cn < LR1110.wifi.nb_countries; ++cn) {
+//		printf("Country: %c%c Mac:", LR1110.wifi.countries[cn].country_code[0], LR1110.wifi.countries[cn].country_code[1]);
+//		PrintHexBuffer(LR1110.wifi.countries[cn].mac_address, 6);
+//		printf("IO_Reg: 0x%X Channel_info: 0x%X\n\n", LR1110.wifi.countries[cn].io_regulation, \
+//				LR1110.wifi.countries[cn].channel_info_byte);
+//	}
+
+}
+
+void OnRadioGnssDone(void)
+{
+
 }
 #endif /* TX_CW */
 
@@ -833,7 +912,14 @@ void OnRadioRxDone( uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr )
 static void OnLedBeaconTimerEvent( void* context )
 {
 //    GpioWrite( &Led2, 1 );
+#ifdef VERSION_020
     SECURE_LED_RED(true);
+#else
+#endif
+
+    lr1110_wifi_scan(&LR1110, LR1110_WIFI_TYPE_SCAN_B_G_N, 0x3FFF, LR1110_WIFI_SCAN_MODE_BEACON,
+    			3, 3, 500, true);
+
     TimerStart( &Led2Timer );
 
     TimerStart( &LedBeaconTimer );
@@ -872,7 +958,10 @@ void Error_Handler(void)
   __disable_irq();
   while (1)
   {
+#ifdef VERSION_020
 	  SECURE_LEDToggle_RED();
+#else
+#endif
 	  HAL_Delay(500);
   }
   /* USER CODE END Error_Handler_Debug */

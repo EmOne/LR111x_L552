@@ -66,7 +66,7 @@ typedef enum
   USB_BCD_IDLE                      = 0x00,
 } USB_BCD_Status;
 /* USER CODE BEGIN PV */
-void USB_VBUS_detection_Callback(uint16_t GPIO_Pin);
+void USB_VBUS_detection_Callback(void* context);
 /* USER CODE END PV */
 /**
   * @}

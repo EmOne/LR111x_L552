@@ -378,8 +378,8 @@
 //   <o.10> RCC_S_IRQn          <0=> Secure state
 //   <o.11> EXTI0_IRQn          <0=> Secure state
 //   <o.12> EXTI1_IRQn          <0=> Secure state
-//   <o.13> EXTI2_IRQn          <0=> Secure state
-//   <o.14> EXTI3_IRQn          <0=> Secure state
+//   <o.13> EXTI2_IRQn          <1=> Non-Secure state
+//   <o.14> EXTI3_IRQn          <1=> Non-Secure state
 //   <o.15> EXTI4_IRQn          <0=> Secure state
 //   <o.16> EXTI5_IRQn          <0=> Secure state
 //   <o.17> EXTI6_IRQn          <0=> Secure state
@@ -390,7 +390,7 @@
 //   <o.22> EXTI11_IRQn         <0=> Secure state
 //   <o.23> EXTI12_IRQn         <0=> Secure state
 //   <o.24> EXTI13_IRQn         <0=> Secure state
-//   <o.25> EXTI14_IRQn         <0=> Secure state
+//   <o.25> EXTI14_IRQn         <1=> Non-Secure state
 //   <o.26> EXTI15_IRQn         <0=> Secure state
 //   <o.27> DMAMUX1_IRQn        <0=> Secure state
 //   <o.28> DMAMUX1_S_IRQn      <0=> Secure state
@@ -399,7 +399,7 @@
 //   <o.31> DMA1_Channel3_IRQn  <0=> Secure state
 */
 
-#define NVIC_INIT_ITNS0_VAL      0x00000004
+#define NVIC_INIT_ITNS0_VAL      0x02006004
 /*
 //   </e>
 */
@@ -441,11 +441,11 @@
 //   <o.27> SPI1_IRQn           <1=> Non-Secure state
 //   <o.28> SPI2_IRQn           <0=> Secure state
 //   <o.29> USART1_IRQn         <0=> Secure state
-//   <o.30> USART2_IRQn         <0=> Secure state
+//   <o.30> USART2_IRQn         <1=> Non-Secure state
 //   <o.31> USART3_IRQn         <1=> Non-Secure state
 */
 
-#define NVIC_INIT_ITNS1_VAL      0x89821E26
+#define NVIC_INIT_ITNS1_VAL      0xC9821E26
 
 /*
 //   </e>
@@ -460,7 +460,7 @@
 // Interrupts 64..95
 //   <o.0>  UART4_IRQn          <0=> Secure state
 //   <o.1>  UART5_IRQn          <0=> Secure state
-//   <o.2>  LPUART1_IRQn        <0=> Secure state
+//   <o.2>  LPUART1_IRQn        <1=> Non-Secure state
 //   <o.3>  LPTIM1_IRQn         <0=> Secure state
 //   <o.4>  LPTIM2_IRQn         <0=> Secure state
 //   <o.5>  TIM15_IRQn          <0=> Secure state
@@ -491,7 +491,7 @@
 //   <o.31> FPU_IRQn            <1=> Non-Secure state
 */
 
-#define NVIC_INIT_ITNS2_VAL      0xC0060200
+#define NVIC_INIT_ITNS2_VAL      0xC0060204
 
 /*
 //   </e>

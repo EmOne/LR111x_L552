@@ -258,6 +258,9 @@ void HAL_UART_MspInit(UART_HandleTypeDef* uartHandle)
 
     __HAL_LINKDMA(uartHandle,hdmatx,hdma_lpuart1_tx);
 
+    /* LPUART1 interrupt Init */
+    HAL_NVIC_SetPriority(LPUART1_IRQn, 0, 0);
+    HAL_NVIC_EnableIRQ(LPUART1_IRQn);
   /* USER CODE BEGIN LPUART1_MspInit 1 */
 
   /* USER CODE END LPUART1_MspInit 1 */
@@ -291,6 +294,9 @@ void HAL_UART_MspInit(UART_HandleTypeDef* uartHandle)
     GPIO_InitStruct.Alternate = GPIO_AF7_USART2;
     HAL_GPIO_Init(MB1_DE_GPIO_Port, &GPIO_InitStruct);
 
+    /* USART2 interrupt Init */
+    HAL_NVIC_SetPriority(USART2_IRQn, 0, 0);
+    HAL_NVIC_EnableIRQ(USART2_IRQn);
   /* USER CODE BEGIN USART2_MspInit 1 */
 
   /* USER CODE END USART2_MspInit 1 */
@@ -399,6 +405,9 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef* uartHandle)
     /* LPUART1 DMA DeInit */
     HAL_DMA_DeInit(uartHandle->hdmarx);
     HAL_DMA_DeInit(uartHandle->hdmatx);
+
+    /* LPUART1 interrupt Deinit */
+    HAL_NVIC_DisableIRQ(LPUART1_IRQn);
   /* USER CODE BEGIN LPUART1_MspDeInit 1 */
 
   /* USER CODE END LPUART1_MspDeInit 1 */
@@ -416,6 +425,8 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef* uartHandle)
     */
     HAL_GPIO_DeInit(MB1_DE_GPIO_Port, MB1_DE_Pin);
 
+    /* USART2 interrupt Deinit */
+    HAL_NVIC_DisableIRQ(USART2_IRQn);
   /* USER CODE BEGIN USART2_MspDeInit 1 */
 
   /* USER CODE END USART2_MspDeInit 1 */
@@ -480,6 +491,17 @@ uint8_t UartGetChar( UART_HandleTypeDef *obj, uint8_t *data )
 	        return 1;
 //	    }
 //	return HAL_UART_Receive(obj, data, 1, 100);
+}
+
+int __io_putchar(int ch) {
+	HAL_UART_Transmit(&hlpuart1, (uint8_t *)&ch, 1, 100);
+	return 0;
+}
+
+int __io_getchar(void) {
+	int data;
+	HAL_UART_Receive(&hlpuart1, (uint8_t *) &data, 1, 100);
+	return data;
 }
 /* USER CODE END 1 */
 

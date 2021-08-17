@@ -28,7 +28,7 @@
 #include "usbd_cdc.h"
 
 /* USER CODE BEGIN Includes */
-
+#include "gpio.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -38,7 +38,7 @@
 /* Private variables ---------------------------------------------------------*/
 USB_BCD_Status USBD_BCD_PortState = USB_BCD_IDLE;
 /* USER CODE BEGIN PV */
-
+Gpio_t bcd;
 /* USER CODE END PV */
 
 PCD_HandleTypeDef hpcd_USB_FS;
@@ -75,7 +75,8 @@ void HAL_PCD_MspInit(PCD_HandleTypeDef* pcdHandle)
   if(pcdHandle->Instance==USB)
   {
   /* USER CODE BEGIN USB_MspInit 0 */
-
+	GpioInit(&bcd, LR_RFSW2_GPIO_Port, LR_RFSW2_Pin, PIN_INPUT, PIN_PUSH_PULL, PIN_NO_PULL, 0 );
+	GpioSetInterrupt( &bcd, IRQ_RISING_EDGE, IRQ_HIGH_PRIORITY, USB_VBUS_detection_Callback );
   /* USER CODE END USB_MspInit 0 */
   /** Initializes the peripherals clock
   */
@@ -764,10 +765,10 @@ USBD_StatusTypeDef USBD_LL_BatterryCharging(USBD_HandleTypeDef *pdev)
    * @brief  Handle USB VBUS detection upon external interrupt
    * @param  GPIO_Pin
    */
-void USB_VBUS_detection_Callback(uint16_t GPIO_Pin)
+void USB_VBUS_detection_Callback(void* context)
 {
-  if (GPIO_Pin == GPIO_PIN_12)
-  {
+//  if (GPIO_Pin == GPIO_PIN_12)
+//  {
     if (HAL_GPIO_ReadPin(GPIOD, GPIO_PIN_12) == GPIO_PIN_SET)
     {
       /*wait for bus stabilization*/
@@ -782,7 +783,7 @@ void USB_VBUS_detection_Callback(uint16_t GPIO_Pin)
 
       USBD_BCD_PortState = USB_BCD_DEVICE_DISCONNECTED;
     }
-  }
+//  }
 }
 
 /**

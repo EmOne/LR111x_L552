@@ -209,7 +209,11 @@ void Error_Handler(void)
   __disable_irq();
   while (1)
   {
+#ifdef VERSION_010
 	  HAL_GPIO_TogglePin(MB1_RX_GPIO_Port, MB1_RX_Pin);
+#else
+
+#endif
 	  HAL_Delay(200);
   }
   /* USER CODE END Error_Handler_Debug */

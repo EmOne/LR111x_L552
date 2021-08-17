@@ -130,12 +130,14 @@ void lr1110_board_init( const void* context, lr1110_dio_irq_handler dio_irq )
     // Initialize RF switch control
     lr1110_system_rfswitch_cfg_t rf_switch_configuration;
 #if 010
-    rf_switch_configuration.enable  = LR1110_SYSTEM_RFSW0_HIGH | LR1110_SYSTEM_RFSW1_HIGH;
+    rf_switch_configuration.enable  = LR1110_SYSTEM_RFSW0_HIGH | LR1110_SYSTEM_RFSW1_HIGH ;
     rf_switch_configuration.standby = 0;
-    rf_switch_configuration.rx      = LR1110_SYSTEM_RFSW0_HIGH;
+    rf_switch_configuration.rx      = LR1110_SYSTEM_RFSW1_HIGH;
     rf_switch_configuration.tx      = LR1110_SYSTEM_RFSW0_HIGH | LR1110_SYSTEM_RFSW1_HIGH;
-    rf_switch_configuration.wifi    = 0;
-    rf_switch_configuration.gnss    = 0;
+    rf_switch_configuration.tx_hp   = LR1110_SYSTEM_RFSW0_HIGH;
+    rf_switch_configuration.tx_hf   = LR1110_SYSTEM_RFSW0_HIGH;
+    rf_switch_configuration.wifi    = LR1110_SYSTEM_RFSW3_HIGH;
+    rf_switch_configuration.gnss    = LR1110_SYSTEM_RFSW2_HIGH;
 #else
     rf_switch_configuration.enable  = LR1110_SYSTEM_RFSW0_HIGH | LR1110_SYSTEM_RFSW1_HIGH |
     		LR1110_SYSTEM_RFSW2_HIGH | LR1110_SYSTEM_RFSW3_HIGH;
@@ -151,7 +153,7 @@ void lr1110_board_init( const void* context, lr1110_dio_irq_handler dio_irq )
     lr1110_system_set_dio_as_rf_switch( context, &rf_switch_configuration );
 
     lr1110_radio_pa_cfg_t paConfig = {
-#if 010
+#if 0
         .pa_sel        = LR1110_RADIO_PA_SEL_LP,
         .pa_reg_supply = LR1110_RADIO_PA_REG_SUPPLY_DCDC,
         .pa_duty_cycle = 0x04,

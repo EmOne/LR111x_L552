@@ -241,9 +241,6 @@
       <Secure>1</Secure>
       <filestoremove>
         <file>
-          <name>Secure\Core\Src\icache.c</name>
-        </file>
-        <file>
           <name>Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_core.c</name>
         </file>
         <file>

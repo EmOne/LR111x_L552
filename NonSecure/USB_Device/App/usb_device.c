@@ -28,7 +28,7 @@
 #include "usbd_cdc_if.h"
 
 /* USER CODE BEGIN Includes */
-
+#include "gpio.h"
 /* USER CODE END Includes */
 
 /* USER CODE BEGIN PV */
@@ -50,7 +50,7 @@ extern USBD_DescriptorsTypeDef CDC_Desc;
  * -- Insert your variables declaration here --
  */
 /* USER CODE BEGIN 0 */
-
+Gpio_t bcd;
 /* USER CODE END 0 */
 
 /*
