@@ -45,6 +45,7 @@ extern "C" {
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "lpm-board.h"
 #include "utilities.h"
 #include "util_console.h"
 #include "stm32l552e_eval.h"

@@ -94,7 +94,7 @@
 /*!
  * Defines the application data transmission duty cycle. 5s, value in [ms].
  */
-#define APP_TX_DUTYCYCLE                            5000 * 9
+#define APP_TX_DUTYCYCLE                            5000 * 6
 
 /*!
  * Defines a random delay for application data transmission duty cycle. 1s,
@@ -217,6 +217,16 @@ void OnRadioRxDone( uint8_t* payload, uint16_t size, int16_t rssi, int8_t snr );
 void OnRadioRxTimeout( void );
 static int16_t iRssi;
 #endif /* TX_CW */
+
+/*!
+ * Flag to indicate if the MCU is Initialized
+ */
+static bool McuInitialized = false;
+
+/*!
+ * Flag used to indicate if board is powered from the USB
+ */
+static bool UsbIsConnected = false;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -265,6 +275,11 @@ static void OnLed2TimerEvent( void* context );
  * \brief Function executed on Beacon timer Timeout event
  */
 static void OnLedBeaconTimerEvent( void* context );
+
+/*!
+ * Timer used at first boot to calibrate the SystemWakeupTime
+ */
+static TimerEvent_t CalibrateSystemWakeupTimeTimer;
 
 static LmHandlerCallbacks_t LmHandlerCallbacks =
 {
@@ -319,7 +334,28 @@ static volatile uint32_t TxPeriodicity = 0;
 static void OnRadioWifiDone( void );
 
 static void OnRadioGnssDone( void );
+/*!
+ * Used to measure and calibrate the system wake-up time from STOP mode
+ */
+static void CalibrateSystemWakeupTime( void );
 
+/*!
+ * System Clock Re-Configuration when waking up from STOP mode
+ */
+static void SystemClockReConfig( void );
+/*!
+ * Flag to indicate if the SystemWakeupTime is Calibrated
+ */
+static volatile bool SystemWakeupTimeCalibrated = false;
+
+/*!
+ * Callback indicating the end of the system wake-up time calibration
+ */
+static void OnCalibrateSystemWakeupTimeTimerEvent( void* context )
+{
+    RtcSetMcuWakeUpTime( );
+    SystemWakeupTimeCalibrated = true;
+}
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -379,15 +415,7 @@ int main(void)
   MX_USART2_UART_Init();
   MX_ICACHE_Init();
   /* USER CODE BEGIN 2 */
-  RtcInit();
-  BSP_GYRO_Init();
-#if V010
-  BSP_IDD_Init(0);
-  BSP_IDD_Init(1);
-#endif
-  SpiInit(&LR1110.spi, SPI_3, LR_MOSI_GPIO_Port, LR_MOSI_Pin,
-		  LR_MISO_GPIO_Port, LR_MISO_Pin, LR_SCK_GPIO_Port, LR_SCK_Pin, NULL, NC);
-  lr1110_board_init_io( &LR1110 );
+  BoardInitMcu();
 
   TimerInit( &Led1Timer, OnLed1TimerEvent );
   TimerSetValue( &Led1Timer, 25 );
@@ -927,6 +955,107 @@ void OnRadioWifiDone(void)
 void OnRadioGnssDone(void)
 {
 
+}
+
+void BoardInitMcu( void )
+{
+	if (McuInitialized == false)
+	{
+		RtcInit();
+		BSP_GYRO_Init();
+#if V010
+		BSP_IDD_Init(0);
+		BSP_IDD_Init(1);
+#endif
+		LpmSetOffMode( LPM_APPLI_ID, LPM_DISABLE );
+	} else {
+		SystemClockReConfig();
+	}
+
+	BoardInitPeriph();
+
+	if (McuInitialized == false){
+		McuInitialized = true;
+		lr1110_board_init_dbg_io( &LR1110 );
+	} else {
+		CalibrateSystemWakeupTime( );
+	}
+}
+
+void BoardInitPeriph( void )
+{
+	MX_LPUART1_UART_Init();
+	SpiInit(&LR1110.spi, SPI_3, LR_MOSI_GPIO_Port, LR_MOSI_Pin,
+				  LR_MISO_GPIO_Port, LR_MISO_Pin, LR_SCK_GPIO_Port, LR_SCK_Pin, NULL, NC);
+	lr1110_board_init_io( &LR1110 );
+}
+
+void BoardDeInitMcu( void )
+{
+//    SpiDeInit( &LR1110.spi );
+//    lr1110_board_deinit_io( &LR1110 );
+}
+
+void CalibrateSystemWakeupTime( void )
+{
+    if( SystemWakeupTimeCalibrated == false )
+    {
+        TimerInit( &CalibrateSystemWakeupTimeTimer, OnCalibrateSystemWakeupTimeTimerEvent );
+        TimerSetValue( &CalibrateSystemWakeupTimeTimer, 1000 );
+        TimerStart( &CalibrateSystemWakeupTimeTimer );
+        while( SystemWakeupTimeCalibrated == false )
+        {
+
+        }
+    } else {
+
+    }
+}
+
+void SystemClockReConfig( void )
+{
+      RCC_ClkInitTypeDef RCC_ClkInitStruct = { 0 };
+      RCC_OscInitTypeDef RCC_OscInitStruct = { 0 };
+      uint32_t pFLatency = 0;
+
+    CRITICAL_SECTION_BEGIN( );
+
+    // In case nvic had a pending IT, the arm doesn't enter stop mode
+    // Hence the pll is not switched off and will cause HAL_RCC_OscConfig return
+    // an error
+    if ( __HAL_RCC_GET_SYSCLK_SOURCE() != RCC_CFGR_SWS )
+    {
+        // Enable Power Control clock
+        __HAL_RCC_PWR_CLK_ENABLE( );
+
+        // Get the Oscillators configuration according to the internal RCC registers */
+        HAL_RCC_GetOscConfig( &RCC_OscInitStruct );
+
+        // Enable PLL
+        RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_NONE;
+        RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
+        if( HAL_RCC_OscConfig( &RCC_OscInitStruct ) != HAL_OK )
+        {
+            Error_Handler();
+        }
+
+        /* Get the Clocks configuration according to the internal RCC registers */
+        HAL_RCC_GetClockConfig(&RCC_ClkInitStruct, &pFLatency);
+
+        /* Select PLL as system clock source and keep HCLK, PCLK1 and PCLK2 clocks dividers as before */
+        RCC_ClkInitStruct.ClockType     = RCC_CLOCKTYPE_SYSCLK;
+        RCC_ClkInitStruct.SYSCLKSource  = RCC_SYSCLKSOURCE_PLLCLK;
+        if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, pFLatency) != HAL_OK)
+        {
+        	Error_Handler();
+        }
+    }
+    else
+    {
+        // MCU did not enter stop mode beacuse NVIC had a pending IT
+    }
+
+    CRITICAL_SECTION_END( );
 }
 /* USER CODE END 4 */
 

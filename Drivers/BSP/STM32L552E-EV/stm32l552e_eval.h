@@ -471,14 +471,28 @@ void BoardLowPowerHandler( void );
  */
 uint8_t GetBoardPowerSource( void );
 
-///*!
-// * \brief Get the board version
-// *
-// * \retval value  Version
-// */
+/*!
+ * \brief Get the board version
+ *
+ * \retval value  Version
+ */
 //Version_t BoardGetVersion( void );
 
-//void BoardInitMcu( void );
+/*!
+ * \brief Initializes the mcu.
+ */
+void BoardInitMcu( void );
+
+/*!
+ * \brief Initializes the boards peripherals.
+ */
+void BoardInitPeriph( void );
+
+/*!
+ * \brief De-initializes the target board peripherals to decrease power
+ *        consumption.
+ */
+void BoardDeInitMcu( void );
 
 /**
   * @}

@@ -500,7 +500,7 @@ int __io_putchar(int ch) {
 
 int __io_getchar(void) {
 	int data;
-	HAL_UART_Receive(&hlpuart1, (uint8_t *) &data, 1, 100);
+	UartGetChar(&hlpuart1, (uint8_t *) &data);
 	return data;
 }
 /* USER CODE END 1 */

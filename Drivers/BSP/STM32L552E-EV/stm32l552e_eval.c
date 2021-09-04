@@ -1695,6 +1695,19 @@ void BoardResetMcu( void )
     NVIC_SystemReset( );
 }
 
+__weak void BoardInitMcu( void ){
+
+}
+
+__weak void BoardInitPeriph( void )
+{
+
+}
+
+__weak void BoardDeInitMcu( void )
+{
+
+}
 /**
   * @}
   */

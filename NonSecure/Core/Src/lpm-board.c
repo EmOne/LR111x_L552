@@ -151,7 +151,7 @@ __weak void LpmExitSleepMode( void )
 	    CRITICAL_SECTION_BEGIN( );
 
 	    // Initilizes the peripherals
-//	    BoardInitMcu( );
+	    BoardInitMcu( );
 
 	    CRITICAL_SECTION_END( );
 }
@@ -160,7 +160,7 @@ __weak void LpmEnterStopMode( void )
 {
 	CRITICAL_SECTION_BEGIN( );
 
-//	    BoardDeInitMcu( );
+	    BoardDeInitMcu( );
 
 	    CRITICAL_SECTION_END( );
 
@@ -176,7 +176,7 @@ __weak void LpmEnterOffMode( void )
 {
     CRITICAL_SECTION_BEGIN( );
 
-    //	    BoardDeInitMcu( );
+   	    BoardDeInitMcu( );
 
 	    CRITICAL_SECTION_END( );
 	    HAL_PWR_EnterSTOPMode( PWR_LOWPOWERREGULATOR_ON, PWR_STOPENTRY_WFI );

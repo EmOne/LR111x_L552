@@ -101,4 +101,11 @@ void DisplayClassUpdate( DeviceClass_t deviceClass );
  */
 void DisplayAppInfo( const char* appName, const Version_t* appVersion, const Version_t* gitHubVersion );
 
+/*!
+ * Prints the provided buffer in HEX
+ *
+ * \param buffer Buffer to be printed
+ * \param size   Buffer size to be printed
+ */
+void PrintHexBuffer( uint8_t *buffer, uint8_t size );
 #endif // __LMHANDLER_MSG_DISPLAY_H__
