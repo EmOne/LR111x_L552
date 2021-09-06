@@ -9,10 +9,10 @@
   * <h2><center>&copy; Copyright (c) 2021 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
-  * This software component is licensed by ST under BSD 3-Clause license,
-  * the "License"; You may not use this file except in compliance with the
-  * License. You may obtain a copy of the License at:
-  *                        opensource.org/licenses/BSD-3-Clause
+  * This software component is licensed by ST under Ultimate Liberty license
+  * SLA0044, the "License"; You may not use this file except in compliance with
+  * the License. You may obtain a copy of the License at:
+  *                             www.st.com/SLA0044
   *
   ******************************************************************************
   */
@@ -232,6 +232,11 @@ static bool McuInitialized = false;
  * Flag used to indicate if board is powered from the USB
  */
 static bool UsbIsConnected = false;
+
+/*!
+ * Flag used to indicate if board is req from the gnss
+ */
+static bool iSAidingPosReq = false;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -988,7 +993,7 @@ static void OnGnssTimerEvent(  void* context  )
 //			| LR1110_GNSS_IRQ_PSEUDO_RANGE_MASK
 //			, 10);
 
-	lr1110_gnss_scan_continuous(&LR1110);
+//	lr1110_gnss_scan_continuous(&LR1110);
 
 }
 
@@ -1017,7 +1022,6 @@ static void OnWifiTimerEvent(  void* context  )
 
 }
 
-//#ifdef TEST_WIFI_SCAN_MAC
 /* *********************************************************************
  * LR1110 WiFi positioning protocol
  * *********************************************************************
@@ -1091,9 +1095,7 @@ void OnRadioWifiDone(void)
 
 	TimerStart(&WifiTimer);
 }
-//#endif
 
-//#ifdef TEST_GNSS_SCAN
 /* *********************************************************************
  * LR1110 GNSS positioning protocol
  * *********************************************************************
@@ -1126,56 +1128,58 @@ void OnRadioWifiDone(void)
  */
 void OnRadioGnssDone(void)
 {
-	AppData.Port = 5;
-	AppData.Buffer[0] = 0x01; //TAG=0x01
-	AppData.BufferSize = 1;
+	if(iSAidingPosReq) {
+		AppData.Port = 5;
+		AppData.Buffer[0] = 0x01; //TAG=0x01
+		AppData.BufferSize = 1;
 
-	lr1110_gnss_get_result_size(&LR1110, &LR1110.gnss.len);
-	lr1110_gnss_read_results(&LR1110, (uint8_t *) &LR1110.gnss.results, LR1110.gnss.len);
+		lr1110_gnss_get_result_size(&LR1110, &LR1110.gnss.len);
+		lr1110_gnss_read_results(&LR1110, (uint8_t *) &LR1110.gnss.results, LR1110.gnss.len);
 
-	printf("GNSS: len %d : result:", LR1110.gnss.len);
-	PrintHexBuffer(LR1110.gnss.results,  LR1110.gnss.len);
-	printf("\r\n");
+		printf("GNSS: len %d : result:", LR1110.gnss.len);
+		PrintHexBuffer(LR1110.gnss.results,  LR1110.gnss.len);
+		printf("\r\n");
 
-	lr1110_gnss_get_nb_detected_satellites(&LR1110, &LR1110.gnss.nb_satellite);
-	printf("GNSS: SV %d detected\r\n", LR1110.gnss.nb_satellite);
-	lr1110_gnss_get_detected_satellites(&LR1110, LR1110.gnss.nb_satellite, LR1110.gnss.satellite);
-	for (int var = 0; var < LR1110.gnss.nb_satellite; ++var) {
-		printf("    GNSS: SV index %d CNR: %d\r\n", LR1110.gnss.satellite[var].satellite_id, LR1110.gnss.satellite[var].cnr);
-						   
-	}
-	lr1110_gnss_get_timings(&LR1110, &LR1110.gnss.timings);
-	printf("GNSS: timing radio: %ld computation: %ld\r\n", LR1110.gnss.timings.radio_ms, LR1110.gnss.timings.computation_ms);
+		lr1110_gnss_get_nb_detected_satellites(&LR1110, &LR1110.gnss.nb_satellite);
+		printf("GNSS: SV %d detected\r\n", LR1110.gnss.nb_satellite);
+		lr1110_gnss_get_detected_satellites(&LR1110, LR1110.gnss.nb_satellite, LR1110.gnss.satellite);
+		for (int var = 0; var < LR1110.gnss.nb_satellite; ++var) {
+			printf("    GNSS: SV index %d CNR: %d\r\n", LR1110.gnss.satellite[var].satellite_id, LR1110.gnss.satellite[var].cnr);
 
-	memcpy1(&AppData.Buffer[AppData.BufferSize], (uint8_t *) &LR1110.gnss.results, LR1110.gnss.len);
-	AppData.BufferSize += LR1110.gnss.len;
+		}
+		lr1110_gnss_get_timings(&LR1110, &LR1110.gnss.timings);
+		printf("GNSS: timing radio: %ld computation: %ld\r\n", LR1110.gnss.timings.radio_ms, LR1110.gnss.timings.computation_ms);
 
-	// U-GNSSLOC-NAV - 0x01: GNSS Navigation message (NAV)
-	if (LmHandlerSend(&AppData, LmHandlerParams.IsTxConfirmed)
-			== LORAMAC_HANDLER_SUCCESS) {
+		memcpy1(&AppData.Buffer[AppData.BufferSize], (uint8_t *) &LR1110.gnss.results, LR1110.gnss.len);
+		AppData.BufferSize += LR1110.gnss.len;
 
-		SECURE_LED_YELLOW(GPIO_PIN_SET);
+		// U-GNSSLOC-NAV - 0x01: GNSS Navigation message (NAV)
+		if (LmHandlerSend(&AppData, LmHandlerParams.IsTxConfirmed)
+				== LORAMAC_HANDLER_SUCCESS) {
+			SECURE_LED_YELLOW(GPIO_PIN_SET);
 
-		TimerStart(&Led1Timer);
-
+			TimerStart(&Led1Timer);
+		}
+		iSAidingPosReq = true;
+	} else {
 		//U-GNSSLOC-REQAID - 0x00: Aiding position request
 		AppData.Port = 6;
 		AppData.Buffer[0] = 0x00; //TAG=0x00
 		AppData.BufferSize = 1;
 
-		if (LmHandlerSend(&AppData, LORAMAC_HANDLER_CONFIRMED_MSG)
+		if (LmHandlerSend(&AppData, LmHandlerParams.IsTxConfirmed)
 					== LORAMAC_HANDLER_SUCCESS) {
 			SECURE_LED_YELLOW(GPIO_PIN_SET);
 
 			TimerStart(&Led1Timer);
 		}
+		iSAidingPosReq = false;
 	}
 
 	OnTxTimerEvent( NULL );
 
 	TimerStart(&GnssTimer);
 }
-//#endif
 
 void BoardInitMcu( void )
 {
@@ -1204,7 +1208,10 @@ void BoardInitMcu( void )
 
 void BoardInitPeriph( void )
 {
-	MX_LPUART1_UART_Init();
+	if (HAL_UART_Init(&hlpuart1) != HAL_OK)
+	{
+	    Error_Handler();
+	}
 	SpiInit(&LR1110.spi, SPI_3, LR_MOSI_GPIO_Port, LR_MOSI_Pin,
 				  LR_MISO_GPIO_Port, LR_MISO_Pin, LR_SCK_GPIO_Port, LR_SCK_Pin, NULL, NC);
 	lr1110_board_init_io( &LR1110 );
@@ -1212,6 +1219,11 @@ void BoardInitPeriph( void )
 
 void BoardDeInitMcu( void )
 {
+
+	if (HAL_UART_DeInit(&hlpuart1) != HAL_OK)
+	{
+	    Error_Handler();
+	}
 //    SpiDeInit( &LR1110.spi );
 //    lr1110_board_deinit_io( &LR1110 );
 }
@@ -1223,10 +1235,10 @@ void CalibrateSystemWakeupTime( void )
         TimerInit( &CalibrateSystemWakeupTimeTimer, OnCalibrateSystemWakeupTimeTimerEvent );
         TimerSetValue( &CalibrateSystemWakeupTimeTimer, 1000 );
         TimerStart( &CalibrateSystemWakeupTimeTimer );
-        while( SystemWakeupTimeCalibrated == false )
-        {
-
-        }
+//        while( SystemWakeupTimeCalibrated == false )
+//        {
+//
+//        }
     } else {
 
     }

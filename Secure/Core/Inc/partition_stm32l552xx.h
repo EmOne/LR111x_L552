@@ -386,7 +386,7 @@
 //   <o.18> EXTI7_IRQn          <0=> Secure state
 //   <o.19> EXTI8_IRQn          <0=> Secure state
 //   <o.20> EXTI9_IRQn          <0=> Secure state
-//   <o.21> EXTI10_IRQn         <0=> Secure state
+//   <o.21> EXTI10_IRQn         <1=> Non-Secure state
 //   <o.22> EXTI11_IRQn         <0=> Secure state
 //   <o.23> EXTI12_IRQn         <0=> Secure state
 //   <o.24> EXTI13_IRQn         <0=> Secure state
@@ -394,12 +394,12 @@
 //   <o.26> EXTI15_IRQn         <0=> Secure state
 //   <o.27> DMAMUX1_IRQn        <0=> Secure state
 //   <o.28> DMAMUX1_S_IRQn      <0=> Secure state
-//   <o.29> DMA1_Channel1_IRQn  <0=> Secure state
-//   <o.30> DMA1_Channel2_IRQn  <0=> Secure state
-//   <o.31> DMA1_Channel3_IRQn  <0=> Secure state
+//   <o.29> DMA1_Channel1_IRQn  <1=> Non-Secure state
+//   <o.30> DMA1_Channel2_IRQn  <1=> Non-Secure state
+//   <o.31> DMA1_Channel3_IRQn  <1=> Non-Secure state
 */
 
-#define NVIC_INIT_ITNS0_VAL      0x02006004
+#define NVIC_INIT_ITNS0_VAL      0xE2206004
 /*
 //   </e>
 */
@@ -411,7 +411,7 @@
 
 /*
 / Interrupts 32..63
-//   <o.0>  DMA1_Channel4_IRQn  <0=> Secure state
+//   <o.0>  DMA1_Channel4_IRQn  <1=> Non-Secure state
 //   <o.1>  DMA1_Channel5_IRQn  <1=> Non-Secure state
 //   <o.2>  DMA1_Channel6_IRQn  <1=> Non-Secure state
 //   <o.3>  DMA1_Channel7_IRQn  <0=> Secure state
@@ -428,7 +428,7 @@
 //   <o.14> TIM3_IRQn           <0=> Secure state
 //   <o.15> TIM4_IRQn           <0=> Secure state
 //   <o.16> TIM5_IRQn           <0=> Secure state
-//   <o.17> TIM6_IRQn           <0=> Secure state
+//   <o.17> TIM6_IRQn           <1=> Non-Secure state
 //   <o.18> TIM7_IRQn           <0=> Secure state
 //   <o.19> TIM8_BRK_IRQn       <0=> Secure state
 //   <o.20> TIM8_UP_IRQn        <0=> Secure state
@@ -439,13 +439,13 @@
 //   <o.25> I2C2_EV_IRQn        <0=> Secure state
 //   <o.26> I2C2_ER_IRQn        <0=> Secure state
 //   <o.27> SPI1_IRQn           <1=> Non-Secure state
-//   <o.28> SPI2_IRQn           <0=> Secure state
+//   <o.28> SPI2_IRQn           <1=> Non-Secure state
 //   <o.29> USART1_IRQn         <0=> Secure state
 //   <o.30> USART2_IRQn         <1=> Non-Secure state
 //   <o.31> USART3_IRQn         <1=> Non-Secure state
 */
 
-#define NVIC_INIT_ITNS1_VAL      0xC9801E26
+#define NVIC_INIT_ITNS1_VAL      0xD9821E27
 
 /*
 //   </e>

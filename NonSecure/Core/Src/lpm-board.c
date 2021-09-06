@@ -148,12 +148,12 @@ __weak void LpmEnterSleepMode( void )
 __weak void LpmExitSleepMode( void )
 {
 	// Disable IRQ while the MCU is not running on HSI
-	    CRITICAL_SECTION_BEGIN( );
+	CRITICAL_SECTION_BEGIN();
 
-	    // Initilizes the peripherals
-	    BoardInitMcu( );
+	// Initilizes the peripherals
+	BoardInitMcu();
 
-	    CRITICAL_SECTION_END( );
+	CRITICAL_SECTION_END();
 }
 
 __weak void LpmEnterStopMode( void )
@@ -170,6 +170,7 @@ __weak void LpmEnterStopMode( void )
 
 __weak void LpmExitStopMode( void )
 {
+	 BoardInitPeriph();
 }
 
 __weak void LpmEnterOffMode( void )
@@ -184,4 +185,5 @@ __weak void LpmEnterOffMode( void )
 
 __weak void LpmExitOffMode( void )
 {
+
 }

@@ -21,7 +21,7 @@
 #include "gpio.h"
 
 /* USER CODE BEGIN 0 */
-
+#include "utilities.h"
 /* USER CODE END 0 */
 
 /*----------------------------------------------------------------------------*/
@@ -118,16 +118,14 @@ static Gpio_t *GpioIrq[16];
 
 void GpioInit( Gpio_t *obj, void* port, uint16_t pin, PinModes mode, PinConfigs config, PinTypes type, uint32_t value )
 {
-//    if( pin < IOE_0 )
-//    {
-        GPIO_InitTypeDef GPIO_InitStructure;
+	GPIO_InitTypeDef GPIO_InitStructure;
 
-        obj->pin = pin;
+	obj->pin = pin;
 
-        if( pin == NC  || port == NULL)
-        {
-            return;
-        }
+	if( pin == NC  || port == NULL)
+	{
+		return;
+	}
 
         obj->pinIndex = pin; //( 0x01 << ( obj->pin & 0x0F ) );
         obj->port = port;
@@ -157,9 +155,9 @@ void GpioInit( Gpio_t *obj, void* port, uint16_t pin, PinModes mode, PinConfigs 
             __HAL_RCC_GPIOH_CLK_ENABLE( );
         }
 
-        GPIO_InitStructure.Pin =  obj->pinIndex ;
-        GPIO_InitStructure.Pull = obj->pull = type;
-        GPIO_InitStructure.Speed = GPIO_SPEED_FREQ_HIGH;
+	GPIO_InitStructure.Pin =  obj->pinIndex ;
+	GPIO_InitStructure.Pull = obj->pull = type;
+	GPIO_InitStructure.Speed = GPIO_SPEED_FREQ_HIGH;
 
         if( mode == PIN_INPUT )
         {
@@ -199,15 +197,7 @@ void GpioInit( Gpio_t *obj, void* port, uint16_t pin, PinModes mode, PinConfigs 
             GpioWrite( obj, value );
         }
 
-        HAL_GPIO_Init( obj->port, &GPIO_InitStructure );
-//    }
-//    else
-//    {
-//#if defined( BOARD_IOE_EXT )
-//        // IOExt Pin
-//        GpioIoeInit( obj, pin, mode, config, type, value );
-//#endif
-//    }
+	HAL_GPIO_Init( obj->port, &GPIO_InitStructure );
 }
 
 void GpioSetContext( Gpio_t *obj, void* context )
@@ -217,9 +207,7 @@ void GpioSetContext( Gpio_t *obj, void* context )
 
 void GpioSetInterrupt( Gpio_t *obj, IrqModes irqMode, IrqPriorities irqPriority, GpioIrqHandler *irqHandler )
 {
-//    if( obj->pin < IOE_0 )
-//    {
-        uint32_t priority = 0;
+	uint32_t priority = 0;
 
         IRQn_Type IRQnb = EXTI0_IRQn;
         GPIO_InitTypeDef   GPIO_InitStructure;
@@ -339,115 +327,66 @@ void GpioSetInterrupt( Gpio_t *obj, IrqModes irqMode, IrqPriorities irqPriority,
             break;
         }
 
-//        GpioIrq[( obj->pin ) & 0x0F] = obj;
+
 
         HAL_NVIC_SetPriority( IRQnb , priority, 0 );
         HAL_NVIC_EnableIRQ( IRQnb );
-//    }
-//    else
-//    {
-//#if defined( BOARD_IOE_EXT )
-//        // IOExt Pin
-//        GpioIoeSetInterrupt( obj, irqMode, irqPriority, irqHandler );
-//#endif
-//    }
+
 }
 
 void GpioRemoveInterrupt( Gpio_t *obj )
 {
-//    if( obj->pin < IOE_0 )
-//    {
-        // Clear callback before changing pin mode
-        GpioIrq[( obj->pin ) & 0x0F] = NULL;
+	GpioIrq[( obj->pin ) & 0x0F] = NULL;
 
-        GPIO_InitTypeDef   GPIO_InitStructure;
+	GPIO_InitTypeDef   GPIO_InitStructure;
 
-        GPIO_InitStructure.Pin =  obj->pinIndex ;
-        GPIO_InitStructure.Mode = GPIO_MODE_ANALOG;
-        HAL_GPIO_Init( obj->port, &GPIO_InitStructure );
-//    }
-//    else
-//    {
-//#if defined( BOARD_IOE_EXT )
-//        // IOExt Pin
-//        GpioIoeRemoveInterrupt( obj );
-//#endif
-//    }
+	GPIO_InitStructure.Pin =  obj->pinIndex ;
+	GPIO_InitStructure.Mode = GPIO_MODE_ANALOG;
+	HAL_GPIO_Init( obj->port, &GPIO_InitStructure );
 }
 
 void GpioWrite( Gpio_t *obj, uint32_t value )
 {
-//    if( obj->pin < IOE_0 )
-//    {
-        if( obj == NULL )
-        {
-            assert_param( FAIL );
-        }
-        // Check if pin is not connected
-        if( obj->pin == NC )
-        {
-            return;
-        }
-        HAL_GPIO_WritePin( obj->port, obj->pinIndex , ( GPIO_PinState )value );
-//    }
-//    else
-//    {
-//#if defined( BOARD_IOE_EXT )
-//        // IOExt Pin
-//        GpioIoeWrite( obj, value );
-//#endif
-//    }
+	if( obj == NULL )
+	{
+		assert_param( FAIL );
+	}
+	// Check if pin is not connected
+	if( obj->pin == NC )
+	{
+		return;
+	}
+	HAL_GPIO_WritePin( obj->port, obj->pinIndex , ( GPIO_PinState )value );
+
 }
 
 void GpioToggle( Gpio_t *obj )
 {
-//    if( obj->pin < IOE_0 )
-//    {
-        if( obj == NULL )
-        {
-            assert_param( FAIL );
-        }
+	if( obj == NULL )
+	{
+		assert_param( FAIL );
+	}
 
-        // Check if pin is not connected
-        if( obj->pin == NC )
-        {
-            return;
-        }
-        HAL_GPIO_TogglePin( obj->port, obj->pinIndex );
-//    }
-//    else
-//    {
-//#if defined( BOARD_IOE_EXT )
-//        // IOExt Pin
-//        GpioIoeToggle( obj );
-//#endif
-//    }
+	// Check if pin is not connected
+	if( obj->pin == NC )
+	{
+		return;
+	}
+	HAL_GPIO_TogglePin( obj->port, obj->pinIndex );
 }
 
 uint32_t GpioRead( Gpio_t *obj )
 {
-//    if( obj->pin < IOE_0 )
-//    {
-        if( obj == NULL )
-        {
-            assert_param( FAIL );
-        }
-        // Check if pin is not connected
-        if( obj->pin == NC )
-        {
-            return 0;
-        }
-        return HAL_GPIO_ReadPin( obj->port, obj->pinIndex );
-//    }
-//    else
-//    {
-//#if defined( BOARD_IOE_EXT )
-//        // IOExt Pin
-//        return GpioIoeRead( obj );
-//#else
-//        return 0;
-//#endif
-//    }
+	if( obj == NULL )
+	{
+		assert_param( FAIL );
+	}
+	// Check if pin is not connected
+	if( obj->pin == NC )
+	{
+		return 0;
+	}
+	return HAL_GPIO_ReadPin( obj->port, obj->pinIndex );
 }
 
 void EXTI0_IRQHandler( void )

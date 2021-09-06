@@ -54,7 +54,10 @@ void MX_RTC_Init(void)
     Error_Handler();
   }
   privilegeState.rtcPrivilegeFull = RTC_PRIVILEGE_FULL_NO;
-  privilegeState.backupRegisterPrivZone = RTC_PRIVILEGE_BKUP_ZONE_NONE;
+  privilegeState.rtcPrivilegeFeatures = RTC_PRIVILEGE_FEATURE_INIT|RTC_PRIVILEGE_FEATURE_ALRB
+                              |RTC_PRIVILEGE_FEATURE_ALRA|RTC_PRIVILEGE_FEATURE_CAL
+                              |RTC_PRIVILEGE_FEATURE_TS|RTC_PRIVILEGE_FEATURE_WUT;
+  privilegeState.backupRegisterPrivZone = RTC_PRIVILEGE_BKUP_ZONE_ALL;
   privilegeState.backupRegisterStartZone2 = RTC_BKP_DR0;
   privilegeState.backupRegisterStartZone3 = RTC_BKP_DR0;
   if (HAL_RTCEx_PrivilegeModeSet(&hrtc, &privilegeState) != HAL_OK)
