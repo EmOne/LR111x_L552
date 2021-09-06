@@ -35,6 +35,8 @@ extern "C" {
 extern RTC_HandleTypeDef hrtc;
 
 /* USER CODE BEGIN Private defines */
+extern RTC_HandleTypeDef hrtc;
+
 /*!
  * \brief Temperature coefficient of the clock source
  */

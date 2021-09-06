@@ -172,6 +172,10 @@ void lr1110_board_init( const void* context, lr1110_dio_irq_handler dio_irq )
     // Set packet type
     lr1110_radio_pkt_type_t packet_type = LR1110_RADIO_PKT_TYPE_LORA;
     lr1110_radio_set_pkt_type( context, packet_type );
+
+    lr1110_gnss_read_firmware_version( context, &LR1110.gnss.version);
+
+    lr1110_wifi_read_version( context, &LR1110.wifi.version);
 }
 
 static void lr1110_board_init_tcxo_io( const void* context )
@@ -309,9 +313,12 @@ lr1110_hal_status_t lr1110_hal_wakeup( const void* context )
 
 static lr1110_hal_status_t lr1110_hal_wait_on_busy( const void* context )
 {
+	uint32_t s = HAL_GetTick();
     while( GpioRead( &( ( lr1110_t* ) context )->busy ) == 1 )
     {
-        ;
+    	if((HAL_GetTick() - s) > 10000)
+    		return LR1110_HAL_STATUS_ERROR;
+    	RtcDelayMs(10);
     }
     return LR1110_HAL_STATUS_OK;
 }

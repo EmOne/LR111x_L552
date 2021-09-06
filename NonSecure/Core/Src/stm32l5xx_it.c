@@ -21,6 +21,8 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "stm32l5xx_it.h"
+//#include "usbpd.h"
+//#include "tracer_emb.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 /* USER CODE END Includes */
@@ -47,7 +49,7 @@
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN PFP */
-
+void HardFault_Handler_C( unsigned int *args );
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -70,8 +72,11 @@ extern UART_HandleTypeDef huart3;
 extern RNG_HandleTypeDef hrng;
 extern RTC_HandleTypeDef hrtc;
 extern SPI_HandleTypeDef hspi1;
+extern SPI_HandleTypeDef hspi2;
 extern SPI_HandleTypeDef hspi3;
 extern TIM_HandleTypeDef htim1;
+extern TIM_HandleTypeDef htim6;
+
 /* USER CODE BEGIN EV */
 
 /* USER CODE END EV */
@@ -156,22 +161,22 @@ void SysTick_Handler(void)
 /* please refer to the startup file (startup_stm32l5xx.s).                    */
 /******************************************************************************/
 
-/**
-  * @brief This function handles RTC non-secure interrupts through EXTI line 17.
-  */
-void RTC_IRQHandler(void)
-{
-  /* USER CODE BEGIN RTC_IRQn 0 */
-
-  /* USER CODE END RTC_IRQn 0 */
-  HAL_RTC_AlarmIRQHandler(&hrtc);
-  HAL_RTCEx_TimeStampIRQHandler(&hrtc);
-  HAL_RTCEx_WakeUpTimerIRQHandler(&hrtc);
-  /* USER CODE BEGIN RTC_IRQn 1 */
-
-  /* USER CODE END RTC_IRQn 1 */
-}
-
+///**
+//  * @brief This function handles RTC non-secure interrupts through EXTI line 17.
+//  */
+//void RTC_IRQHandler(void)
+//{
+//  /* USER CODE BEGIN RTC_IRQn 0 */
+//////
+//  /* USER CODE END RTC_IRQn 0 */
+//  HAL_RTC_AlarmIRQHandler(&hrtc);
+//  HAL_RTCEx_TimeStampIRQHandler(&hrtc);
+//  HAL_RTCEx_WakeUpTimerIRQHandler(&hrtc);
+//  /* USER CODE BEGIN RTC_IRQn 1 */
+//////
+//  /* USER CODE END RTC_IRQn 1 */
+//}
+//
 ///**
 //  * @brief This function handles EXTI line2 interrupt.
 //  */
@@ -201,6 +206,20 @@ void RTC_IRQHandler(void)
 //}
 //
 ///**
+//  * @brief This function handles EXTI line10 interrupt.
+//  */
+//void EXTI10_IRQHandler(void)
+//{
+//  /* USER CODE BEGIN EXTI10_IRQn 0 */
+////
+//  /* USER CODE END EXTI10_IRQn 0 */
+//  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_10);
+//  /* USER CODE BEGIN EXTI10_IRQn 1 */
+////
+//  /* USER CODE END EXTI10_IRQn 1 */
+//}
+//
+///**
 //  * @brief This function handles EXTI line14 interrupt.
 //  */
 //void EXTI14_IRQHandler(void)
@@ -215,6 +234,63 @@ void RTC_IRQHandler(void)
 //}
 
 /**
+  * @brief This function handles DMA1 channel1 global interrupt.
+  */
+void DMA1_Channel1_IRQHandler(void)
+{
+  /* USER CODE BEGIN DMA1_Channel1_IRQn 0 */
+
+  /* USER CODE END DMA1_Channel1_IRQn 0 */
+  HAL_DMA_IRQHandler(&hdma_lpuart1_rx);
+  /* USER CODE BEGIN DMA1_Channel1_IRQn 1 */
+
+  /* USER CODE END DMA1_Channel1_IRQn 1 */
+}
+
+/**
+  * @brief This function handles DMA1 channel2 global interrupt.
+  */
+void DMA1_Channel2_IRQHandler(void)
+{
+  /* USER CODE BEGIN DMA1_Channel2_IRQn 0 */
+
+  /* USER CODE END DMA1_Channel2_IRQn 0 */
+
+  /* USER CODE BEGIN DMA1_Channel2_IRQn 1 */
+
+  /* USER CODE END DMA1_Channel2_IRQn 1 */
+}
+
+/**
+  * @brief This function handles DMA1 channel3 global interrupt.
+  */
+void DMA1_Channel3_IRQHandler(void)
+{
+  /* USER CODE BEGIN DMA1_Channel3_IRQn 0 */
+
+  /* USER CODE END DMA1_Channel3_IRQn 0 */
+
+  /* USER CODE BEGIN DMA1_Channel3_IRQn 1 */
+
+  /* USER CODE END DMA1_Channel3_IRQn 1 */
+}
+
+/**
+  * @brief This function handles DMA1 channel4 global interrupt.
+  */
+void DMA1_Channel4_IRQHandler(void)
+{
+  /* USER CODE BEGIN DMA1_Channel4_IRQn 0 */
+
+  /* USER CODE END DMA1_Channel4_IRQn 0 */
+  HAL_DMA_IRQHandler(&hdma_usart3_tx);
+//  TRACER_EMB_IRQHandlerDMA();
+  /* USER CODE BEGIN DMA1_Channel4_IRQn 1 */
+
+  /* USER CODE END DMA1_Channel4_IRQn 1 */
+}
+
+/**
   * @brief This function handles DMA1 channel5 global interrupt.
   */
 void DMA1_Channel5_IRQHandler(void)
@@ -222,6 +298,7 @@ void DMA1_Channel5_IRQHandler(void)
   /* USER CODE BEGIN DMA1_Channel5_IRQn 0 */
 
   /* USER CODE END DMA1_Channel5_IRQn 0 */
+  HAL_DMA_IRQHandler(&hdma_usart3_rx);
   HAL_DMA_IRQHandler(&hdma_lpuart1_rx);
   /* USER CODE BEGIN DMA1_Channel5_IRQn 1 */
 
@@ -314,6 +391,20 @@ void TIM1_CC_IRQHandler(void)
 }
 
 /**
+  * @brief This function handles TIM6 global interrupt.
+  */
+void TIM6_IRQHandler(void)
+{
+  /* USER CODE BEGIN TIM6_IRQn 0 */
+
+  /* USER CODE END TIM6_IRQn 0 */
+  HAL_TIM_IRQHandler(&htim6);
+  /* USER CODE BEGIN TIM6_IRQn 1 */
+
+  /* USER CODE END TIM6_IRQn 1 */
+}
+
+/**
   * @brief This function handles I2C1 event interrupt / I2C1 wake-up interrupt through EXTI line 23.
   */
 void I2C1_EV_IRQHandler(void)
@@ -356,6 +447,20 @@ void SPI1_IRQHandler(void)
 }
 
 /**
+  * @brief This function handles SPI2 global interrupt.
+  */
+void SPI2_IRQHandler(void)
+{
+  /* USER CODE BEGIN SPI2_IRQn 0 */
+
+  /* USER CODE END SPI2_IRQn 0 */
+  HAL_SPI_IRQHandler(&hspi2);
+  /* USER CODE BEGIN SPI2_IRQn 1 */
+
+  /* USER CODE END SPI2_IRQn 1 */
+}
+
+/**
   * @brief This function handles USART2 global interrupt / USART2 wake-up interrupt through EXTI line 27.
   */
 void USART2_IRQHandler(void)
@@ -378,6 +483,7 @@ void USART3_IRQHandler(void)
 
   /* USER CODE END USART3_IRQn 0 */
   HAL_UART_IRQHandler(&huart3);
+//  TRACER_EMB_IRQHandlerUSART();
   /* USER CODE BEGIN USART3_IRQn 1 */
 
   /* USER CODE END USART3_IRQn 1 */
@@ -495,6 +601,38 @@ void ICACHE_IRQHandler(void)
 }
 
 /* USER CODE BEGIN 1 */
+void HardFault_Handler_C( unsigned int *args )
+{
+    volatile unsigned int stacked_r0;
+    volatile unsigned int stacked_r1;
+    volatile unsigned int stacked_r2;
+    volatile unsigned int stacked_r3;
+    volatile unsigned int stacked_r12;
+    volatile unsigned int stacked_lr;
+    volatile unsigned int stacked_pc;
+    volatile unsigned int stacked_psr;
 
+    stacked_r0 = ( ( unsigned long) args[0] );
+    stacked_r1 = ( ( unsigned long) args[1] );
+    stacked_r2 = ( ( unsigned long) args[2] );
+    stacked_r3 = ( ( unsigned long) args[3] );
+
+    stacked_r12 = ( ( unsigned long) args[4] );
+    stacked_lr = ( ( unsigned long) args[5] );
+    stacked_pc = ( ( unsigned long) args[6] );
+    stacked_psr = ( ( unsigned long) args[7] );
+
+    ( void )stacked_r0;
+    ( void )stacked_r1;
+    ( void )stacked_r2;
+    ( void )stacked_r3;
+
+    ( void )stacked_r12;
+    ( void )stacked_lr ;
+    ( void )stacked_pc ;
+    ( void )stacked_psr;
+
+    Error_Handler();
+}
 /* USER CODE END 1 */
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

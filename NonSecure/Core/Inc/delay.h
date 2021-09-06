@@ -30,6 +30,7 @@ extern "C"
 
 #include <stdint.h>
 #include "stm32l552e_eval.h"
+#include "rtc.h"
 
 /*! 
  * Blocking delay of "s" seconds

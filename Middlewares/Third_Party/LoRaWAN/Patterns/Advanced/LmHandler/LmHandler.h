@@ -217,6 +217,16 @@ typedef struct LmHandlerCallbacks_s
      */
     void ( *OnSysTimeUpdate )( void );
 #endif
+
+    /*!
+	 * WIFI Scan MAC
+	 * */
+	void ( *OnWifiScanMAC )(void);
+
+	/*!
+	 * WIFI Scan MAC
+	 * */
+	void ( *OnGnssScan )(void);
 }LmHandlerCallbacks_t;
 
 /*!

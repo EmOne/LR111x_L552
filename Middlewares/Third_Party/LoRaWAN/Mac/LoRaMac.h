@@ -2526,6 +2526,19 @@ typedef struct sLoRaMacCallback
      *\warning  Runs in a IRQ context. Should only change variables state.
      */
     void ( *MacProcessNotify )( void );
+
+	/*!
+	 *\brief    Will be called each time a Radio Wifi scan done is handled by the MAC
+	 *          layer.
+	 */
+    void ( *WifiScanDone )( void );
+
+	/*!
+	 *\brief    Will be called each time a Radio Gnss scan done is handled by the MAC
+	 *          layer.
+	 */
+    void ( *GnssScanDone )( void );
+
 }LoRaMacCallback_t;
 
 

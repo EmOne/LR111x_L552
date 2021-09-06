@@ -79,7 +79,7 @@ extern "C" {
 //#define BSP_AUDIO_OUT_IT_PRIORITY     0x07UL  /* Default is lowest priority level */
 
 /* SD card interrupt priority */
-//#define BSP_SD_IT_PRIORITY            0x07UL  /* Default is lowest priority level */
+#define BSP_SD_IT_PRIORITY            0x07UL  /* Default is lowest priority level */
 
 /* SRAM DMA interrupt priority */
 #define BSP_SRAM_DMA_IT_PRIORITY      0x07UL  /* Default is lowest priority level */

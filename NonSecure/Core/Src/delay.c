@@ -30,5 +30,6 @@ void Delay( float s )
 
 void DelayMs( uint32_t ms )
 {
-    HAL_Delay( ms );
+	RtcDelayMs( ms );
+//    HAL_Delay( ms );
 }

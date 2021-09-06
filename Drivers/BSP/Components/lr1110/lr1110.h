@@ -87,7 +87,20 @@ typedef struct lr1110_wifi_s
 	uint8_t nb_countries;
 	lr1110_wifi_basic_complete_result_t all_results[LR1110_WIFI_MAX_RESULTS];
 	lr1110_wifi_country_code_t countries[LR1110_WIFI_MAX_RESULTS];
+	lr1110_wifi_version_t version;
 } lr1110_wifi_t ;
+
+typedef struct lr1110_gnss_s
+{
+	uint16_t len;
+	uint8_t results[LR1110_GNSS_MAX_SIZE_ARRAY];
+	lr1110_gnss_solver_assistance_position_t pos;
+	lr1110_gnss_detected_satellite_t satellite[16];
+	uint8_t nb_satellite;
+	uint8_t delay;
+	lr1110_gnss_version_t version;
+	lr1110_gnss_timings_t timings;
+} lr1110_gnss_t ;
 
 /*!
  * Radio hardware and global parameters
@@ -102,7 +115,7 @@ typedef struct lr1110_s
     lr1110_modulation_params_t  modulation_params;
     lr1110_packet_params_t      packet_params;
     lr1110_wifi_t wifi;
-//    lr1110_gnss_t gnss;
+    lr1110_gnss_t gnss;
 } lr1110_t;
 
 /*!

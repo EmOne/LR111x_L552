@@ -52,7 +52,11 @@
 #include "stm32l5xx_hal.h"
 #include "eeprom_emul_conf.h"
 #include "eeprom_emul_types.h"
+#ifdef EEPROM_FLASH_INTERFACE
 #include "flash_interface.h"
+#else
+#include "i2c_interface.h"
+#endif
 #include "stm32l5xx_ll_crc.h"
 #include "stm32l5xx_ll_bus.h"
 #if defined(RECOVERY_TEST)

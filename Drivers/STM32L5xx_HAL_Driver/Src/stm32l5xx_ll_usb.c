@@ -518,18 +518,72 @@ HAL_StatusTypeDef USB_EPStartXfer(USB_TypeDef *USBx, USB_EPTypeDef *ep)
       /* manage isochronous double buffer IN mode */
       else
       {
-        /* Write the data to the USB endpoint */
+        /* enable double buffer */
+        PCD_SET_EP_DBUF(USBx, ep->num);
+
+        /* each Time to write in PMA xfer_len_db will */
+        ep->xfer_len_db -= len;
+
+        /* Fill the data buffer */
         if ((PCD_GET_ENDPOINT(USBx, ep->num) & USB_EP_DTOG_TX) != 0U)
         {
           /* Set the Double buffer counter for pmabuffer1 */
           PCD_SET_EP_DBUF1_CNT(USBx, ep->num, ep->is_in, len);
           pmabuffer = ep->pmaaddr1;
+
+          /* Write the user buffer to USB PMA */
+          USB_WritePMA(USBx, ep->xfer_buff, pmabuffer, (uint16_t)len);
+          ep->xfer_buff += len;
+
+          if (ep->xfer_len_db > ep->maxpacket)
+          {
+            ep->xfer_len_db -= len;
+          }
+          else
+          {
+            len = ep->xfer_len_db;
+            ep->xfer_len_db = 0U;
+          }
+
+          if (len > 0U)
+          {
+            /* Set the Double buffer counter for pmabuffer0 */
+            PCD_SET_EP_DBUF0_CNT(USBx, ep->num, ep->is_in, len);
+            pmabuffer = ep->pmaaddr0;
+
+            /* Write the user buffer to USB PMA */
+            USB_WritePMA(USBx, ep->xfer_buff, pmabuffer, (uint16_t)len);
+          }
         }
         else
         {
           /* Set the Double buffer counter for pmabuffer0 */
           PCD_SET_EP_DBUF0_CNT(USBx, ep->num, ep->is_in, len);
           pmabuffer = ep->pmaaddr0;
+
+          /* Write the user buffer to USB PMA */
+          USB_WritePMA(USBx, ep->xfer_buff, pmabuffer, (uint16_t)len);
+          ep->xfer_buff += len;
+
+          if (ep->xfer_len_db > ep->maxpacket)
+          {
+            ep->xfer_len_db -= len;
+          }
+          else
+          {
+            len = ep->xfer_len_db;
+            ep->xfer_len_db = 0U;
+          }
+
+          if (len > 0U)
+          {
+            /* Set the Double buffer counter for pmabuffer1 */
+            PCD_SET_EP_DBUF1_CNT(USBx, ep->num, ep->is_in, len);
+            pmabuffer = ep->pmaaddr1;
+
+            /* Write the user buffer to USB PMA */
+            USB_WritePMA(USBx, ep->xfer_buff, pmabuffer, (uint16_t)len);
+          }
         }
         USB_WritePMA(USBx, ep->xfer_buff, pmabuffer, (uint16_t)len);
         PCD_FreeUserBuffer(USBx, ep->num, ep->is_in);

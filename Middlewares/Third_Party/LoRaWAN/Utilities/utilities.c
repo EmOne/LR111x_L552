@@ -47,7 +47,16 @@ void srand1( uint32_t seed )
 
 int32_t randr( int32_t min, int32_t max )
 {
-    return ( int32_t )rand1( ) % ( max - min + 1 ) + min;
+	uint32_t val;
+	if(HAL_RNG_GenerateRandomNumber(&hrng, &val) == HAL_OK)
+		return ( int32_t ) val % max;
+	else
+		return ( int32_t ) rand1( ) % ( max - min + 1 ) + min;
+}
+
+int32_t randr1( int32_t min, int32_t max )
+{
+	return ( int32_t ) rand1( ) % ( max - min + 1 ) + min;
 }
 
 void memcpy1( uint8_t *dst, const uint8_t *src, uint16_t size )

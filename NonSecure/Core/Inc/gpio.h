@@ -41,7 +41,7 @@ typedef enum
     IOE_PINS,
 
     // Not connected
-    NC = (int)0xFFFFFFFF
+    NC = (uint16_t)0xFFFF
 }PinNames;
 
 /*!
@@ -83,7 +83,7 @@ typedef enum
     IRQ_RISING_EDGE,
     IRQ_FALLING_EDGE,
     IRQ_RISING_FALLING_EDGE
-}IrqModes;
+} IrqModes;
 
 /*!
  * Define the IRQ priority on the GPIO
@@ -95,7 +95,7 @@ typedef enum
     IRQ_MEDIUM_PRIORITY,
     IRQ_HIGH_PRIORITY,
     IRQ_VERY_HIGH_PRIORITY
-}IrqPriorities;
+} IrqPriorities;
 
 /*!
  * GPIO IRQ handler function prototype
@@ -114,7 +114,7 @@ typedef struct
     PinTypes pull;
     void* Context;
     GpioIrqHandler* IrqHandler;
-}Gpio_t;
+} Gpio_t;
 
 /* USER CODE END Private defines */
 

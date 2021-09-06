@@ -1,15 +1,15 @@
 /**
   ******************************************************************************
   * @file    icg20330.c
-  * @author  MCD Application Team
-  * @version V2.0.0
+  * @author  EmOne Team
+  * @version V0.1.0
   * @date    26-June-2015
   * @brief   This file provides a set of functions needed to manage the ICG20330,
   *          ST MEMS motion sensor, 3-axis digital output gyroscope.  
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; COPYRIGHT(c) 2015 STMicroelectronics</center></h2>
+  * <h2><center>&copy; COPYRIGHT(c) 2021 EmOne</center></h2>
   *
   * Redistribution and use in source and binary forms, with or without modification,
   * are permitted provided that the following conditions are met:

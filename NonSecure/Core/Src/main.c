@@ -21,10 +21,11 @@
 #include "main.h"
 #include "adc.h"
 #include "crc.h"
-#include "dma.h"
+#include "dma.h"					  
 #include "gtzc.h"
 #include "i2c.h"
 #include "icache.h"
+#include "iwdg.h"
 #include "usart.h"
 #include "rng.h"
 #include "rtc.h"
@@ -188,7 +189,11 @@ volatile bool Led2TimerEvent = false;
  * Timer to handle the state of LED beacon indicator
  */
 static TimerEvent_t LedBeaconTimer;
+volatile bool IsBeacon = false;
 
+static TimerEvent_t WifiTimer;
+
+static TimerEvent_t GnssTimer;
 extern lr1110_t LR1110;
 
 #if defined( TX_CW ) || defined( RX_SENSE )
@@ -256,6 +261,9 @@ static void OnTxPeriodicityChanged( uint32_t periodicity );
 static void OnTxFrameCtrlChanged( LmHandlerMsgTypes_t isTxConfirmed );
 static void OnPingSlotPeriodicityChanged( uint8_t pingSlotPeriodicity );
 
+static void OnRadioWifiDone( void );
+static void OnRadioGnssDone( void );
+
 /*!
  * Function executed on TxTimer event
  */
@@ -281,10 +289,20 @@ static void OnLedBeaconTimerEvent( void* context );
  */
 static TimerEvent_t CalibrateSystemWakeupTimeTimer;
 
+/*!
+ * \brief Function executed on Gnss timer Timeout event
+ */
+static void OnGnssTimerEvent(  void* context  );
+
+/*!
+ * \brief Function executed on Wifi timer Timeout event
+ */
+static void OnWifiTimerEvent(  void* context  );
+
 static LmHandlerCallbacks_t LmHandlerCallbacks =
 {
     .GetBatteryLevel = BoardGetBatteryLevel,
-    .GetTemperature = NULL,
+    .GetTemperature = BoardGetTemperature,
     .GetRandomSeed = BoardGetRandomSeed,
     .OnMacProcess = OnMacProcessNotify,
     .OnNvmDataChange = OnNvmDataChange,
@@ -297,6 +315,8 @@ static LmHandlerCallbacks_t LmHandlerCallbacks =
     .OnClassChange= OnClassChange,
     .OnBeaconStatusChange = OnBeaconStatusChange,
     .OnSysTimeUpdate = OnSysTimeUpdate,
+	.OnWifiScanMAC = OnRadioWifiDone,
+	.OnGnssScan = OnRadioGnssDone
 };
 
 static LmHandlerParams_t LmHandlerParams =
@@ -331,9 +351,6 @@ static volatile uint8_t IsTxFramePending = 0;
 
 static volatile uint32_t TxPeriodicity = 0;
 
-static void OnRadioWifiDone( void );
-
-static void OnRadioGnssDone( void );
 /*!
  * Used to measure and calibrate the system wake-up time from STOP mode
  */
@@ -362,7 +379,7 @@ static void OnCalibrateSystemWakeupTimeTimerEvent( void* context )
 /* USER CODE BEGIN 0 */
 static float pfData[3];
 static int32_t iddValue[2];
-static float latitude, longitude, meters;
+static float meters;
 /* USER CODE END 0 */
 
 /**
@@ -381,8 +398,8 @@ int main(void)
   HAL_Init();
 
   /* USER CODE BEGIN Init */
-    HAL_DBGMCU_EnableDBGStopMode( );
-    HAL_DBGMCU_EnableDBGStandbyMode( );
+  HAL_DBGMCU_EnableDBGStopMode( );
+  HAL_DBGMCU_EnableDBGStandbyMode( );
   /* USER CODE END Init */
 
   /* GTZC initialisation */
@@ -390,10 +407,10 @@ int main(void)
 
   /* USER CODE BEGIN SysInit */
   /* Register SecureFault callback defined in non-secure and to be called by secure handler */
-    SECURE_RegisterCallback(SECURE_FAULT_CB_ID, (void *)SecureFault_Callback);
+  SECURE_RegisterCallback(SECURE_FAULT_CB_ID, (void *)SecureFault_Callback);
 
-    /* Register SecureError callback defined in non-secure and to be called by secure handler */
-    SECURE_RegisterCallback(GTZC_ERROR_CB_ID, (void *)SecureError_Callback);
+  /* Register SecureError callback defined in non-secure and to be called by secure handler */
+  SECURE_RegisterCallback(GTZC_ERROR_CB_ID, (void *)SecureError_Callback);
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
@@ -414,6 +431,7 @@ int main(void)
   MX_USB_Device_Init();
   MX_USART2_UART_Init();
   MX_ICACHE_Init();
+//  MX_IWDG_Init();
   /* USER CODE BEGIN 2 */
   BoardInitMcu();
 
@@ -425,6 +443,14 @@ int main(void)
 
   TimerInit( &LedBeaconTimer, OnLedBeaconTimerEvent );
   TimerSetValue( &LedBeaconTimer, 5000 );
+   TimerStart(&LedBeaconTimer);
+
+    TimerInit(&WifiTimer, OnWifiTimerEvent);
+	TimerSetValue(&WifiTimer, 90 * 1000);
+	TimerStart(&WifiTimer);
+	TimerInit(&GnssTimer, OnGnssTimerEvent);
+	TimerSetValue(&GnssTimer, 60 * 1000);
+	TimerStart(&GnssTimer);
 
 #ifdef TX_CW
   RadioEvents.TxTimeout = OnRadioTxTimeout;
@@ -464,14 +490,12 @@ int main(void)
 				  &appVersion,
 				  &gitHubVersion );
 
-  if ( LmHandlerInit( &LmHandlerCallbacks, &LmHandlerParams ) != LORAMAC_HANDLER_SUCCESS )
-  {
-	  printf( "LoRaMac wasn't properly initialized\n" );
-	  // Fatal error, endless loop.
-	  while ( 1 )
-	  {
-	  }
-  }
+    if ( LmHandlerInit( &LmHandlerCallbacks, &LmHandlerParams ) != LORAMAC_HANDLER_SUCCESS )
+    {
+  	  printf( "LoRaMac wasn't properly initialized\n" );
+  	  // Fatal error, endless loop.
+  	  Error_Handler();
+    }
 
   // Set system maximum tolerated rx error in milliseconds
   LmHandlerSetSystemMaxRxError( 20 );
@@ -546,6 +570,7 @@ int main(void)
 			// The MCU wakes up through events
 			BoardLowPowerHandler();
 		}
+//		HAL_IWDG_Refresh(&hiwdg);
 		CRITICAL_SECTION_END();
 #endif /* TX_CW */
   }
@@ -638,6 +663,14 @@ static void OnRxData( LmHandlerAppData_t* appData, LmHandlerRxParams_t* params )
             AppLedStateOn = appData->Buffer[0] & 0x01;
         }
         break;
+    case 0xAA:
+    	LR1110.gnss.pos.latitude = ((int16_t) appData->Buffer[1] & 0x0F) << 8 | (int16_t) appData->Buffer[0];
+    	LR1110.gnss.pos.longitude = ((int16_t) appData->Buffer[2] << 4) | ((int16_t)appData->Buffer[1] & 0xF0) >> 4;
+    	lr1110_gnss_set_assistance_position(&LR1110, &LR1110.gnss.pos);
+    	break;
+    case 0X63:
+    	BoardResetMcu();
+    	break;
     default:
         break;
     }
@@ -717,11 +750,7 @@ static void PrepareTxFrame( void )
 	BSP_IDD_GetValue(0, (uint32_t*) &iddValue[0]);
 	BSP_IDD_GetValue(1, (uint32_t*) &iddValue[1]);
 
-//	lr1110_wifi_get_nb_results(&LR1110, &LR1110.wifi.nb_results);
-//	lr1110_wifi_read_basic_complete_results(&LR1110, 0, LR1110.wifi.nb_results, LR1110.wifi.all_results);
-
-//	lr1110_gnss_set_scan_mode(&LR1110, LR1110_GNSS_SINGLE_SCAN_MODE, inter_capture_delay_second);
-//	lr1110_gnss_scan_autonomous(&LR1110, );
+	lr1110_gnss_read_assistance_position(&LR1110, &LR1110.gnss.pos);
 
     uint8_t channel = 0;
 
@@ -732,10 +761,9 @@ static void PrepareTxFrame( void )
     CayenneLppAddAnalogInput( channel++, BoardGetBatteryLevel( ) * 100 / 254 );
     CayenneLppAddAnalogInput( channel++, iddValue[0]);
     CayenneLppAddGyrometer(channel++, pfData[0], pfData[1], pfData[2]);
-    CayenneLppAddGps(channel++, latitude, longitude, meters);
+    CayenneLppAddGps(channel++, LR1110.gnss.pos.latitude, LR1110.gnss.pos.longitude, meters);
     CayenneLppCopy( AppData.Buffer );
     AppData.BufferSize = CayenneLppGetSize( );
-
 
     if( LmHandlerSend( &AppData, LmHandlerParams.IsTxConfirmed ) == LORAMAC_HANDLER_SUCCESS )
     {
@@ -829,8 +857,16 @@ static void OnLed1TimerEvent( void* context )
     TimerStop( &Led1Timer );
 #ifdef VERSION_020
     // Switch LED 1 OFF
-//    GpioWrite( &Led1, 0 );
-    SECURE_LED_YELLOW(true);
+
+    SECURE_LED_YELLOW(GPIO_PIN_RESET);
+
+    if(IsBeacon){
+    	RtcDelayMs(150);
+    	IsBeacon = false;
+    	SECURE_LED_YELLOW(GPIO_PIN_SET);
+    	TimerStart( &Led1Timer );
+    }
+
 #else
 #endif
 #endif
@@ -849,7 +885,7 @@ static void OnLed2TimerEvent( void* context )
 #ifdef VERSION_020
     // Switch LED 2 OFF
 //    GpioWrite( &Led2, 0 );
-    SECURE_LED_RED(false);
+    SECURE_LED_RED(GPIO_PIN_RESET);
 #else
 
 #endif
@@ -905,36 +941,131 @@ static void OnLedBeaconTimerEvent( void* context )
 {
 //    GpioWrite( &Led2, 1 );
 #ifdef VERSION_020
-    SECURE_LED_RED(true);
+	SECURE_LED_YELLOW(GPIO_PIN_SET);
 #else
 #endif
 
-    lr1110_wifi_scan(&LR1110, LR1110_WIFI_TYPE_SCAN_B_G_N, 0x3FFF, LR1110_WIFI_SCAN_MODE_BEACON,
-    			3, 3, 500, true);
+    IsBeacon = true;
 
-    TimerStart( &Led2Timer );
+    TimerStart( &Led1Timer );
 
     TimerStart( &LedBeaconTimer );
 }
 
+static void OnGnssTimerEvent(  void* context  )
+{
+	SECURE_LED_YELLOW(GPIO_PIN_SET);
+
+	TimerStart( &Led1Timer );
+
+	TimerStop( &TxTimer );
+
+	TimerStop( &GnssTimer );
+
+	lr1110_system_stat1_t stat1;
+	lr1110_system_stat2_t stat2;
+	uint32_t              irq = 0;
+	lr1110_system_get_status(&LR1110, &stat1, &stat2, &irq);
+
+	lr1110_system_errors_t errors = { 0 };
+	lr1110_system_get_errors(&LR1110, &errors);
+	lr1110_system_clear_errors(&LR1110);
+	lr1110_system_get_and_clear_irq_status(&LR1110, &irq);
+	LR1110.gnss.delay = 50;
+	LR1110.gnss.pos.latitude = 13.798088073124758;
+	LR1110.gnss.pos.longitude = 100.60763602927065;
+	lr1110_gnss_set_assistance_position(&LR1110, &LR1110.gnss.pos);
+	lr1110_gnss_set_constellations_to_use(&LR1110, LR1110_GNSS_GPS_MASK | LR1110_GNSS_BEIDOU_MASK);
+	lr1110_gnss_set_scan_mode(&LR1110, LR1110_GNSS_DOUBLE_SCAN_MODE, &LR1110.gnss.delay);
+	lr1110_gnss_scan_assisted(&LR1110, 0, LR1110_GNSS_OPTION_DEFAULT,
+			LR1110_GNSS_BIT_CHANGE_MASK
+			| LR1110_GNSS_DOPPLER_MASK
+		    | LR1110_GNSS_IRQ_PSEUDO_RANGE_MASK
+			, 16);
+//	lr1110_gnss_scan_autonomous(&LR1110, 0,
+//			LR1110_GNSS_BIT_CHANGE_MASK
+//			| LR1110_GNSS_DOPPLER_MASK
+//			| LR1110_GNSS_IRQ_PSEUDO_RANGE_MASK
+//			, 10);
+
+	lr1110_gnss_scan_continuous(&LR1110);
+
+}
+
+static void OnWifiTimerEvent(  void* context  )
+{
+	SECURE_LED_YELLOW(GPIO_PIN_SET);
+
+	TimerStart(&Led1Timer);
+
+	TimerStop( &TxTimer );
+
+	TimerStop( &WifiTimer );
+
+	lr1110_system_stat1_t stat1;
+	lr1110_system_stat2_t stat2;
+	uint32_t irq = 0;
+	lr1110_system_get_status(&LR1110, &stat1, &stat2, &irq);
+
+	lr1110_system_errors_t errors = { 0 };
+	lr1110_system_get_errors(&LR1110, &errors);
+	lr1110_system_clear_errors(&LR1110);
+	lr1110_system_get_and_clear_irq_status(&LR1110, &irq);
+	lr1110_system_set_standby(&LR1110, LR1110_SYSTEM_STANDBY_CFG_RC);
+	lr1110_wifi_scan(&LR1110, LR1110_WIFI_TYPE_SCAN_B_G_N, 0x3FFF, LR1110_WIFI_SCAN_MODE_BEACON,
+	    			3, 3, 500, true);
+
+}
+
+//#ifdef TEST_WIFI_SCAN_MAC
+/* *********************************************************************
+ * LR1110 WiFi positioning protocol
+ * *********************************************************************
+ * The WiFi positioning protocol messages consist of a single tag-value
+ * pair per message in uplink direction. Downlinks are not defined for
+ * this protocol.
+ * https://www.loracloud.com/documentation/device_management?url=v1.html
+ * #lr1110-wifi-positioning-protocol
+ ***********************************************************************
+ * U-WIFILOC-MACRSSI - 0x01: WiFi AP MAC List with RSSI
+ * Byte Length |    1   |	1  |  6  |     |   1  |  6  |
+ * Field:	   |TAG=0x01| RSSI | MAC | ... | RSSI |	MAC |
+ *
+ * MAC Address Encoding:
+ * A 46-bit MAC address denoted as M6:M5:M4:M3:M2:M1 is encoded in:
+ * Byte Length |  1 |  1 |  1 |  1 |  1 |  1 |
+ * Field:	   | M6 | M5 | M4 | M3 | M2 | M1 |
+ *
+ * Maintain: Anol P. <anol.p@emone.co.th>
+ */
 void OnRadioWifiDone(void)
 {
 	lr1110_wifi_get_nb_results(&LR1110, &LR1110.wifi.nb_results);
 	lr1110_wifi_read_basic_complete_results(&LR1110, 0, LR1110.wifi.nb_results, LR1110.wifi.all_results);
 	printf("WiFi scan num: %d\n\n", LR1110.wifi.nb_results);
 
+	AppData.Port = 4;
+	AppData.Buffer[0] = 0x01; //TAG=0x01
+	AppData.BufferSize = 1;
 	for (int wn = 0; wn < LR1110.wifi.nb_results; ++wn) {
-		printf("WiFi idx: %d Mac:", wn);
-		PrintHexBuffer(LR1110.wifi.all_results[wn].mac_address, 6);
+		AppData.Buffer[AppData.BufferSize] = LR1110.wifi.all_results[wn].rssi;
+		AppData.BufferSize++;
+		for (int var = 0; var < LR1110_WIFI_MAC_ADDRESS_LENGTH; ++var) {
+			AppData.Buffer[AppData.BufferSize] = LR1110.wifi.all_results[wn].mac_address[LR1110_WIFI_MAC_ADDRESS_LENGTH - var];
+			AppData.BufferSize++;
+		}
+
+		printf("WiFi index: %d MAC:", wn);
+		PrintHexBuffer(LR1110.wifi.all_results[wn].mac_address, LR1110_WIFI_MAC_ADDRESS_LENGTH);
+		printf("Rssi: %d Phi_Offset: %d Timestamp: %lld\n\n",
+								LR1110.wifi.all_results[wn].rssi,
+								LR1110.wifi.all_results[wn].phi_offset,
+								LR1110.wifi.all_results[wn].timestamp_us);
 		printf("Beacon: %ul Channel_Info: 0x%X Data_Rate: 0X%X Frame_Type: 0x%X\n",
 				LR1110.wifi.all_results[wn].beacon_period_tu,
 				LR1110.wifi.all_results[wn].channel_info_byte,
 				LR1110.wifi.all_results[wn].data_rate_info_byte,
 				LR1110.wifi.all_results[wn].frame_type_info_byte);
-		printf("Rssi: %d Phi_Offset: %ld Timestamp: %ul\n\n",
-						LR1110.wifi.all_results[wn].rssi,
-						LR1110.wifi.all_results[wn].phi_offset,
-						LR1110.wifi.all_results[wn].timestamp_us);
 	}
 
 //    lr1110_wifi_search_country_code( &LR1110, 0x3FFF, 3, 3, 1000, false);
@@ -946,16 +1077,105 @@ void OnRadioWifiDone(void)
 //	for (int cn = 0; cn < LR1110.wifi.nb_countries; ++cn) {
 //		printf("Country: %c%c Mac:", LR1110.wifi.countries[cn].country_code[0], LR1110.wifi.countries[cn].country_code[1]);
 //		PrintHexBuffer(LR1110.wifi.countries[cn].mac_address, 6);
-//		printf("IO_Reg: 0x%X Channel_info: 0x%X\n\n", LR1110.wifi.countries[cn].io_regulation, \
+//		printf("IO_Reg: 0x%X Channel_info: 0x%X\n\n", LR1110.wifi.countries[cn].io_regulation,
 //				LR1110.wifi.countries[cn].channel_info_byte);
 //	}
+	if (LmHandlerSend(&AppData, LmHandlerParams.IsTxConfirmed)
+			== LORAMAC_HANDLER_SUCCESS) {
+		SECURE_LED_YELLOW(GPIO_PIN_SET);
 
+		TimerStart(&Led1Timer);
+	}
+
+	OnTxTimerEvent( NULL );
+
+	TimerStart(&WifiTimer);
 }
+//#endif
 
+//#ifdef TEST_GNSS_SCAN
+/* *********************************************************************
+ * LR1110 GNSS positioning protocol
+ * *********************************************************************
+ * The LR1110 GNSS positioning messages consist of a single tag-value
+ * pair per message in uplink and downlink direction.
+ * Their purpose is to deliver GNSS scan results to the geolocation
+ * solver and communicate aiding information adjustments back
+ * to the device.
+ * https://www.loracloud.com/documentation/device_management?url=v1.html
+ * #lr1110-gnss-positioning-protocol
+ ***********************************************************************
+ * U-GNSSLOC-REQAID - 0x00: Aiding position request
+ * Byte Length |    1   |
+ * Field:	   |TAG=0x00|
+ *
+ * U-GNSSLOC-NAV - 0x01: GNSS Navigation message (NAV)
+ * Byte Length |    1   |	VL  |
+ * Field:	   |TAG=0x01| GNSS_SCAN_RES |
+ * GNSS_SCAN_RES: GNSS scan result containing GNSS signal measurements.
+ *
+ * D-GNSSLOC-AIDP - 0x00: Aiding position update
+ * Byte Length |    1   |	3  |
+ * Field:	   |TAG=0x00|  POS |
+ * POS contains an estimate of the device’s position encoded in WGS84
+ * latitude/longitude coordinates.
+ * Bits: | 23 - 12 | 11 - 0 |
+ * Field:|   LAT   |   LON  |
+ *
+ * Maintain: Anol P. <anol.p@emone.co.th>
+ */
 void OnRadioGnssDone(void)
 {
+	AppData.Port = 5;
+	AppData.Buffer[0] = 0x01; //TAG=0x01
+	AppData.BufferSize = 1;
 
+	lr1110_gnss_get_result_size(&LR1110, &LR1110.gnss.len);
+	lr1110_gnss_read_results(&LR1110, (uint8_t *) &LR1110.gnss.results, LR1110.gnss.len);
+
+	printf("GNSS: len %d : result:", LR1110.gnss.len);
+	PrintHexBuffer(LR1110.gnss.results,  LR1110.gnss.len);
+	printf("\r\n");
+
+	lr1110_gnss_get_nb_detected_satellites(&LR1110, &LR1110.gnss.nb_satellite);
+	printf("GNSS: SV %d detected\r\n", LR1110.gnss.nb_satellite);
+	lr1110_gnss_get_detected_satellites(&LR1110, LR1110.gnss.nb_satellite, LR1110.gnss.satellite);
+	for (int var = 0; var < LR1110.gnss.nb_satellite; ++var) {
+		printf("    GNSS: SV index %d CNR: %d\r\n", LR1110.gnss.satellite[var].satellite_id, LR1110.gnss.satellite[var].cnr);
+						   
+	}
+	lr1110_gnss_get_timings(&LR1110, &LR1110.gnss.timings);
+	printf("GNSS: timing radio: %ld computation: %ld\r\n", LR1110.gnss.timings.radio_ms, LR1110.gnss.timings.computation_ms);
+
+	memcpy1(&AppData.Buffer[AppData.BufferSize], (uint8_t *) &LR1110.gnss.results, LR1110.gnss.len);
+	AppData.BufferSize += LR1110.gnss.len;
+
+	// U-GNSSLOC-NAV - 0x01: GNSS Navigation message (NAV)
+	if (LmHandlerSend(&AppData, LmHandlerParams.IsTxConfirmed)
+			== LORAMAC_HANDLER_SUCCESS) {
+
+		SECURE_LED_YELLOW(GPIO_PIN_SET);
+
+		TimerStart(&Led1Timer);
+
+		//U-GNSSLOC-REQAID - 0x00: Aiding position request
+		AppData.Port = 6;
+		AppData.Buffer[0] = 0x00; //TAG=0x00
+		AppData.BufferSize = 1;
+
+		if (LmHandlerSend(&AppData, LORAMAC_HANDLER_CONFIRMED_MSG)
+					== LORAMAC_HANDLER_SUCCESS) {
+			SECURE_LED_YELLOW(GPIO_PIN_SET);
+
+			TimerStart(&Led1Timer);
+		}
+	}
+
+	OnTxTimerEvent( NULL );
+
+	TimerStart(&GnssTimer);
 }
+//#endif
 
 void BoardInitMcu( void )
 {
@@ -1057,6 +1277,28 @@ void SystemClockReConfig( void )
 
     CRITICAL_SECTION_END( );
 }
+
+/**
+ * @brief  Period elapsed callback in non blocking mode
+  * @note   This function is called  when TIM6 interrupt took place, inside
+  * HAL_TIM_IRQHandler(). It makes a direct call to HAL_IncTick() to increment
+  * a global variable "uwTick" used as application time base.
+  * @param  htim : TIM handle
+  * @retval None
+  */
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+{
+  /* USER CODE BEGIN Callback 0 */
+
+  /* USER CODE END Callback 0 */
+  if (htim->Instance == TIM6) {
+    HAL_IncTick();
+  }
+  /* USER CODE BEGIN Callback 1 */
+
+  /* USER CODE END Callback 1 */
+}
+
 /* USER CODE END 4 */
 
 /**
@@ -1074,7 +1316,9 @@ void Error_Handler(void)
 	  SECURE_LEDToggle_RED();
 #else
 #endif
-	  HAL_Delay(500);
+	  for (int var = 0; var < 1000000; ++var) {
+		__NOP();
+	}
   }
   /* USER CODE END Error_Handler_Debug */
 }
@@ -1090,8 +1334,8 @@ void Error_Handler(void)
 void assert_failed(uint8_t *file, uint32_t line)
 {
   /* USER CODE BEGIN 6 */
-  /* User can add his own implementation to report the file name and line number,
-     ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
+  /* User can add his own implementation to report the file name and line number,*/
+  printf("Wrong parameters value: file %s on line %d\r\n", file, line);
   /* USER CODE END 6 */
 }
 #endif /* USE_FULL_ASSERT */

@@ -35,6 +35,7 @@ extern ADC_HandleTypeDef hadc1;
 extern ADC_HandleTypeDef hadc2;
 
 /* USER CODE BEGIN Private defines */
+#define ADC_CONVERTED_DATA_BUFFER_SIZE   ((uint32_t)  4)
 
 /* USER CODE END Private defines */
 
@@ -42,7 +43,8 @@ void MX_ADC1_Init(void);
 void MX_ADC2_Init(void);
 
 /* USER CODE BEGIN Prototypes */
-
+extern __IO   uint8_t ubDmaTransferStatus;
+extern __IO  uint16_t   aADCxConvertedData[];
 /* USER CODE END Prototypes */
 
 #ifdef __cplusplus

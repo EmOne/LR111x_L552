@@ -58,7 +58,13 @@ void MX_GPIO_Init(void)
   HAL_EXTI_ConfigLineAttributes(EXTI_LINE_3, EXTI_LINE_PRIV);
 
   /*Configure the EXTI line attribute */
+  HAL_EXTI_ConfigLineAttributes(EXTI_LINE_2, EXTI_LINE_PRIV);
+
+  /*Configure the EXTI line attribute */
   HAL_EXTI_ConfigLineAttributes(EXTI_LINE_14, EXTI_LINE_PRIV);
+
+  /*Configure the EXTI line attribute */
+  HAL_EXTI_ConfigLineAttributes(EXTI_LINE_10, EXTI_LINE_PRIV);
 
   /*Configure GPIO pins : PEPin PEPin */
   GPIO_InitStruct.Pin = GYO_INT1_Pin|GYO_INT2_Pin;
@@ -88,7 +94,7 @@ void MX_GPIO_Init(void)
   /*Configure GPIO pin : PtPin */
   GPIO_InitStruct.Pin = LR_NRST_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(LR_NRST_GPIO_Port, &GPIO_InitStruct);
 
@@ -98,6 +104,9 @@ void MX_GPIO_Init(void)
 
   HAL_NVIC_SetPriority(EXTI3_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(EXTI3_IRQn);
+
+  HAL_NVIC_SetPriority(EXTI10_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(EXTI10_IRQn);
 
   HAL_NVIC_SetPriority(EXTI14_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(EXTI14_IRQn);

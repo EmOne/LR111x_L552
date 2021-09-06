@@ -59,28 +59,42 @@ int32_t   BSP_IDD_StartMeasurement(uint32_t Instance)
 	if(Instance == 0)
 	{
 		HAL_ADC_Start(&hadc2);
-		while ((HAL_ADC_GetState(&hadc2) & HAL_ADC_STATE_REG_EOC) == 0)
-			HAL_ADC_PollForConversion(&hadc2, 1000);
-		HAL_ADC_Stop(&hadc2);
+//		while ((HAL_ADC_GetState(&hadc2) & HAL_ADC_STATE_REG_EOC) == 0)
+//			HAL_ADC_PollForConversion(&hadc2, 1000);
+//		HAL_ADC_Stop(&hadc2);
 	}
 	else //if (Instance == 1)
 	{
-		ADC_ChannelConfTypeDef sConfig = {0};
-		sConfig.Channel = ADC_CHANNEL_VBAT;
-		sConfig.Rank = ADC_REGULAR_RANK_1;
-		sConfig.SamplingTime = ADC_SAMPLETIME_2CYCLES_5;
-		sConfig.SingleDiff = ADC_SINGLE_ENDED;
-		sConfig.OffsetNumber = ADC_OFFSET_NONE;
-		sConfig.Offset = 0;
-		if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
-		{
-			Error_Handler();
-		}
+//		ADC_ChannelConfTypeDef sConfig = {0};
+//		sConfig.Channel = ADC_CHANNEL_VBAT;
+//		  sConfig.Rank = ADC_REGULAR_RANK_3;
+//		  sConfig.SamplingTime = ADC_SAMPLETIME_2CYCLES_5;
+//		  sConfig.SingleDiff = ADC_SINGLE_ENDED;
+//		  sConfig.OffsetNumber = ADC_OFFSET_NONE;
+//		  sConfig.Offset = 0;
+//		  if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
+//		  {
+//		    Error_Handler();
+//		  }
 
-		HAL_ADC_Start(&hadc1);
-		while ((HAL_ADC_GetState(&hadc1) & HAL_ADC_STATE_REG_EOC) == 0)
-			HAL_ADC_PollForConversion(&hadc1, 1000);
-		HAL_ADC_Stop(&hadc1);
+		/* Start ADC group regular conversion with DMA */
+		if (ubDmaTransferStatus == 2) {
+			if (HAL_ADC_Start_DMA(&hadc1, (uint32_t*) aADCxConvertedData,
+			ADC_CONVERTED_DATA_BUFFER_SIZE) != HAL_OK) {
+				/* ADC conversion start error */
+				Error_Handler();
+			}
+			ubDmaTransferStatus = 0;
+		} else if (ubDmaTransferStatus == 1) {
+		  if (HAL_ADC_Start(&hadc1) != HAL_OK)
+		  {
+		    /* ADC conversion start error */
+		    Error_Handler();
+		  }
+		}
+//		while ((HAL_ADC_GetState(&hadc1) & HAL_ADC_STATE_REG_EOC) == 0)
+//			HAL_ADC_PollForConversion(&hadc1, 1000);
+//		HAL_ADC_Stop(&hadc1);
 	}
 
 	return status;
@@ -96,7 +110,7 @@ int32_t   BSP_IDD_GetValue(uint32_t Instance, uint32_t *IddValue)
 	int32_t status = BSP_ERROR_NONE;
 	if(Instance == 0)
 	{
-		*IddValue = HAL_ADC_GetValue(&hadc2);
+		*IddValue = __LL_ADC_CALC_DATA_TO_VOLTAGE(3300, HAL_ADC_GetValue(&hadc2), LL_ADC_RESOLUTION_12B);
 	}
 	else if(Instance == 1)
 	{
@@ -110,7 +124,8 @@ int32_t   BSP_IDD_GetValue(uint32_t Instance, uint32_t *IddValue)
 	}
 	else
 	{
-		*IddValue = HAL_ADC_GetValue(&hadc1);
+		*IddValue = __LL_ADC_CALC_VREFANALOG_VOLTAGE(aADCxConvertedData[3], LL_ADC_RESOLUTION_12B);
+//		*IddValue = HAL_ADC_GetValue(&hadc1);
 	}
 	return status;
 }

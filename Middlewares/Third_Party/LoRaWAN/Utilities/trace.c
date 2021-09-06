@@ -81,7 +81,7 @@ int32_t TraceSend( const char *strFormat, ...)
     circular_queue_get(&MsgTraceQueue,&buffer,&bufSize);
     TracePeripheralReady = RESET;
     //DBG_GPIO_RST(GPIOB, GPIO_PIN_12);
-    LPM_SetStopMode(LPM_UART_TX_Id , LPM_DISABLE );
+    LpmSetStopMode(LPM_UART_TX_Id , LPM_DISABLE );
 
     RESTORE_PRIMASK();
     OutputTrace(buffer, bufSize);

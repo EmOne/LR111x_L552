@@ -63,7 +63,7 @@ void ModBusMaster_UART_Initialise(void)
     //InitUART2();
 //	if (huart != NULL) {
 		HAL_GPIO_WritePin(MB1_DE_GPIO_Port, MB1_DE_Pin, GPIO_PIN_RESET);
-	    HAL_GPIO_WritePin(MB1_RE_GPIO_Port, MB1_RE_Pin, GPIO_PIN_RESET);
+//	    HAL_GPIO_WritePin(MB1_RE_GPIO_Port, MB1_RE_Pin, GPIO_PIN_RESET);
 
 		huartModbusMaster= (UART_HandleTypeDef *) &huart3;
 
@@ -91,7 +91,7 @@ unsigned char ModBusMaster_UART_String(unsigned char *s, unsigned int Length)
 	HAL_StatusTypeDef ret = HAL_OK;
 	HAL_UART_StateTypeDef uRet;
 
-	HAL_GPIO_WritePin(MB1_RE_GPIO_Port, MB1_RE_Pin, GPIO_PIN_SET);
+//	HAL_GPIO_WritePin(MB1_RE_GPIO_Port, MB1_RE_Pin, GPIO_PIN_SET);
 	HAL_GPIO_WritePin(MB1_DE_GPIO_Port, MB1_DE_Pin, GPIO_PIN_SET);
 
 //    while(Length)
@@ -120,7 +120,7 @@ void MODBUS_SLAVE_RX_IRQHandler(void)
 {
 	if(__HAL_UART_GET_FLAG(huartModbusSlave, UART_FLAG_RXNE))
 	{
-		ReceiveBuffer[ReceiveCounter]   = (unsigned char) huartModbusSlave->Instance->DR;
+		ReceiveBuffer[ReceiveCounter]   = (unsigned char) huartModbusSlave->Instance->RDR;
 		ReceiveCounter++;
 
 		if(ReceiveCounter>RECEIVE_BUFFER_SIZE)
@@ -156,7 +156,7 @@ void MODBUS_MASTER_RX_IRQHandler(void)
 void MODBUS_MASTER_TX_IRQHandler(void)
 {
 	HAL_UART_Receive_DMA(huartModbusMaster, &MasterReceiveBuffer[MasterReceiveCounter], 1);
-	HAL_GPIO_WritePin(MB1_RE_GPIO_Port, MB1_RE_Pin, GPIO_PIN_RESET);
+//	HAL_GPIO_WritePin(MB1_RE_GPIO_Port, MB1_RE_Pin, GPIO_PIN_RESET);
 	HAL_GPIO_WritePin(MB1_DE_GPIO_Port, MB1_DE_Pin, GPIO_PIN_RESET);
 }
 

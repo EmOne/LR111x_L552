@@ -686,16 +686,6 @@ void RTC_Alarm_IRQHandler( void )
     }
 }
 
-/*!
- * \brief  Alarm A callback.
- *
- * \param [IN] hrtc RTC handle
- */
-void HAL_RTC_AlarmAEventCallback( RTC_HandleTypeDef *hrtc )
-{
-    TimerIrqHandler( );
-}
-
 void RtcBkupWrite( uint32_t data0, uint32_t data1 )
 {
     HAL_RTCEx_BKUPWrite( &RtcHandle, RTC_BKP_DR0, data0 );
@@ -747,6 +737,75 @@ TimerTime_t RtcTempCompensation( TimerTime_t period, float temperature )
     // Calculate the resulting period
     return ( TimerTime_t ) interim;
 }
+
+/**
+  * @brief  This function handles RTC WAKE UP TIMER interrupt request.
+  * @retval None
+  */
+void RTC_IRQHandler(void)
+{
+	LpmSetStopMode( LPM_RTC_ID, LPM_ENABLE );
+//	RTC_Alarm_IRQHandler();
+	HAL_RTC_AlarmIRQHandler(&hrtc);
+	HAL_RTCEx_TimeStampIRQHandler(&hrtc);
+	HAL_RTCEx_WakeUpTimerIRQHandler(&hrtc);
+}
+/*!
+ * \brief  Alarm A callback.
+ *
+ * \param [IN] hrtc RTC handle
+ */
+void HAL_RTC_AlarmAEventCallback( RTC_HandleTypeDef *hrtc )
+{
+    TimerIrqHandler( );
+}
+
+
+/**
+  * @brief  Alarm B callback.
+  * @param  hrtc RTC handle
+  * @retval None
+  */
+void HAL_RTCEx_AlarmBEventCallback(RTC_HandleTypeDef *hrtc)
+{
+  /* Prevent unused argument(s) compilation warning */
+  UNUSED(hrtc);
+
+  /* NOTE : This function should not be modified, when the callback is needed,
+            the HAL_RTCEx_AlarmBEventCallback could be implemented in the user file
+   */
+}
+
+/**
+  * @brief  TimeStamp callback.
+  * @param  hrtc RTC handle
+  * @retval None
+  */
+void HAL_RTCEx_TimeStampEventCallback(RTC_HandleTypeDef *hrtc)
+{
+  /* Prevent unused argument(s) compilation warning */
+  UNUSED(hrtc);
+
+  /* NOTE : This function should not be modified, when the callback is needed,
+            the HAL_RTCEx_TimeStampEventCallback could be implemented in the user file
+  */
+}
+
+/**
+  * @brief  Wake Up Timer callback.
+  * @param  hrtc RTC handle
+  * @retval None
+  */
+void HAL_RTCEx_WakeUpTimerEventCallback(RTC_HandleTypeDef *hrtc)
+{
+  /* Prevent unused argument(s) compilation warning */
+  UNUSED(hrtc);
+
+  /* NOTE : This function should not be modified, when the callback is needed,
+            the HAL_RTCEx_WakeUpTimerEventCallback could be implemented in the user file
+   */
+}
+
 /* USER CODE END 1 */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

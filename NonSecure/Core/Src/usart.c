@@ -66,7 +66,7 @@ void MX_LPUART1_UART_Init(void)
   hlpuart1.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
   hlpuart1.Init.ClockPrescaler = UART_PRESCALER_DIV1;
   hlpuart1.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
-  hlpuart1.FifoMode = UART_FIFOMODE_ENABLE;
+  hlpuart1.FifoMode = UART_FIFOMODE_DISABLE;
   if (HAL_UART_Init(&hlpuart1) != HAL_OK)
   {
     Error_Handler();
@@ -79,7 +79,7 @@ void MX_LPUART1_UART_Init(void)
   {
     Error_Handler();
   }
-  if (HAL_UARTEx_EnableFifoMode(&hlpuart1) != HAL_OK)
+  if (HAL_UARTEx_DisableFifoMode(&hlpuart1) != HAL_OK)
   {
     Error_Handler();
   }
@@ -215,7 +215,7 @@ void HAL_UART_MspInit(UART_HandleTypeDef* uartHandle)
 
     /* LPUART1 DMA Init */
     /* LPUART1_RX Init */
-    hdma_lpuart1_rx.Instance = DMA1_Channel5;
+    hdma_lpuart1_rx.Instance = DMA1_Channel1;
     hdma_lpuart1_rx.Init.Request = DMA_REQUEST_LPUART1_RX;
     hdma_lpuart1_rx.Init.Direction = DMA_PERIPH_TO_MEMORY;
     hdma_lpuart1_rx.Init.PeriphInc = DMA_PINC_DISABLE;
@@ -355,7 +355,7 @@ void HAL_UART_MspInit(UART_HandleTypeDef* uartHandle)
     __HAL_LINKDMA(uartHandle,hdmarx,hdma_usart3_rx);
 
     /* USART3_TX Init */
-    hdma_usart3_tx.Instance = DMA2_Channel3;
+    hdma_usart3_tx.Instance = DMA1_Channel4;
     hdma_usart3_tx.Init.Request = DMA_REQUEST_USART3_TX;
     hdma_usart3_tx.Init.Direction = DMA_MEMORY_TO_PERIPH;
     hdma_usart3_tx.Init.PeriphInc = DMA_PINC_DISABLE;
@@ -369,12 +369,34 @@ void HAL_UART_MspInit(UART_HandleTypeDef* uartHandle)
       Error_Handler();
     }
 
-    if (HAL_DMA_ConfigChannelAttributes(&hdma_usart3_tx, DMA_CHANNEL_PRIV) != HAL_OK)
+    if (HAL_DMA_ConfigChannelAttributes(&hdma_usart3_tx, DMA_CHANNEL_NPRIV) != HAL_OK)
     {
       Error_Handler();
     }
 
     __HAL_LINKDMA(uartHandle,hdmatx,hdma_usart3_tx);
+
+    /* USART3_RX Init */
+    hdma_usart3_rx.Instance = DMA1_Channel5;
+    hdma_usart3_rx.Init.Request = DMA_REQUEST_USART3_RX;
+    hdma_usart3_rx.Init.Direction = DMA_PERIPH_TO_MEMORY;
+    hdma_usart3_rx.Init.PeriphInc = DMA_PINC_DISABLE;
+    hdma_usart3_rx.Init.MemInc = DMA_MINC_ENABLE;
+    hdma_usart3_rx.Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE;
+    hdma_usart3_rx.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;
+    hdma_usart3_rx.Init.Mode = DMA_NORMAL;
+    hdma_usart3_rx.Init.Priority = DMA_PRIORITY_LOW;
+    if (HAL_DMA_Init(&hdma_usart3_rx) != HAL_OK)
+    {
+      Error_Handler();
+    }
+
+    if (HAL_DMA_ConfigChannelAttributes(&hdma_usart3_rx, DMA_CHANNEL_NPRIV) != HAL_OK)
+    {
+      Error_Handler();
+    }
+
+    __HAL_LINKDMA(uartHandle,hdmarx,hdma_usart3_rx);
 
     /* USART3 interrupt Init */
     HAL_NVIC_SetPriority(USART3_IRQn, 0, 0);
@@ -469,28 +491,34 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 
 uint8_t UartGetChar( UART_HandleTypeDef *obj, uint8_t *data )
 {
-//	if( obj->UartId == UART_USB_CDC )
-//	    {
-//	#if defined( USE_USB_CDC )
-//	        return UartUsbGetChar( obj, data );
-//	#else
-//	        return 255; // Not supported
-//	#endif
-//	    }
-//	    else
-//	    {
-	        CRITICAL_SECTION_BEGIN( );
+	CRITICAL_SECTION_BEGIN();
+	if (obj->Instance == LPUART1) {
+		if (IsFifoEmpty(&fifo_dgb_rx) == false) {
+			*data = FifoPop(&fifo_dgb_rx);
+			CRITICAL_SECTION_END();
+			return 0;
+		}
+	} else if (obj->Instance == USART3) {
+		if (IsFifoEmpty(&fifo_rx) == false) {
+			*data = FifoPop(&fifo_rx);
+			CRITICAL_SECTION_END();
+			return 0;
+		}
+	}
+	CRITICAL_SECTION_END();
+	return 1;
+}
 
-	        if( IsFifoEmpty( &fifo_dgb_rx ) == false )
-	        {
-	            *data = FifoPop( &fifo_dgb_rx );
-	            CRITICAL_SECTION_END( );
-	            return 0;
-	        }
-	        CRITICAL_SECTION_END( );
-	        return 1;
-//	    }
-//	return HAL_UART_Receive(obj, data, 1, 100);
+int _write(int file, char *ptr, int len)
+{
+//	int DataIdx;
+
+	HAL_UART_Transmit(&hlpuart1, (uint8_t *) ptr, len, 500);
+//	for (DataIdx = 0; DataIdx < len; DataIdx++)
+//	{
+//		__io_putchar(*ptr++);
+//	}
+	return len;
 }
 
 int __io_putchar(int ch) {

@@ -21,7 +21,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32l552e_eval.h"
-
+#include "adc.h"
 #if (USE_BSP_COM_FEATURE == 1)
 #if (USE_COM_LOG == 1)
 #include <stdio.h>
@@ -1586,7 +1586,7 @@ extern uint16_t vref;
 uint16_t BoardBatteryMeasureVolage( void )
 {
 
-    uint32_t batteryVoltage = 0;
+//    uint32_t batteryVoltage = 0;
 
     // Read the current Voltage
     BSP_IDD_StartMeasurement(2);
@@ -1595,10 +1595,10 @@ uint16_t BoardBatteryMeasureVolage( void )
 
     // We don't use the VREF from calibValues here.
     // calculate the Voltage in millivolt
-    batteryVoltage = ( uint32_t )ADC_VREF_BANDGAP * ( uint32_t )ADC_MAX_VALUE;
-    batteryVoltage = batteryVoltage / ( uint32_t )vref;
+//    batteryVoltage = ( uint32_t )ADC_VREF_BANDGAP * ( uint32_t )ADC_MAX_VALUE;
+//    batteryVoltage = batteryVoltage / ( uint32_t )vref;
 
-    return (batteryVoltage / 10);
+    return vref; //(batteryVoltage / 10);
 }
 
 uint32_t BoardGetBatteryVoltage( void )
@@ -1636,6 +1636,10 @@ uint8_t BoardGetBatteryLevel( void )
         }
     }
     return batteryLevel;
+}
+
+float BoardGetTemperature( void ) {
+	return (float) __LL_ADC_CALC_TEMPERATURE(3300, aADCxConvertedData[1], LL_ADC_RESOLUTION_12B);
 }
 
 uint8_t GetBoardPowerSource( void )

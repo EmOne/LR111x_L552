@@ -3746,6 +3746,9 @@ LoRaMacStatus_t LoRaMacInitialization( LoRaMacPrimitives_t* primitives, LoRaMacC
     MacCtx.RadioEvents.RxError = OnRadioRxError;
     MacCtx.RadioEvents.TxTimeout = OnRadioTxTimeout;
     MacCtx.RadioEvents.RxTimeout = OnRadioRxTimeout;
+    MacCtx.RadioEvents.WifiDone = callbacks->WifiScanDone;
+    MacCtx.RadioEvents.GnssDone = callbacks->GnssScanDone;
+
     Radio.Init( &MacCtx.RadioEvents );
 
     // Initialize the Secure Element driver

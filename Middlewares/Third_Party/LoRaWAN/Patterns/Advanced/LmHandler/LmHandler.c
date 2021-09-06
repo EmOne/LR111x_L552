@@ -252,6 +252,8 @@ LmHandlerErrorStatus_t LmHandlerInit( LmHandlerCallbacks_t *handlerCallbacks,
     LoRaMacCallbacks.GetTemperatureLevel = LmHandlerCallbacks->GetTemperature;
     LoRaMacCallbacks.NvmDataChange  = NvmDataMgmtEvent;
     LoRaMacCallbacks.MacProcessNotify = LmHandlerCallbacks->OnMacProcess;
+    LoRaMacCallbacks.WifiScanDone = LmHandlerCallbacks->OnWifiScanMAC;
+    LoRaMacCallbacks.GnssScanDone = LmHandlerCallbacks->OnGnssScan;
 
     IsClassBSwitchPending = false;
     IsUplinkTxPending = false;
@@ -302,7 +304,7 @@ LmHandlerErrorStatus_t LmHandlerInit( LmHandlerCallbacks_t *handlerCallbacks,
         // Random seed initialization
         srand1( LmHandlerCallbacks->GetRandomSeed( ) );
         // Choose a random device address
-        CommissioningParams.DevAddr = randr( 0, 0x01FFFFFF );
+        CommissioningParams.DevAddr = randr1( 0, 0x01FFFFFF );
 #endif
 
         mibReq.Type = MIB_DEV_ADDR;

@@ -36,6 +36,17 @@ Maintainer: Miguel Luis and Gregory Cristian
 
 #include "main.h"
 #include "trace.h"
+
+/*!
+ * Generic definition
+ */
+#ifndef SUCCESS
+#define SUCCESS                                     1
+#endif
+
+#ifndef FAIL
+#define FAIL                                        0
+#endif
 /* BACKUP_PRIMASK MUST be implemented at the begining of the funtion 
    that implement a critical section                        
    PRIMASK is saved on STACK and recovered at the end of the funtion
@@ -56,7 +67,7 @@ Maintainer: Miguel Luis and Gregory Cristian
 #define ALIGN(n)             __attribute__((aligned(n)))
 
 /* delay definition */
-//#define DelayMs(n)             HAL_Delay(n)
+#define DelayMs(n)             HAL_Delay(n)
 
 typedef uint32_t TimerTime_t;
 #define TIMERTIME_T_MAX                             ( ( uint32_t )~0 )
@@ -113,13 +124,22 @@ typedef union Version_u
 void srand1( uint32_t seed );
 
 /*!
- * \brief Computes a random number between min and max
+ * \brief Computes a true random number between min and max
  *
  * \param [IN] min range minimum value
  * \param [IN] max range maximum value
  * \retval random random value in range min..max
  */
 int32_t randr( int32_t min, int32_t max );
+
+/*!
+ * \brief Computes a random number between min and max
+ *
+ * \param [IN] min range minimum value
+ * \param [IN] max range maximum value
+ * \retval random random value in range min..max
+ */
+int32_t randr1( int32_t min, int32_t max );
 
 /*!
  * \brief Computes a random number between 
