@@ -316,9 +316,9 @@ static lr1110_hal_status_t lr1110_hal_wait_on_busy( const void* context )
 	uint32_t s = HAL_GetTick();
     while( GpioRead( &( ( lr1110_t* ) context )->busy ) == 1 )
     {
-    	if((HAL_GetTick() - s) > 10000)
+    	if((HAL_GetTick() - s) > 10000){
     		return LR1110_HAL_STATUS_ERROR;
-    	RtcDelayMs(10);
+    	}
     }
     return LR1110_HAL_STATUS_OK;
 }
