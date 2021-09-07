@@ -39,6 +39,7 @@
 /* USER CODE BEGIN Includes */
 #include "stm32l552e_eval.h"
 #include "lr1110-board.h"
+#include "lr1110_system.h"
 #include "lr1110_wifi.h"
 #include "lr1110_gnss.h"
 #include "lr1110_bootloader.h"
@@ -115,7 +116,7 @@
  *
  * \remark Please note that LORAWAN_DEFAULT_DATARATE is used only when ADR is disabled
  */
-#define LORAWAN_DEFAULT_DATARATE                    DR_2
+#define LORAWAN_DEFAULT_DATARATE                    DR_3
 
 /*!
  * LoRaWAN confirmed messages
@@ -451,10 +452,10 @@ int main(void)
    TimerStart(&LedBeaconTimer);
 
     TimerInit(&WifiTimer, OnWifiTimerEvent);
-	TimerSetValue(&WifiTimer, 90 * 1000);
+	TimerSetValue(&WifiTimer, 60 * 60 * 1000);
 	TimerStart(&WifiTimer);
 	TimerInit(&GnssTimer, OnGnssTimerEvent);
-	TimerSetValue(&GnssTimer, 60 * 1000);
+	TimerSetValue(&GnssTimer, 60 * 30 * 1000);
 	TimerStart(&GnssTimer);
 
 #ifdef TX_CW
@@ -1193,7 +1194,7 @@ void BoardInitMcu( void )
 #endif
 		LpmSetOffMode( LPM_APPLI_ID, LPM_DISABLE );
 	} else {
-		SystemClockReConfig();
+//		SystemClockReConfig();
 	}
 
 	BoardInitPeriph();
@@ -1202,7 +1203,7 @@ void BoardInitMcu( void )
 		McuInitialized = true;
 		lr1110_board_init_dbg_io( &LR1110 );
 	} else {
-		CalibrateSystemWakeupTime( );
+//		CalibrateSystemWakeupTime( );
 	}
 }
 

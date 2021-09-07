@@ -290,7 +290,7 @@ lr1110_hal_status_t lr1110_hal_write_read( const void* context, const uint8_t* c
 lr1110_hal_status_t lr1110_hal_reset( const void* context )
 {
     GpioWrite( &( ( lr1110_t* ) context )->reset, 0 );
-    DelayMs( 1 );
+    RtcDelayMs( 1 );
     GpioWrite( &( ( lr1110_t* ) context )->reset, 1 );
     return LR1110_HAL_STATUS_OK;
 }

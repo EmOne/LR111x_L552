@@ -477,13 +477,6 @@ void BoardLowPowerHandler( void );
  */
 uint8_t GetBoardPowerSource( void );
 
-///*!
-// * \brief Get the board version
-// *
-// * \retval value  Version
-// */
-//Version_t BoardGetVersion( void );
-
 /*!
  * \brief Measure the temperature voltage
  *
@@ -540,9 +533,10 @@ void BoardInitPeriph( void );
  */
 void BoardDeInitMcu( void );
 
-/**
-  * @}
-  */
+/*!
+ * \brief Reset the target board
+ */
+void BoardResetMcu( void );
 
 /**
   * @}

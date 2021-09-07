@@ -68,6 +68,11 @@ CMSE_NS_ENTRY void SECURE_RegisterCallback(SECURE_CallbackIDTypeDef CallbackId, 
 /**
   * @}
   */
+CMSE_NS_ENTRY/*secureportNON_SECURE_CALLABLE*/ void SECURE_SystemClock_config( void )
+{
+	SystemClock_Config();
+}
+
 CMSE_NS_ENTRY/*secureportNON_SECURE_CALLABLE*/ void SECURE_LEDToggle_RED(void)
 {
 	HAL_GPIO_TogglePin(MB1_RX_GPIO_Port, MB1_RX_Pin);
@@ -75,7 +80,7 @@ CMSE_NS_ENTRY/*secureportNON_SECURE_CALLABLE*/ void SECURE_LEDToggle_RED(void)
 
 CMSE_NS_ENTRY/*secureportNON_SECURE_CALLABLE*/ void SECURE_LED_RED(bool onoff)
 {
-	HAL_GPIO_WritePin(MB1_RX_GPIO_Port, MB1_RX_Pin, onoff);
+	HAL_GPIO_WritePin(MB1_RX_GPIO_Port, MB1_RX_Pin, !onoff);
 }
 
 CMSE_NS_ENTRY/*secureportNON_SECURE_CALLABLE*/ void SECURE_LEDToggle_YELLOW(void)
@@ -85,7 +90,7 @@ CMSE_NS_ENTRY/*secureportNON_SECURE_CALLABLE*/ void SECURE_LEDToggle_YELLOW(void
 
 CMSE_NS_ENTRY/*secureportNON_SECURE_CALLABLE*/ void SECURE_LED_YELLOW(bool onoff)
 {
-	HAL_GPIO_WritePin(MB1_TX_GPIO_Port, MB1_TX_Pin, onoff);
+	HAL_GPIO_WritePin(MB1_TX_GPIO_Port, MB1_TX_Pin, !onoff);
 }
 
 CMSE_NS_ENTRY/*secureportNON_SECURE_CALLABLE*/ void SECURE_GYO_DEN(bool onoff)
@@ -101,6 +106,11 @@ CMSE_NS_ENTRY/*secureportNON_SECURE_CALLABLE*/ void SECURE_CURRENT_CS(bool onoff
 CMSE_NS_ENTRY/*secureportNON_SECURE_CALLABLE*/ void SECURE_CHARGE_CE(bool onoff)
 {
 	HAL_GPIO_WritePin(LDO_EN_GPIO_Port, LDO_EN_Pin, onoff);
+}
+
+CMSE_NS_ENTRY/*secureportNON_SECURE_CALLABLE*/ void SECURE_WP_EN(bool onoff)
+{
+	HAL_GPIO_WritePin(WP_GPIO_Port, WP_Pin, onoff);
 }
 
 /**

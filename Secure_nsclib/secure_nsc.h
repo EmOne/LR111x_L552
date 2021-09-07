@@ -38,10 +38,12 @@ typedef enum
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions ------------------------------------------------------- */
 void SECURE_RegisterCallback(SECURE_CallbackIDTypeDef CallbackId, void *func);
+void SECURE_SystemClock_config( void );
 void SECURE_LEDToggle_RED(void);
 void SECURE_LED_RED(bool onoff);
 void SECURE_LEDToggle_YELLOW(void);
 void SECURE_LED_YELLOW(bool onoff);
+void SECURE_WP_EN(bool onoff);
 void SECURE_GYO_DEN(bool onoff);
 void SECURE_CURRENT_CS(bool onoff);
 void SECURE_CHARGE_CE(bool onoff);

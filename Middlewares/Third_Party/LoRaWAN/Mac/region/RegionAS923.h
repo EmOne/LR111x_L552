@@ -161,7 +161,7 @@ extern "C"
 /*!
  * Default uplink dwell time configuration
  */
-#define AS923_DEFAULT_UPLINK_DWELL_TIME             0
+#define AS923_DEFAULT_UPLINK_DWELL_TIME             1
 
 /*!
  * Default Max EIRP
@@ -176,7 +176,7 @@ extern "C"
 /*!
  * Enabled or disabled the duty cycle
  */
-#define AS923_DUTY_CYCLE_ENABLED                    0
+#define AS923_DUTY_CYCLE_ENABLED                    1
 
 /*!
  * Maximum RX window duration
@@ -298,7 +298,7 @@ static const uint8_t MaxPayloadOfDatarateDwell0AS923[] = { 51, 51, 115, 115, 242
  * Maximum payload with respect to the datarate index.
  * The table is only valid for uplinks.
  */
-static const uint8_t MaxPayloadOfDatarateDwell1AS923[] = { 0, 0, 11, 53, 125, 242, 242, 242 };
+static const uint8_t MaxPayloadOfDatarateDwell1AS923[] = { 0, 0, 51, 53, 125, 242, 242, 242 };
 
 /*!
  * Effective datarate offsets for receive window 1 when downlink dwell time is zero.
